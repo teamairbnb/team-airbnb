@@ -1,12 +1,12 @@
 import React from 'react'
 import './App.css'
 import './index.css'
-
+import Onboarding from './components/Onboarding'
 function App() {
 
   return (
     <>
-      <div className='text-5xl'>Hello from the frontend</div>
+      <Onboarding />
     </>
   )
 }

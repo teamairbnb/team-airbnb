@@ -9,7 +9,7 @@ function Onboarding() {
         <img src={logo} alt="App logo" className="w-[123px] h-[118px] mt-[79px]" />
       </div>
       <div className="pb-20">
-        <button className="flex items-center justify-center gap-[10px] bg-blue-600 text-white w-[300px] h-[48px] p-2.5 rounded-[10px]">
+        <button className="flex items-center justify-center gap-[10px] bg-blue-600 text-white w-[350px] h-[48px] p-2.5 rounded-[10px]">
             Get Started
         </button>
       </div>

@@ -1,14 +1,14 @@
-import React from 'react'
-import './App.css'
-import './index.css'
+import React from "react";
+import "./App.css";
+import "./index.css";
+import CarBookingScreen from "./components/carDetails";
 
 function App() {
-
   return (
     <>
-      <div className='text-5xl'>Hello from the frontend</div>
+      <CarBookingScreen />
     </>
-  )
+  );
 }
 
-export default App
+export default App;

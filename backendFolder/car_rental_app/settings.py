@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+from datetime import timedelta
+
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -87,6 +89,8 @@ DATABASES = {
 }
 
 
+
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -130,7 +134,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email configuration
 
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -152,5 +156,18 @@ REST_FRAMEWORK = {
 DJOSER = {
     "SEND_ACTIVATION_EMAIL": True,
     "ACTIVATION_URL": "activate/{uid}/{token}",
-    "SERIALIZERS": {},
+    "SERIALIZERS": {
+         "user_create": "accounts.serializers.CustomUserCreateSerializer",
+        "user": "accounts.serializers.CustomUserSerializer",
+        "current_user": "accounts.serializers.CustomUserSerializer",
+    },
+
+}
+# custom user model
+AUTH_USER_MODEL = 'accounts.CustomUser'
+
+# extend the token expiry time
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),   
 }

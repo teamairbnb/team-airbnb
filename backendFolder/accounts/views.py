@@ -8,8 +8,10 @@ from .serializers import CustomUserSerializer
 import uuid
 from django.utils.crypto import get_random_string
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_spectacular.utils import extend_schema
 
 
+@extend_schema(request=CustomUserSerializer, responses=CustomUserSerializer)
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):

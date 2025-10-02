@@ -9,7 +9,7 @@ from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 class IsAdminOrReadOnly(permissions.BasePermission):
     def has_permission(self, request, view):
-        if request.method is permissions.SAFE_METHODS:
+        if request.method in permissions.SAFE_METHODS:
             return True
         return request.user and request.user.is_staff
 

@@ -1,4 +1,8 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
+import datetime
+
+
 
 CAR_MAKE_CHOICES = [
     ('toyota', 'Toyota'),
@@ -44,10 +48,15 @@ AVAILABILITY_STATUS_CHOICES = [
     ('unavailable', 'Unavailable'),
 ]
 
+current_year = datetime.datetime.now().year
+
 class Car(models.Model):
     make = models.CharField(max_length=50, choices=CAR_MAKE_CHOICES, db_index=True)
     model = models.CharField(max_length=50, choices=CAR_MODEL_CHOICES, db_index=True)
-    year = models.PositiveIntegerField(db_index=True)
+    year = models.PositiveIntegerField(db_index=True, validators=[
+        MinValueValidator(2000),
+        MaxValueValidator(current_year + 1)
+    ])
     car_type = models.CharField(max_length=50, choices=CAR_TYPE_CHOICES, db_index=True)
     color = models.CharField(max_length=30, db_index=True)
     seats = models.PositiveIntegerField(db_index=True)

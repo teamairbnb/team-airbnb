@@ -1,6 +1,6 @@
-import Logo from "./Logo.jsx";
+import Logo from "../components/Logo.jsx";
 import { useState } from "react";
-import Button from "./Button.jsx";
+import Button from "../components/Button.jsx";
 
 function Signup() {
   const [businessName, setBusinessName] = useState("");
@@ -32,7 +32,6 @@ function Signup() {
     if (Object.keys(validationErrors).length === 0) {
       console.log({ businessName, ownerName, email, phone, password });
       alert("Signup submitted successfully!");
-      
 
       setBusinessName("");
       setOwnerName("");
@@ -52,13 +51,12 @@ function Signup() {
           <h1 className="font-semibold text-xl">Create your account</h1>
         </div>
 
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col gap-4 w-full"
-        >
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
           {/* Business Name */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="businessName" className="block mb-2">Business Name</label>
+            <label htmlFor="businessName" className="block mb-2">
+              Business Name
+            </label>
             <input
               type="text"
               id="businessName"
@@ -68,13 +66,17 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.businessName && (
-              <p className="text-sm text-red-500 text-right">{errors.businessName}</p>
+              <p className="text-sm text-red-500 text-right">
+                {errors.businessName}
+              </p>
             )}
           </div>
 
           {/* Owner Name */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="ownerName" className="block mb-2">Owner Name</label>
+            <label htmlFor="ownerName" className="block mb-2">
+              Owner Name
+            </label>
             <input
               type="text"
               id="ownerName"
@@ -84,13 +86,17 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.ownerName && (
-              <p className="text-sm text-red-500 text-right">{errors.ownerName}</p>
+              <p className="text-sm text-red-500 text-right">
+                {errors.ownerName}
+              </p>
             )}
           </div>
 
           {/* Email */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="email" className="block mb-2">Email</label>
+            <label htmlFor="email" className="block mb-2">
+              Email
+            </label>
             <input
               type="email"
               id="email"
@@ -106,7 +112,9 @@ function Signup() {
 
           {/* Phone Number */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="phone" className="block mb-2">Phone Number</label>
+            <label htmlFor="phone" className="block mb-2">
+              Phone Number
+            </label>
             <input
               type="tel"
               id="phone"
@@ -122,7 +130,9 @@ function Signup() {
 
           {/* Password */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="password" className="block mb-2">Password</label>
+            <label htmlFor="password" className="block mb-2">
+              Password
+            </label>
             <input
               type="password"
               id="password"
@@ -132,13 +142,17 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.password && (
-              <p className="text-sm text-red-500 text-right">{errors.password}</p>
+              <p className="text-sm text-red-500 text-right">
+                {errors.password}
+              </p>
             )}
           </div>
 
           {/* Re-enter Password */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="rePassword" className="block mb-2">Re-enter Password</label>
+            <label htmlFor="rePassword" className="block mb-2">
+              Re-enter Password
+            </label>
             <input
               type="password"
               id="rePassword"
@@ -148,7 +162,9 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.rePassword && (
-              <p className="text-sm text-red-500 text-right">{errors.rePassword}</p>
+              <p className="text-sm text-red-500 text-right">
+                {errors.rePassword}
+              </p>
             )}
           </div>
 

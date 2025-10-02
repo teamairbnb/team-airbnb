@@ -1,5 +1,5 @@
-import mainlogo from "../images/mainlogo.png";
-import logo from "../images/logo.png";
+import mainlogo from "../assets/images/mainlogo.png";
+import logo from "../assets/images/logo.png";
 function Logo() {
   return (
     <div className="flex flex-col p-[25px] -translate-y-10 w-full rounded-[50px] h-[290px] bg-cover bg-center relative" style={{backgroundImage: `url(${mainlogo})`}}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import './index.css'
-import Login from './assets/components/Login'
+import Login from './pages/Login'
 
 function App() {
 

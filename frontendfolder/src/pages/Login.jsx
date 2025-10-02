@@ -1,6 +1,6 @@
-import Logo from "./Logo.jsx";
+import Logo from "../components/Logo.jsx";
 import { useState } from "react";
-import Button from "./Button.jsx";
+import Button from "../components/Button.jsx";
 
 function Login() {
   const [email, setEmail] = useState("");

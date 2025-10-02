@@ -8,7 +8,7 @@ export default function CodeVerification() {
   const [errors, setErrors] = useState(Array(6).fill(false));
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
 
-  // countdown effect
+  // countdown timer effect
   useEffect(() => {
     if (timeLeft <= 0) return;
 
@@ -19,7 +19,7 @@ export default function CodeVerification() {
     return () => clearInterval(timer);
   }, [timeLeft]);
 
-  const formatTime = (seconds)=> {
+  const formatTime = (seconds) => {
     const m = String(Math.floor(seconds / 60)).padStart(2, "0");
     const s = String(seconds % 60).padStart(2, "0");
     return `${m}:${s}`;
@@ -28,22 +28,25 @@ export default function CodeVerification() {
   const handleChange = (e, index) => {
     const value = e.target.value;
 
+    // invalid character check
     if (value && !/^[0-9]$/.test(value)) {
       setErrors((prev) => {
         const updated = [...prev];
-        updated[index] = true;
+        updated[index] = true; 
         return updated;
       });
-    } else {
-      setErrors((prev) => {
-        const updated = [...prev];
-        updated[index] = false;
-        return updated;
-      });
+      return; 
+    }
 
-      if (value && index < inputsRef.current.length - 1) {
-        inputsRef.current[index + 1]?.focus();
-      }
+    // valid digit OR empty check
+    setErrors((prev) => {
+      const updated = [...prev];
+      updated[index] = value.trim() === "" ? true : false;
+      return updated;
+    });
+
+    if (value && index < inputsRef.current.length - 1) {
+      inputsRef.current[index + 1]?.focus();
     }
   };
 
@@ -54,7 +57,24 @@ export default function CodeVerification() {
   };
 
   const handleResend = () => {
-    setTimeLeft(300); 
+    setTimeLeft(300);
+    // clearing inputs and resetting errors
+    inputsRef.current.forEach((input) => {
+      if (input) input.value = "";
+    });
+    setErrors(Array(6).fill(false));
+  };
+
+  const handleVerify = () => {
+    const values = inputsRef.current.map((input) => input?.value || "");
+
+    // checking if any is empty or invalid
+    const newErrors = values.map((val) => val.trim() === "" || !/^[0-9]$/.test(val));
+    setErrors(newErrors);
+
+    if (!newErrors.includes(true)) {
+      navigate("/verificationsuccess");
+    }
   };
 
   return (
@@ -78,9 +98,10 @@ export default function CodeVerification() {
                 ref={(el) => (inputsRef.current[i] = el)}
                 onChange={(e) => handleChange(e, i)}
                 onKeyDown={(e) => handleKeyDown(e, i)}
-                className={`w-[51px] h-[54px] rounded-[15px] text-center text-lg focus:outline-none focus:ring-2 ${
+                className={`w-[51px] h-[54px] rounded-[15px] text-center text-lg focus:outline-none focus:ring-2 
+                ${
                   errors[i]
-                    ? "border-red-500 focus:ring-red-500"
+                    ? "border border-red-500 focus:ring-red-500"
                     : "border border-gray-300 focus:ring-indigo-500"
                 }`}
               />
@@ -92,17 +113,17 @@ export default function CodeVerification() {
               Code is valid for{" "}
               <span className="text-[#111827]">{formatTime(timeLeft)}</span>
             </p>
-            <p
-              onClick={handleResend}
-              className="text-[#2563EB] cursor-pointer"
-            >
+            <p onClick={handleResend} className="text-[#2563EB] cursor-pointer">
               Resend
             </p>
           </div>
         </div>
 
         <div className="fixed bottom-0 left-0 w-full px-[15px] pb-[57px] bg-white">
-          <button onClick={() => navigate("/verificationsuccess")} className="bg-[#2563EB] w-full font-semibold tracking-wide flex justify-center items-center text-white rounded-[15px] py-[14px]">
+          <button
+            onClick={handleVerify}
+            className="bg-[#2563EB] w-full font-semibold tracking-wide flex justify-center items-center text-white rounded-[15px] py-[14px]"
+          >
             Verify
           </button>
         </div>

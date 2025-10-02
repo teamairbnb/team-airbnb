@@ -5,21 +5,32 @@ import logotext from "../assets/logotext.svg";
 import usericon from "../assets/usericon.svg";
 import notificon from "../assets/notificon.svg";
 import search from "../assets/search.svg";
-import car from "../assets/smcar.svg";
-import plane from "../assets/grayplane.svg";
-import location from "../assets/graylocation.svg";
+import carActive from "../assets/smcar.svg";
+import carInactive from "../assets/nonactivecar.svg";
+import planeActive from "../assets/activeplane.svg";
+import planeInactive from "../assets/grayplane.svg";
+import locationActive from "../assets/activelocation.svg";
+import locationInactive from "../assets/graylocation.svg";
 import centeredmenu from "../assets/centeredmenu.svg";
 import AvailableCarCard from "../components/AvailableCarCard";
 import Footer from "../components/Footer";
 
 export default function CustomerHomePage() {
   const categoriesData = [
-    { icon: car, label: "All" },
-    { icon: plane, label: "Airport" },
-    { icon: location, label: "Nearby" },
-    { icon: location, label: "Taxi" },
-    { icon: plane, label: "Flight" },
-    { icon: location, label: "Hotel" },
+    { label: "All", activeIcon: carActive, inactiveIcon: carInactive },
+    { label: "Airport", activeIcon: planeActive, inactiveIcon: planeInactive },
+    {
+      label: "Nearby",
+      activeIcon: locationActive,
+      inactiveIcon: locationInactive,
+    },
+    { label: "Taxi", activeIcon: carActive, inactiveIcon: carInactive },
+    { label: "Flight", activeIcon: planeActive, inactiveIcon: planeInactive },
+    {
+      label: "Hotel",
+      activeIcon: locationActive,
+      inactiveIcon: locationInactive,
+    },
   ];
 
   const [activeCategory, setActiveCategory] = useState("All");
@@ -86,13 +97,11 @@ export default function CustomerHomePage() {
               key={index}
               onClick={() => setActiveCategory(category.label)}
               className={`cursor-pointer min-w-[calc(33.333%-8px)] snap-start py-[14px] flex justify-center rounded-[10px] items-center ${
-                isActive
-                  ? "bg-[#2563EB] text-white"
-                  : "bg-white text-[#6B7280]"
+                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"
               }`}
             >
               <img
-                src={category.icon}
+                src={isActive ? category.activeIcon : category.inactiveIcon}
                 alt={category.label}
                 className="mr-[8px]"
               />
@@ -115,7 +124,8 @@ export default function CustomerHomePage() {
           <div className="text-gray-600 text-center py-10">
             <p className="font-semibold text-lg">{activeCategory}</p>
             <p className="text-sm mt-2">
-              No results for <span className="font-medium">{activeCategory}</span>
+              No results for{" "}
+              <span className="font-medium">{activeCategory}</span>
             </p>
           </div>
         )}

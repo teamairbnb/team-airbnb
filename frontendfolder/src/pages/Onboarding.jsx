@@ -1,9 +1,10 @@
-import logo from "../assets/logo.png";
+import logo from "../assets/images/logo.png";
+import bg from "../assets/images/bg.png";
 function Onboarding() {
   return (
     <div
       className="flex flex-col bg-cover bg-repeat  items-center h-screen w-screen"
-      style={{ backgroundImage: "url('/images/bg.png')" }}
+      style={{ backgroundImage: `url(${bg})` }}
     >
       <div className="flex flex-col items-center w-full h-full">
         <img src={logo} alt="App logo" className="w-[123px] h-[118px] mt-[79px]" />

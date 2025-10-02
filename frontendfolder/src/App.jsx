@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import './index.css'
-import Onboarding from './components/Onboarding'
+import Onboarding from './pages/Onboarding'
 function App() {
 
   return (

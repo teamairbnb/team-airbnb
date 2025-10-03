@@ -449,6 +449,7 @@ paths:
     post:
       operationId: auth_jwt_create_create
       description: |-
+        This is for login.
         Takes a set of user credentials and returns an access and refresh JSON web
         token pair to prove the authentication of those credentials.
       tags:
@@ -548,6 +549,7 @@ paths:
                 $ref: '#/components/schemas/PaginatedCustomUserList'
           description: ''
     post:
+      description: 'This endpoint allows for registration of a new user.'
       operationId: auth_users_create
       tags:
       - auth

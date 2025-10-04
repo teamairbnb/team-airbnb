@@ -7,7 +7,7 @@ import CodeVerification from "./pages/CodeVerification";
 import VerificationSuccess from "./pages/VerificationSuccess";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import Login from './pages/Login'
-
+import Signup from './pages/Signup'
 
 function App() {
   return (
@@ -16,9 +16,10 @@ function App() {
       <Routes>
         <Route path="/" element={<Onboarding />} />
         <Route path="/Login" element={<Login />} />
+        <Route path="/Signup" element={<Signup />} />
+        <Route path="/CodeVerification" element={<CodeVerification />} />
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
-        <Route path="/CodeVerification" element={<CodeVerification />} />
       </Routes>
     </BrowserRouter>
     </>

@@ -1,8 +1,11 @@
 import Logo from "../components/Logo.jsx";
 import { useState } from "react";
 import Button from "../components/Button.jsx";
+import { useNavigate } from "react-router-dom";
 
 function Login() {
+  const navigate = useNavigate();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
@@ -35,7 +38,7 @@ function Login() {
         <div className="text-left mb-4">
           <h1 className="font-semibold text-xl">Sign in to your account</h1>
           <p className="text-sm">
-            Don't have an account? <span className="text-blue-600">Sign Up</span>
+            Don't have an account? <span className="text-blue-600" onClick={() => (window.location.href = "/Signup")}>Sign Up</span>
           </p>
         </div>
 
@@ -88,7 +91,7 @@ function Login() {
           </div>
 
           <div className="mt-5">
-            <Button text="Sign in" type="submit" className="w-full max-w-[350px]" />
+            <Button onClick={() => navigate("/CodeVerification")} text="Sign in" type="submit" className="w-full max-w-[350px]" />
           </div>
         </form>
       </div>

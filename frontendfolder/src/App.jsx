@@ -21,7 +21,6 @@ function App() {
         <Route path="/CodeVerification" element={<CodeVerification />} />
       </Routes>
     </BrowserRouter>
-      
     </>
   );
 }

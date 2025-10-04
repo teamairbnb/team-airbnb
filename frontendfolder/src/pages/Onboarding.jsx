@@ -1,5 +1,5 @@
-import logo from "../assets/images/logo.png";
-import bg from "../assets/images/bg.png";
+import logo from "../assets/logo.png";
+import bg from "../assets/bg.png";
 function Onboarding() {
   return (
     <div

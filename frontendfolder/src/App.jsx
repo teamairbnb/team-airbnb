@@ -1,14 +1,26 @@
-import React from 'react'
-import './App.css'
-import './index.css'
+import React from "react";
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import "./App.css";
+import "./index.css";
 import Onboarding from './pages/Onboarding'
-function App() {
+import CodeVerification from "./pages/CodeVerification";
+import VerificationSuccess from "./pages/VerificationSuccess";
+import CustomerHomePage from "./pages/CustomerHomePage";
 
+
+function App() {
   return (
     <>
-      <Onboarding />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Onboarding />} />
+        <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
+        <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
+        <Route path="/CodeVerification" element={<CodeVerification />} />
+      </Routes>
+    </BrowserRouter>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

@@ -13,27 +13,60 @@ import locationActive from "../assets/activelocation.svg";
 import locationInactive from "../assets/graylocation.svg";
 import centeredmenu from "../assets/centeredmenu.svg";
 import AvailableCarCard from "../components/AvailableCarCard";
-import Footer from "../components/Footer";
+import CarFilterMenu from "../components/CarFilterMenu";
 
 export default function CustomerHomePage() {
   const categoriesData = [
     { label: "All", activeIcon: carActive, inactiveIcon: carInactive },
     { label: "Airport", activeIcon: planeActive, inactiveIcon: planeInactive },
-    {
-      label: "Nearby",
-      activeIcon: locationActive,
-      inactiveIcon: locationInactive,
-    },
+    { label: "Nearby", activeIcon: locationActive, inactiveIcon: locationInactive },
     { label: "Taxi", activeIcon: carActive, inactiveIcon: carInactive },
     { label: "Flight", activeIcon: planeActive, inactiveIcon: planeInactive },
-    {
-      label: "Hotel",
-      activeIcon: locationActive,
-      inactiveIcon: locationInactive,
-    },
+    { label: "Hotel", activeIcon: locationActive, inactiveIcon: locationInactive },
+  ];
+
+  // mock cars data
+  const cars = [
+    { id: 1, name: "Mercedes Benz 480", type: "SUV", year: 2022, price: 500 },
+    { id: 2, name: "Toyota Corolla", type: "Sedan", year: 2020, price: 300 },
+    { id: 3, name: "Ford F-150", type: "Truck", year: 2025, price: 600 },
+    { id: 4, name: "Honda Odyssey", type: "Family Car", year: 2019, price: 200 },
+    { id: 5, name: "BMW X5", type: "SUV", year: 2023, price: 550 },
+    { id: 6, name: "Kia Rio", type: "Hatchback", year: 2021, price: 250 },
+    { id: 7, name: "Audi A6", type: "Sedan", year: 2022, price: 400 },
+    { id: 8, name: "Lexus GX460", type: "SUV", year: 2020, price: 480 },
   ];
 
   const [activeCategory, setActiveCategory] = useState("All");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [filteredCars, setFilteredCars] = useState(cars.slice(0, 8));
+
+  const handleApplyFilters = ({ carYear, priceRange, carType }) => {
+    let results = cars;
+
+    if (carType) {
+      results = results.filter((c) => c.type === carType);
+    }
+    if (carYear) {
+      results = results.filter((c) => c.year === carYear);
+    }
+    if (priceRange) {
+      const [min, max] = priceRange.replace(/\$/g, "").split("-").map((p) => parseInt(p));
+      results = results.filter((c) => c.price >= min && c.price <= max);
+    }
+
+    if (!carType && !carYear && !priceRange) {
+      results = cars;
+    }
+
+    setFilteredCars(results);
+  };
+
+  // handles reset
+  const handleResetFilters = () => {
+    setFilteredCars(cars);
+  };
 
   return (
     <>
@@ -43,7 +76,9 @@ export default function CustomerHomePage() {
         style={{ backgroundImage: `url(${homebg})` }}
       >
         <div className="absolute inset-0 bg-black/40"></div>
+
         <div className="relative z-10 flex flex-col h-full text-white px-[16px] pt-[8px]">
+          {/* Header */}
           <div className="flex justify-between">
             <div className="flex">
               <img className="w-[24px] mr-[16px]" src={menu} alt="" />
@@ -55,6 +90,7 @@ export default function CustomerHomePage() {
             </div>
           </div>
 
+          {/* Title */}
           <div className="flex flex-col items-center mt-[24px]">
             <div className="font-semibold text-center text-[35px] leading-10">
               <p>Don't Rent A Car</p>
@@ -63,6 +99,7 @@ export default function CustomerHomePage() {
             <p className="mt-3">Premium car rental all at affordable rate</p>
           </div>
 
+          {/* Search Box */}
           <div className="mt-[24px] mb-[34px] bg-white rounded-[10px] h-[170px] py-[24px] px-[16px]">
             <div className="flex justify-between gap-[16px]">
               <div className="relative w-full">
@@ -77,10 +114,17 @@ export default function CustomerHomePage() {
                   className="border border-[#D3D3D3] rounded-[5px] py-[11px] pl-[45px] pr-[16px] w-full tracking-wide text-[#111827] focus:outline-none focus:border-[#2563EB] placeholder-[#111827]"
                 />
               </div>
-              <div className="border border-[#D3D3D3] p-[10px] rounded-[5px]">
-                <img className="w-[31px]" src={centeredmenu} alt="" />{" "}
-              </div>
+
+              {/* Menu Button */}
+              <button
+                onClick={() => setMenuOpen(true)}
+                className="border border-[#D3D3D3] p-[10px] rounded-[5px] bg-white"
+                aria-label="Open menu"
+              >
+                <img className="w-[31px]" src={centeredmenu} alt="Menu" />
+              </button>
             </div>
+
             <button className="bg-[#2563EB] mt-[24px] w-full tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px]">
               Search anywhere
             </button>
@@ -97,8 +141,8 @@ export default function CustomerHomePage() {
               key={index}
               onClick={() => setActiveCategory(category.label)}
               className={`cursor-pointer min-w-[calc(33.333%-8px)] snap-start py-[14px] flex justify-center rounded-[10px] items-center ${
-                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"
-              }`}
+                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"}
+              `}
             >
               <img
                 src={isActive ? category.activeIcon : category.inactiveIcon}
@@ -111,27 +155,23 @@ export default function CustomerHomePage() {
         })}
       </div>
 
+      {/* Available Car Cards */}
       <div className="flex flex-col items-center mt-[24px] px-[16px]">
-        {activeCategory === "All" ? (
-          <>
-            <AvailableCarCard />
-            <AvailableCarCard />
-            <AvailableCarCard />
-            <AvailableCarCard />
-            <AvailableCarCard />
-          </>
+        {filteredCars.length > 0 ? (
+          filteredCars.map((car) => <AvailableCarCard key={car.id} car={car} />)
         ) : (
           <div className="text-gray-600 text-center py-10">
-            <p className="font-semibold text-lg">{activeCategory}</p>
-            <p className="text-sm mt-2">
-              No results for{" "}
-              <span className="font-medium">{activeCategory}</span>
-            </p>
+            <p className="font-semibold text-lg">We do not have a car with these attributes</p>
           </div>
         )}
       </div>
 
-      <Footer />
+      <CarFilterMenu
+        isOpen={menuOpen}
+        onClose={() => setMenuOpen(false)}
+        onApply={handleApplyFilters}
+        onReset={handleResetFilters} 
+      />
     </>
   );
 }

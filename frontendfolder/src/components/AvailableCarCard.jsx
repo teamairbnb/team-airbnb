@@ -1,7 +1,10 @@
 import React from "react";
 import mercedes from "../assets/mercedes.svg";
+import { useNavigate } from "react-router-dom";
 
 export default function AvailableCarCard({ car }) {
+  const navigate = useNavigate();
+
   return (
     <div className="w-full rounded-[10px] bg-white mb-[25px] shadow-lg">
       <img className="w-full" src={car.image || mercedes} alt={car.name} />
@@ -11,9 +14,9 @@ export default function AvailableCarCard({ car }) {
         <div className="text-[#6B7280] mt-[3px] flex font-semibold items-center gap-[4px] text-[12px]">
           <p>{car.type}</p>
           <p className="-mt-2">.</p>
-          <p>Auto</p>
+          <p>{car.mode}</p>
           <p className="-mt-2">.</p>
-          <p>{car.seats || 5} Seats</p>
+          <p>{car.seatnum} Seats</p>
           <p className="-mt-2">.</p>
           <p>{car.year}</p>
         </div>
@@ -24,7 +27,10 @@ export default function AvailableCarCard({ car }) {
           <p>
             ${car.price} <span>/d</span>
           </p>
-          <button className="bg-[#2563EB] tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px] px-[21px]">
+          <button
+            onClick={() => navigate("/car-booking", { state: { car } })}
+            className="bg-[#2563EB] tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px] px-[21px]"
+          >
             Reserve Now
           </button>
         </div>

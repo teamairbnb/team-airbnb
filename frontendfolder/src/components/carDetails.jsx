@@ -68,9 +68,9 @@ export default function CarBookingScreen() {
           />
           <Link
             to="/CustomerHomePage"
-            className="absolute top-4 left-4 flex items-center gap-2 text-gray-600 py-[10px] pl-[14px] pr-[6px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
+            className="absolute top-4 left-4 flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
           >
-            <img src={back} alt="Back" />
+            <img className="w-4" src={back} alt="Back" />
           </Link>
         </div>
 

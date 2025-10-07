@@ -5,7 +5,7 @@ export default function EditField({ title, value: initialValue = "" }) {
   const [isEditable, setIsEditable] = useState(false);
   const [value, setValue] = useState(initialValue);
 
-  // Update field if prop changes (important when data comes from route)
+  // Update field if prop changes 
   useEffect(() => {
     setValue(initialValue);
   }, [initialValue]);

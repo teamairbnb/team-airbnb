@@ -58,9 +58,9 @@ export default function ReviewBooking() {
       <div>
         <Link
           to="/PickUp"
-          className="inline-flex items-center gap-2 text-gray-600 py-[10px] pl-[14px] pr-[6px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
+          className="inline-flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
         >
-          <img src={back} alt="Back" />
+          <img className="w-4" src={back} alt="Back" />
         </Link>
 
         <p className="font-bold mt-[20px] text-[25px]">Review your booking</p>
@@ -113,7 +113,7 @@ export default function ReviewBooking() {
           <div className="flex items-center gap-[8px]">
             <input
               type="radio"
-              name="textPreference"
+              name="textMessagePreference"
               className="w-5 h-5 accent-[#2563EB]"
             />
             <div className="text-[12px]">
@@ -127,7 +127,7 @@ export default function ReviewBooking() {
           <div className="flex items-center gap-[8px] mt-4">
             <input
               type="radio"
-              name="textPreference"
+              name="textMessagePreference"
               className="w-5 h-5 accent-[#2563EB]"
             />
             <div className="text-[12px]">

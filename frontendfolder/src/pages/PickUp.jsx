@@ -31,9 +31,9 @@ export default function PickUp() {
       <div>
         <Link
           to="/car-booking"
-          className="inline-flex items-center gap-2 text-gray-600 py-[10px] pl-[14px] pr-[6px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
+          className="inline-flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
         >
-          <img src={back} alt="Back" />
+          <img className="w-4" src={back} alt="Back" />
         </Link>
 
         <p className="font-bold mt-[20px] text-[25px]">Select pick-up</p>

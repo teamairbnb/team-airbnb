@@ -9,7 +9,6 @@ import VerificationSuccess from "./pages/VerificationSuccess";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import UserProfile from "./components/UserProfile";
 
 function App() {
   return (
@@ -22,7 +21,6 @@ function App() {
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/CarBooking" element={<CarBookingScreen />} />
-        <Route path="/UserProfile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   );

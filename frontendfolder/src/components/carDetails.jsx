@@ -110,7 +110,7 @@ export default function CarBookingScreen() {
               Booking option
             </h2>
 
-            {/* Best Price */}
+            {/* Price */}
             <div
               onClick={() => setSelectedBooking("best")}
               className={`border-2 rounded-2xl p-4 mb-3 cursor-pointer transition ${
@@ -231,6 +231,7 @@ export default function CarBookingScreen() {
 
             <Link
               to="/PickUp"
+              state={{ carName: currentCar?.name }}
               className="block w-full my-4 bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"
             >
               Next

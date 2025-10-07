@@ -1,13 +1,30 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { Info } from "lucide-react";
 import back from "../assets/back.svg";
 
 export default function PickUp() {
-  const [pickUpDate, setPickUpDate] = useState("mm/dd/yyyy");
-  const [pickUpTime, setPickUpTime] = useState("12:00");
-  const [returnDate, setReturnDate] = useState("mm/dd/yyyy");
-  const [returnTime, setReturnTime] = useState("12:00");
+  const location = useLocation();
+  const carName = location.state?.carName || "";
+
+  const [pickUpDate, setPickUpDate] = useState("");
+  const [pickUpTime, setPickUpTime] = useState("");
+  const [returnDate, setReturnDate] = useState("");
+  const [returnTime, setReturnTime] = useState("");
+
+  const navigate = useNavigate();
+
+  const handleNext = () => {
+    navigate("/ReviewBooking", {
+      state: {
+        pickUpDate,
+        pickUpTime,
+        returnDate,
+        returnTime,
+        carName, 
+      },
+    });
+  };
 
   return (
     <div className="p-[16px] text-[#111827] tracking-wide min-h-screen flex flex-col justify-between">
@@ -82,12 +99,12 @@ export default function PickUp() {
         </div>
       </div>
 
-      <Link
-        to="/ReviewBooking"
+      <button
+        onClick={handleNext}
         className="block w-full my-4 bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"
       >
         Next
-      </Link>
+      </button>
     </div>
   );
 }

@@ -9,6 +9,9 @@ import VerificationSuccess from "./pages/VerificationSuccess";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import PickUp from "./pages/PickUp";
+import ReviewBooking from "./pages/ReviewBooking";
+import DrivingSecurity from "./pages/DrivingSecurity";
 import UserProfile from "./pages/UserProfile";
 
 function App() {
@@ -22,6 +25,9 @@ function App() {
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/car-booking" element={<CarBookingScreen />} />
+        <Route path="/PickUp" element={<PickUp />} />
+        <Route path="/ReviewBooking" element={<ReviewBooking />} />
+        <Route path="/DrivingSecurity" element={<DrivingSecurity />} />
         <Route path="/UserProfile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>

@@ -12,8 +12,20 @@ import planeInactive from "../assets/grayplane.svg";
 import locationActive from "../assets/activelocation.svg";
 import locationInactive from "../assets/graylocation.svg";
 import centeredmenu from "../assets/centeredmenu.svg";
+import logo_textblack from "../assets/logo_textblack.svg";
+import smblackcar from "../assets/smblackcar.svg";
+import bookicon from "../assets/bookicon.svg";
+import blackusericon from "../assets/blackusericon.svg";
+import blackchaticon from "../assets/blackchaticon.svg";
+import blacknotificon from "../assets/blacknotificon.svg";
+import settingsicon from "../assets/settingsicon.svg";
+
+
+
+
 import AvailableCarCard from "../components/AvailableCarCard";
 import CarFilterMenu from "../components/CarFilterMenu";
+
 
 export default function CustomerHomePage() {
   const categoriesData = [
@@ -25,7 +37,6 @@ export default function CustomerHomePage() {
     { label: "Hotel", activeIcon: locationActive, inactiveIcon: locationInactive },
   ];
 
-  // mock cars data
   const cars = [
     { id: 1, name: "Mercedes Benz 480", type: "SUV", year: 2022, price: 500, mode: "Auto", seatnum: "5" },
     { id: 2, name: "Toyota Corolla", type: "Sedan", year: 2020, price: 300, mode: "Manual", seatnum: "5" },
@@ -38,38 +49,80 @@ export default function CustomerHomePage() {
   ];
 
   const [activeCategory, setActiveCategory] = useState("All");
-  const [menuOpen, setMenuOpen] = useState(false);
-
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [filteredCars, setFilteredCars] = useState(cars.slice(0, 8));
 
   const handleApplyFilters = ({ carYear, priceRange, carType }) => {
     let results = cars;
-
-    if (carType) {
-      results = results.filter((c) => c.type === carType);
-    }
-    if (carYear) {
-      results = results.filter((c) => c.year === carYear);
-    }
+    if (carType) results = results.filter((c) => c.type === carType);
+    if (carYear) results = results.filter((c) => c.year === carYear);
     if (priceRange) {
       const [min, max] = priceRange.replace(/\$/g, "").split("-").map((p) => parseInt(p));
       results = results.filter((c) => c.price >= min && c.price <= max);
     }
-
-    if (!carType && !carYear && !priceRange) {
-      results = cars;
-    }
-
+    if (!carType && !carYear && !priceRange) results = cars;
     setFilteredCars(results);
   };
 
-  // handles reset
-  const handleResetFilters = () => {
-    setFilteredCars(cars);
-  };
+  const handleResetFilters = () => setFilteredCars(cars);
 
   return (
     <>
+      {/* Sidebar Overlay */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
+      )}
+
+      {/* Sliding Sidebar Menu */}
+      <div
+        className={`fixed top-0 left-0 h-full w-[260px] bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        <div className=" pt-[57px]">
+          <button
+            className="text-gray-500 mb-[36px] px-[35px] font-semibold"
+            onClick={() => setSidebarOpen(false)}
+          >
+            <img className="w-16" src={logo_textblack} alt="" />
+          </button>
+          <ul className="space-y-[8px] text-[#111827] font-semibold tracking-wide">
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] bg-[#DEE8FC] p-[16px] flex">
+              <img className="w-[22px]" src={smblackcar} alt="" />
+              <p>Browse car</p>
+            </li>
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
+              <img className="w-[22px]" src={smblackcar} alt="" />
+              <p>Dashboard</p>
+            </li>
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
+              <img className="w-[22px]" src={bookicon} alt="" />
+              <p>My Booking</p>
+            </li>
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
+              <img className="w-[22px]" src={blackusericon} alt="" />
+              <p>Profile</p>
+            </li>
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
+              <img className="w-[22px]" src={blackchaticon} alt="" />
+              <p>Chat</p>
+            </li>
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
+              <img className="w-[22px]" src={blacknotificon} alt="" />
+              <p>Notification</p>
+            </li>
+            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
+              <img className="w-[22px]" src={settingsicon} alt="" />
+              <p>Settings</p>
+            </li>
+          </ul>
+        </div>
+      </div>
+
       {/* Hero Section */}
       <div
         className="relative w-full bg-cover bg-center"
@@ -80,8 +133,14 @@ export default function CustomerHomePage() {
         <div className="relative z-10 flex flex-col h-full text-white px-[16px] pt-[8px]">
           {/* Header */}
           <div className="flex justify-between">
-            <div className="flex">
-              <img className="w-[24px] mr-[16px]" src={menu} alt="" />
+            <div className="flex items-center">
+              {/* 🔹 Menu icon triggers sidebar */}
+              <img
+                className="w-[24px] mr-[16px] cursor-pointer"
+                src={menu}
+                alt="Menu"
+                onClick={() => setSidebarOpen(true)}
+              />
               <img src={logotext} alt="" />
             </div>
             <div className="flex items-center gap-[23px]">
@@ -115,11 +174,9 @@ export default function CustomerHomePage() {
                 />
               </div>
 
-              {/* Menu Button */}
               <button
-                onClick={() => setMenuOpen(true)}
+                onClick={() => setFilterMenuOpen(true)} // 👈 Opens filter, not sidebar
                 className="border border-[#D3D3D3] p-[10px] rounded-[5px] bg-white"
-                aria-label="Open menu"
               >
                 <img className="w-[31px]" src={centeredmenu} alt="Menu" />
               </button>
@@ -132,7 +189,7 @@ export default function CustomerHomePage() {
         </div>
       </div>
 
-      {/* Slider */}
+      {/* Category Slider */}
       <div className="mt-[24px] mx-[16px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide">
         {categoriesData.map((category, index) => {
           const isActive = activeCategory === category.label;
@@ -141,8 +198,8 @@ export default function CustomerHomePage() {
               key={index}
               onClick={() => setActiveCategory(category.label)}
               className={`cursor-pointer min-w-[calc(33.333%-8px)] snap-start py-[14px] flex justify-center rounded-[10px] items-center ${
-                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"}
-              `}
+                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"
+              }`}
             >
               <img
                 src={isActive ? category.activeIcon : category.inactiveIcon}
@@ -155,7 +212,7 @@ export default function CustomerHomePage() {
         })}
       </div>
 
-      {/* Available Car Cards */}
+      {/* Cars */}
       <div className="flex flex-col items-center mt-[24px] px-[16px]">
         {filteredCars.length > 0 ? (
           filteredCars.map((car) => <AvailableCarCard key={car.id} car={car} />)
@@ -166,11 +223,12 @@ export default function CustomerHomePage() {
         )}
       </div>
 
+      {/* Car Filter Menu */}
       <CarFilterMenu
-        isOpen={menuOpen}
-        onClose={() => setMenuOpen(false)}
+        isOpen={filterMenuOpen}
+        onClose={() => setFilterMenuOpen(false)}
         onApply={handleApplyFilters}
-        onReset={handleResetFilters} 
+        onReset={handleResetFilters}
       />
     </>
   );

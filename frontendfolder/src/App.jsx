@@ -12,9 +12,13 @@ import Signup from "./pages/Signup";
 import PickUp from "./pages/PickUp";
 import ReviewBooking from "./pages/ReviewBooking";
 import DrivingSecurity from "./pages/DrivingSecurity";
+<<<<<<< HEAD
 import BookingDetails from "./pages/BookingDetails";
 import BusinessOwnerDashboard from "./pages/BusinessOwnerDashboard";
 import Cars from "./components/Cars";
+=======
+import UserProfile from "./pages/UserProfile";
+>>>>>>> 57c654daff427edab936ba66a671397171348754
 
 function App() {
   return (
@@ -30,9 +34,13 @@ function App() {
         <Route path="/PickUp" element={<PickUp />} />
         <Route path="/ReviewBooking" element={<ReviewBooking />} />
         <Route path="/DrivingSecurity" element={<DrivingSecurity />} />
+<<<<<<< HEAD
         <Route path="/BookingDetails" element={<BookingDetails />} />
         <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
         <Route path="/Cars" element={<Cars />} />
+=======
+        <Route path="/UserProfile" element={<UserProfile />} />
+>>>>>>> 57c654daff427edab936ba66a671397171348754
       </Routes>
     </BrowserRouter>
   );

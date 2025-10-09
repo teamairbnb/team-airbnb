@@ -2,7 +2,6 @@ import React from "react";
 import greencheck from "../assets/greencheck.svg";
 
 export default function DrivingSecurityCard({ title, description, img, features = [], price }) {
-  // Conditional styles
   const isNoFeatures = features.length === 0;
 
   return (

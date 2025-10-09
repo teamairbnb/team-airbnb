@@ -12,6 +12,7 @@ import Signup from "./pages/Signup";
 import PickUp from "./pages/PickUp";
 import ReviewBooking from "./pages/ReviewBooking";
 import DrivingSecurity from "./pages/DrivingSecurity";
+import UserProfile from "./pages/UserProfile";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/PickUp" element={<PickUp />} />
         <Route path="/ReviewBooking" element={<ReviewBooking />} />
         <Route path="/DrivingSecurity" element={<DrivingSecurity />} />
+        <Route path="/UserProfile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   );

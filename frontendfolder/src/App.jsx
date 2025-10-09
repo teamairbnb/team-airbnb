@@ -12,6 +12,9 @@ import Signup from "./pages/Signup";
 import PickUp from "./pages/PickUp";
 import ReviewBooking from "./pages/ReviewBooking";
 import DrivingSecurity from "./pages/DrivingSecurity";
+import BookingDetails from "./pages/BookingDetails";
+import BusinessOwnerDashboard from "./pages/BusinessOwnerDashboard";
+import Cars from "./components/Cars";
 
 function App() {
   return (
@@ -27,6 +30,9 @@ function App() {
         <Route path="/PickUp" element={<PickUp />} />
         <Route path="/ReviewBooking" element={<ReviewBooking />} />
         <Route path="/DrivingSecurity" element={<DrivingSecurity />} />
+        <Route path="/BookingDetails" element={<BookingDetails />} />
+        <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
+        <Route path="/Cars" element={<Cars />} />
       </Routes>
     </BrowserRouter>
   );

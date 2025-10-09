@@ -20,9 +20,6 @@ import blackchaticon from "../assets/blackchaticon.svg";
 import blacknotificon from "../assets/blacknotificon.svg";
 import settingsicon from "../assets/settingsicon.svg";
 
-
-
-
 import AvailableCarCard from "../components/AvailableCarCard";
 import CarFilterMenu from "../components/CarFilterMenu";
 

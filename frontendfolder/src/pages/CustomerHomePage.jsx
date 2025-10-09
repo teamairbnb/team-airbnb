@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom"; // ✅ include location
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import homebg from "../assets/homebg.jpg";
 import menu from "../assets/menu.svg";
 import logotext from "../assets/logotext.svg";
@@ -26,7 +26,7 @@ import CarFilterMenu from "../components/CarFilterMenu";
 
 export default function CustomerHomePage() {
   const navigate = useNavigate();
-  const location = useLocation(); // ✅ for active route detection
+  const location = useLocation(); 
 
   const categoriesData = [
     { label: "All", activeIcon: carActive, inactiveIcon: carInactive },
@@ -142,7 +142,6 @@ export default function CustomerHomePage() {
 
   const handleResetFilters = () => setFilteredCars(cars);
 
-  // ✅ Sidebar menu configuration
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
     { label: "Dashboard", icon: smblackcar, path: "/Dashboard" },

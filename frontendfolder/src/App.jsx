@@ -9,7 +9,10 @@ import VerificationSuccess from "./pages/VerificationSuccess";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-
+import PaymentDetails from "./pages/PaymentDetails";
+import BookingSuccess from "./pages/BookingSuccess";
+import MyBookings from "./pages/MyBookings";
+import NoBookings from "./pages/NoBookings";
 function App() {
   return (
     <BrowserRouter>
@@ -21,6 +24,10 @@ function App() {
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/car-booking" element={<CarBookingScreen />} />
+        <Route path="/payment" element={<PaymentDetails />} />
+        <Route path="/bookingsuccess" element={<BookingSuccess />} />
+        <Route path="/mybookings" element={<MyBookings />} />
+        <Route path="/nobookings" element={<NoBookings />} />
       </Routes>
     </BrowserRouter>
   );

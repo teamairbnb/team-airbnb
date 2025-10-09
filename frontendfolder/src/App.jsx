@@ -13,6 +13,11 @@ import PaymentDetails from "./pages/PaymentDetails";
 import BookingSuccess from "./pages/BookingSuccess";
 import MyBookings from "./pages/MyBookings";
 import NoBookings from "./pages/NoBookings";
+import PickUp from "./pages/PickUp";
+import ReviewBooking from "./pages/ReviewBooking";
+import DrivingSecurity from "./pages/DrivingSecurity";
+import UserProfile from "./pages/UserProfile";
+
 function App() {
   return (
     <BrowserRouter>
@@ -28,6 +33,10 @@ function App() {
         <Route path="/bookingsuccess" element={<BookingSuccess />} />
         <Route path="/mybookings" element={<MyBookings />} />
         <Route path="/nobookings" element={<NoBookings />} />
+        <Route path="/PickUp" element={<PickUp />} />
+        <Route path="/ReviewBooking" element={<ReviewBooking />} />
+        <Route path="/DrivingSecurity" element={<DrivingSecurity />} />
+        <Route path="/UserProfile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>
   );

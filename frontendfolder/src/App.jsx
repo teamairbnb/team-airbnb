@@ -17,6 +17,7 @@ import PickUp from "./pages/PickUp";
 import ReviewBooking from "./pages/ReviewBooking";
 import DrivingSecurity from "./pages/DrivingSecurity";
 import UserProfile from "./pages/UserProfile";
+import FetchCarDetails from "./components/FetchCarDetails";
 
 function App() {
   return (
@@ -28,14 +29,18 @@ function App() {
         <Route path="/CodeVerification" element={<CodeVerification />} />
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
-        <Route path="/car-booking" element={<CarBookingScreen />} />
-        <Route path="/payment" element={<PaymentDetails />} />
-        <Route path="/bookingsuccess" element={<BookingSuccess />} />
-        <Route path="/mybookings" element={<MyBookings />} />
-        <Route path="/nobookings" element={<NoBookings />} />
-        <Route path="/PickUp" element={<PickUp />} />
-        <Route path="/ReviewBooking" element={<ReviewBooking />} />
-        <Route path="/DrivingSecurity" element={<DrivingSecurity />} />
+
+        <Route path="/book/:carId" element={<FetchCarDetails />}>
+          <Route path="/book/:carId/car-booking" element={<CarBookingScreen />} />
+          <Route path="/book/:carId/PickUp" element={<PickUp />} />
+          <Route path="/book/:carId/ReviewBooking" element={<ReviewBooking />} />
+          <Route path="/book/:carId/DrivingSecurity" element={<DrivingSecurity />} />
+          <Route path="/book/:carId/PaymentDetails" element={<PaymentDetails />} />
+          <Route path="/book/:carId/BookingSuccess" element={<BookingSuccess />} />
+        </Route>
+
+        <Route path="/NoBookings" element={<NoBookings />} />
+        <Route path="/MyBookings" element={<MyBookings />} />
         <Route path="/UserProfile" element={<UserProfile />} />
       </Routes>
     </BrowserRouter>

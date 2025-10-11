@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NavBar from "../components/NavBar.jsx";
-import mercedes from "../assets/mercedes.svg";
+import mercedes from "../assets/bookingcarimg.svg";
 import Button from "../components/Button.jsx";
 
 function MyBookings() {
@@ -61,7 +61,7 @@ function MyBookings() {
       <div className="flex items-center justify-between w-full max-w-[400px] mt-6 px-4">
         <h1 className="text-xl font-bold">My Booking</h1>
         <button
-          onClick={() => navigate("/add-booking")}
+          onClick={() => navigate("/CustomerHomePage")}
           className="text-blue-600 border border-blue-600 rounded-md px-3 py-2 font-medium"
         >
           + Add Booking
@@ -86,24 +86,23 @@ function MyBookings() {
       </div>
 
       {/* Car list */}
-      <div className="flex flex-col gap-4 mt-6 w-full max-w-[600px]">
+      <div className="flex flex-col gap-4 mt-6 w-[350px]">
         {filtered.length > 0 ? (
           filtered.map((car) => (
             <div
               key={car.id}
-              className="flex items-center gap-4 px-3 py-4 border rounded-lg shadow-md w-full"
+              className="flex items-center gap-6 px-3 py-4 border rounded-lg shadow-md w-full"
             >
               {/* Car image */}
-              <div className="flex-shrink-0 w-[40%] mb-12 h- flex justify-center items-center">
+              <div className="flex-shrink-0 w-[40%] flex justify-center items-center">
                 <img
                   src={car.image}
                   alt={car.name}
-                  className="w-full h-full object-contain"
                 />
               </div>
 
               {/* Details */}
-              <div className="flex flex-col justify-between w-[55%] mt-2">
+              <div className="flex flex-col justify-between w-[50%] mt-2">
                 <p className="font-semibold text-gray-900">{car.name}</p>
                 <p className="text-xs text-gray-500">{car.date}</p>
 

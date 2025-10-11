@@ -11,7 +11,7 @@ function Slider({ currentStep = 6, totalSteps = 6}) {
    
       <button
         type="button"
-        onClick={() => navigate(-1)}
+        onClick={() => navigate("/DrivingSecurity")}
         className="p-2  bg-[#D3D3D399] rounded"
       >
         <ChevronLeft size={20} className="text-gray-700" />

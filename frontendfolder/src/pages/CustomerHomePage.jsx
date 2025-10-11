@@ -6,12 +6,6 @@ import logotext from "../assets/logotext.svg";
 import usericon from "../assets/usericon.svg";
 import notificon from "../assets/notificon.svg";
 import search from "../assets/search.svg";
-import carActive from "../assets/smcar.svg";
-import carInactive from "../assets/nonactivecar.svg";
-import planeActive from "../assets/activeplane.svg";
-import planeInactive from "../assets/grayplane.svg";
-import locationActive from "../assets/activelocation.svg";
-import locationInactive from "../assets/graylocation.svg";
 import centeredmenu from "../assets/centeredmenu.svg";
 import logo_textblack from "../assets/logo_textblack.svg";
 import smblackcar from "../assets/smblackcar.svg";
@@ -20,113 +14,21 @@ import blackusericon from "../assets/blackusericon.svg";
 import blackchaticon from "../assets/blackchaticon.svg";
 import blacknotificon from "../assets/blacknotificon.svg";
 import settingsicon from "../assets/settingsicon.svg";
-
 import AvailableCarCard from "../components/AvailableCarCard";
 import CarFilterMenu from "../components/CarFilterMenu";
+import { CARS_DATA, CATEGORY_DATA } from "../utils/cars";
+
 
 export default function CustomerHomePage() {
   const navigate = useNavigate();
   const location = useLocation(); 
-
-  const categoriesData = [
-    { label: "All", activeIcon: carActive, inactiveIcon: carInactive },
-    { label: "Airport", activeIcon: planeActive, inactiveIcon: planeInactive },
-    {
-      label: "Nearby",
-      activeIcon: locationActive,
-      inactiveIcon: locationInactive,
-    },
-    { label: "Taxi", activeIcon: carActive, inactiveIcon: carInactive },
-    { label: "Flight", activeIcon: planeActive, inactiveIcon: planeInactive },
-    {
-      label: "Hotel",
-      activeIcon: locationActive,
-      inactiveIcon: locationInactive,
-    },
-  ];
-
-  const cars = [
-    {
-      id: 1,
-      name: "Mercedes Benz 480",
-      type: "SUV",
-      year: 2022,
-      price: 500,
-      mode: "Auto",
-      seatnum: "5",
-    },
-    {
-      id: 2,
-      name: "Toyota Corolla",
-      type: "Sedan",
-      year: 2020,
-      price: 300,
-      mode: "Manual",
-      seatnum: "5",
-    },
-    {
-      id: 3,
-      name: "Ford F-150",
-      type: "Truck",
-      year: 2025,
-      price: 600,
-      mode: "Manual",
-      seatnum: "2",
-    },
-    {
-      id: 4,
-      name: "Honda Odyssey",
-      type: "Family Car",
-      year: 2019,
-      price: 200,
-      mode: "Auto",
-      seatnum: "5",
-    },
-    {
-      id: 5,
-      name: "BMW X5",
-      type: "SUV",
-      year: 2023,
-      price: 550,
-      mode: "Auto",
-      seatnum: "5",
-    },
-    {
-      id: 6,
-      name: "Kia Rio",
-      type: "Hatchback",
-      year: 2021,
-      price: 250,
-      mode: "Manual",
-      seatnum: "5",
-    },
-    {
-      id: 7,
-      name: "Audi A6",
-      type: "Sedan",
-      year: 2022,
-      price: 400,
-      mode: "Auto",
-      seatnum: "5",
-    },
-    {
-      id: 8,
-      name: "Lexus GX460",
-      type: "SUV",
-      year: 2020,
-      price: 480,
-      mode: "Auto",
-      seatnum: "5",
-    },
-  ];
-
   const [activeCategory, setActiveCategory] = useState("All");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-  const [filteredCars, setFilteredCars] = useState(cars.slice(0, 8));
+  const [filteredCars, setFilteredCars] = useState(CARS_DATA.slice(0, 8));
 
   const handleApplyFilters = ({ carYear, priceRange, carType }) => {
-    let results = cars;
+    let results = CARS_DATA;
     if (carType) results = results.filter((c) => c.type === carType);
     if (carYear) results = results.filter((c) => c.year === carYear);
     if (priceRange) {
@@ -136,11 +38,11 @@ export default function CustomerHomePage() {
         .map((p) => parseInt(p));
       results = results.filter((c) => c.price >= min && c.price <= max);
     }
-    if (!carType && !carYear && !priceRange) results = cars;
+    if (!carType && !carYear && !priceRange) results = CARS_DATA;
     setFilteredCars(results);
   };
 
-  const handleResetFilters = () => setFilteredCars(cars);
+  const handleResetFilters = () => setFilteredCars(CARS_DATA);
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
@@ -271,7 +173,7 @@ export default function CustomerHomePage() {
 
       {/* Category Slider */}
       <div className="mt-[24px] mx-[16px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide">
-        {categoriesData.map((category, index) => {
+        {CATEGORY_DATA.map((category, index) => {
           const isActive = activeCategory === category.label;
           return (
             <div

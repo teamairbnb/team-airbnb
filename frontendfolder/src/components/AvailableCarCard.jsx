@@ -5,9 +5,17 @@ import { useNavigate } from "react-router-dom";
 export default function AvailableCarCard({ car }) {
   const navigate = useNavigate();
 
+  const handleReserve = () => {
+    // Save selected car to localStorage
+    localStorage.setItem("selectedCar", JSON.stringify(car));
+
+    navigate(`/book/${car.id}/car-booking`, { state: { car } });
+  };
+
   return (
     <div className="w-full rounded-[10px] bg-white mb-[25px] shadow-lg">
       <img className="w-full" src={car.image || mercedes} alt={car.name} />
+
       <div className="m-[16px] tracking-wide">
         <p className="font-semibold text-[20px]">{car.name}</p>
 
@@ -28,8 +36,8 @@ export default function AvailableCarCard({ car }) {
             ${car.price} <span>/d</span>
           </p>
           <button
-            onClick={() => navigate("/car-booking", { state: { car } })}
-            className="bg-[#2563EB] tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px] px-[21px]"
+            onClick={handleReserve}
+            className="bg-[#2563EB] tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px] px-[21px] hover:bg-[#1D4ED8] transition-all duration-200"
           >
             Reserve Now
           </button>

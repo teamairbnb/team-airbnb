@@ -13,7 +13,7 @@ function NoBookings() {
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="p-2 bg-[#D3D3D399] rounded"
+          className="p-2 bg-[#D3D3D399] rounded-[10px]"
         >
           <ChevronLeft size={20} className="text-gray-700" />
         </button>
@@ -24,7 +24,7 @@ function NoBookings() {
 
       {/* Add Booking Button */}
       <button
-        onClick={() => navigate("/add-booking")}
+        onClick={() => navigate("/CustomerHomePage")}
         className="text-blue-600 border border-blue-600 rounded-md px-4 w-40 py-2 font-medium mb-12"
       >
         + Add Booking
@@ -43,7 +43,7 @@ function NoBookings() {
             <h1 className="font-semibold text-sm">No new bookings</h1>
             <p className="text-xs">Your upcoming rentals will appear here. Make a new booking today!</p>
             {/*Link to browse cars*/}
-            <p className="text-xs font-semibold underline mt-5">Browse cars</p>
+            <p onClick={() => navigate("/CustomerHomePage")} className="text-xs font-semibold underline mt-5">Browse cars</p>
         </div>
       </div>
     </div>

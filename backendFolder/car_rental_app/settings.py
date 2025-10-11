@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'car_inventories',
     'drf_spectacular',
+    'payments',
     'reservations',
 ]
 
@@ -192,6 +193,11 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=3),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),   
 }
+
+
+#  Stripe configuration
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")

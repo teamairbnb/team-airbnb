@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'accounts',
     'car_inventories',
     'drf_spectacular',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -184,3 +185,8 @@ SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),   
 }
+
+
+#  Stripe configuration
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
+STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")

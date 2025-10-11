@@ -43,7 +43,7 @@ export default function FetchCarDetails() {
         bookingDetails,
         setBookingDetails,
         totalPrice,
-        setTotalPrice, // ✅ context now manages totalPrice
+        setTotalPrice,
       }}
     >
       <Outlet />

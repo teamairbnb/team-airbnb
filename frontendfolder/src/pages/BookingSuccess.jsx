@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import successIcon from "../assets/successIcon.png";
-import Button from "../components/Button.jsx";
 
 
 function BookingSuccess() {

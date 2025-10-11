@@ -120,7 +120,6 @@ export default function ReviewBooking() {
         </div>
       </div>
 
-      {/* Next Button */}
       <Link
         to={`/book/${car.id}/DrivingSecurity`}
         className="block w-full my-4 bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"

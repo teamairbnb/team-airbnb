@@ -9,7 +9,7 @@ export default function CarBookingScreen() {
   const { carId } = useParams();
   const { car, setCar } = useCarContext();
 
-  // If no car is found in context
+  // If no car is found 
   if (!car) {
     return (
       <div className="text-center mt-20">
@@ -21,7 +21,7 @@ export default function CarBookingScreen() {
     );
   }
 
-  // Preserve the true base/original price
+  // Preserve the base/original price
   const basePrice = car?.originalPrice || car?.price || 0;
 
   const savedBooking = localStorage.getItem("selectedBooking") || "best";
@@ -214,7 +214,7 @@ export default function CarBookingScreen() {
               <div className="text-2xl font-bold">${totalPrice}</div>
             </div>
 
-            {/* Update car in context and localStorage */}
+            {/* Updating car in context and localStorage */}
             <Link
               to={`/book/${carId}/PickUp`}
               state={{ carName: car?.name }}

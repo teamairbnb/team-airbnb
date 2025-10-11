@@ -29,6 +29,7 @@ class CustomUser(AbstractUser):
     state = models.CharField(max_length=50, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     is_guest = models.BooleanField(default=False) # flag for guest users
+    avatar = models.TextField()
 
     def __str__(self):
         return self.username

@@ -23,8 +23,8 @@ urlpatterns = [
     path('api/v1/', include([
         path('auth/', include('djoser.urls')),
         path('auth/', include('djoser.urls.jwt')),
-        path('app/', include('accounts.urls'))
-
+        path('app/', include('accounts.urls')),
+        path('reservations/',include('reservations.urls')),
     ]
 
     ),

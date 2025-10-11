@@ -1,16 +1,11 @@
 import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import homebg from "../assets/homebg.jpg";
 import menu from "../assets/menu.svg";
 import logotext from "../assets/logotext.svg";
 import usericon from "../assets/usericon.svg";
 import notificon from "../assets/notificon.svg";
 import search from "../assets/search.svg";
-import carActive from "../assets/smcar.svg";
-import carInactive from "../assets/nonactivecar.svg";
-import planeActive from "../assets/activeplane.svg";
-import planeInactive from "../assets/grayplane.svg";
-import locationActive from "../assets/activelocation.svg";
-import locationInactive from "../assets/graylocation.svg";
 import centeredmenu from "../assets/centeredmenu.svg";
 import logo_textblack from "../assets/logo_textblack.svg";
 import smblackcar from "../assets/smblackcar.svg";
@@ -19,50 +14,45 @@ import blackusericon from "../assets/blackusericon.svg";
 import blackchaticon from "../assets/blackchaticon.svg";
 import blacknotificon from "../assets/blacknotificon.svg";
 import settingsicon from "../assets/settingsicon.svg";
-
 import AvailableCarCard from "../components/AvailableCarCard";
 import CarFilterMenu from "../components/CarFilterMenu";
+import { CARS_DATA, CATEGORY_DATA } from "../utils/cars";
 
 
 export default function CustomerHomePage() {
-  const categoriesData = [
-    { label: "All", activeIcon: carActive, inactiveIcon: carInactive },
-    { label: "Airport", activeIcon: planeActive, inactiveIcon: planeInactive },
-    { label: "Nearby", activeIcon: locationActive, inactiveIcon: locationInactive },
-    { label: "Taxi", activeIcon: carActive, inactiveIcon: carInactive },
-    { label: "Flight", activeIcon: planeActive, inactiveIcon: planeInactive },
-    { label: "Hotel", activeIcon: locationActive, inactiveIcon: locationInactive },
-  ];
-
-  const cars = [
-    { id: 1, name: "Mercedes Benz 480", type: "SUV", year: 2022, price: 500, mode: "Auto", seatnum: "5" },
-    { id: 2, name: "Toyota Corolla", type: "Sedan", year: 2020, price: 300, mode: "Manual", seatnum: "5" },
-    { id: 3, name: "Ford F-150", type: "Truck", year: 2025, price: 600, mode: "Manual", seatnum: "2" },
-    { id: 4, name: "Honda Odyssey", type: "Family Car", year: 2019, price: 200, mode: "Auto", seatnum: "5" },
-    { id: 5, name: "BMW X5", type: "SUV", year: 2023, price: 550, mode: "Auto", seatnum: "5" },
-    { id: 6, name: "Kia Rio", type: "Hatchback", year: 2021, price: 250, mode: "Manual", seatnum: "5" },
-    { id: 7, name: "Audi A6", type: "Sedan", year: 2022, price: 400, mode: "Auto", seatnum: "5" },
-    { id: 8, name: "Lexus GX460", type: "SUV", year: 2020, price: 480, mode: "Auto", seatnum: "5" },
-  ];
-
+  const navigate = useNavigate();
+  const location = useLocation(); 
   const [activeCategory, setActiveCategory] = useState("All");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-  const [filteredCars, setFilteredCars] = useState(cars.slice(0, 8));
+  const [filteredCars, setFilteredCars] = useState(CARS_DATA.slice(0, 8));
 
   const handleApplyFilters = ({ carYear, priceRange, carType }) => {
-    let results = cars;
+    let results = CARS_DATA;
     if (carType) results = results.filter((c) => c.type === carType);
     if (carYear) results = results.filter((c) => c.year === carYear);
     if (priceRange) {
-      const [min, max] = priceRange.replace(/\$/g, "").split("-").map((p) => parseInt(p));
+      const [min, max] = priceRange
+        .replace(/\$/g, "")
+        .split("-")
+        .map((p) => parseInt(p));
       results = results.filter((c) => c.price >= min && c.price <= max);
     }
-    if (!carType && !carYear && !priceRange) results = cars;
+    if (!carType && !carYear && !priceRange) results = CARS_DATA;
     setFilteredCars(results);
   };
 
-  const handleResetFilters = () => setFilteredCars(cars);
+  const handleResetFilters = () => setFilteredCars(CARS_DATA);
+
+  const sidebarItems = [
+    { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
+    { label: "Dashboard", icon: smblackcar, path: "/Dashboard" },
+    { label: "My Booking", icon: bookicon, path: "/Bookings" },
+    { label: "Profile", icon: blackusericon, path: "/UserProfile" },
+    { label: "Chat", icon: blackchaticon, path: "/Chat" },
+    { label: "Notification", icon: blacknotificon, path: "/Notifications" },
+    { label: "Settings", icon: settingsicon, path: "/Settings" },
+  ];
 
   return (
     <>
@@ -74,48 +64,41 @@ export default function CustomerHomePage() {
         ></div>
       )}
 
-      {/* Sliding Sidebar Menu */}
+      {/* Sidebar */}
       <div
         className={`fixed top-0 left-0 h-full w-[260px] bg-white z-50 shadow-lg transform transition-transform duration-300 ease-in-out ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className=" pt-[57px]">
+        <div className="pt-[57px]">
           <button
             className="text-gray-500 mb-[36px] px-[35px] font-semibold"
             onClick={() => setSidebarOpen(false)}
           >
             <img className="w-16" src={logo_textblack} alt="" />
           </button>
+
           <ul className="space-y-[8px] text-[#111827] font-semibold tracking-wide">
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] bg-[#DEE8FC] p-[16px] flex">
-              <img className="w-[22px]" src={smblackcar} alt="" />
-              <p>Browse car</p>
-            </li>
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
-              <img className="w-[22px]" src={smblackcar} alt="" />
-              <p>Dashboard</p>
-            </li>
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
-              <img className="w-[22px]" src={bookicon} alt="" />
-              <p>My Booking</p>
-            </li>
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
-              <img className="w-[22px]" src={blackusericon} alt="" />
-              <p>Profile</p>
-            </li>
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
-              <img className="w-[22px]" src={blackchaticon} alt="" />
-              <p>Chat</p>
-            </li>
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
-              <img className="w-[22px]" src={blacknotificon} alt="" />
-              <p>Notification</p>
-            </li>
-            <li className="hover:text-blue-600 cursor-pointer gap-[8px] p-[16px] flex">
-              <img className="w-[22px]" src={settingsicon} alt="" />
-              <p>Settings</p>
-            </li>
+            {sidebarItems.map((item, index) => {
+              const isActive = location.pathname === item.path;
+              return (
+                <li
+                  key={index}
+                  onClick={() => {
+                    setSidebarOpen(false);
+                    navigate(item.path);
+                  }}
+                  className={`cursor-pointer gap-[8px] p-[16px] flex transition-all duration-200 ${
+                    isActive
+                      ? "bg-[#DEE8FC] text-blue-600"
+                      : "hover:text-blue-600"
+                  }`}
+                >
+                  <img className="w-[22px]" src={item.icon} alt="" />
+                  <p>{item.label}</p>
+                </li>
+              );
+            })}
           </ul>
         </div>
       </div>
@@ -131,7 +114,6 @@ export default function CustomerHomePage() {
           {/* Header */}
           <div className="flex justify-between">
             <div className="flex items-center">
-              {/* 🔹 Menu icon triggers sidebar */}
               <img
                 className="w-[24px] mr-[16px] cursor-pointer"
                 src={menu}
@@ -141,7 +123,10 @@ export default function CustomerHomePage() {
               <img src={logotext} alt="" />
             </div>
             <div className="flex items-center gap-[23px]">
-              <img src={usericon} alt="" />
+              <Link to="/UserProfile" className="p-[6px] rounded-full">
+                <img src={usericon} alt="User" className="cursor-pointer" />
+              </Link>
+
               <img src={notificon} alt="" />
             </div>
           </div>
@@ -172,7 +157,7 @@ export default function CustomerHomePage() {
               </div>
 
               <button
-                onClick={() => setFilterMenuOpen(true)} // 👈 Opens filter, not sidebar
+                onClick={() => setFilterMenuOpen(true)}
                 className="border border-[#D3D3D3] p-[10px] rounded-[5px] bg-white"
               >
                 <img className="w-[31px]" src={centeredmenu} alt="Menu" />
@@ -188,7 +173,7 @@ export default function CustomerHomePage() {
 
       {/* Category Slider */}
       <div className="mt-[24px] mx-[16px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide">
-        {categoriesData.map((category, index) => {
+        {CATEGORY_DATA.map((category, index) => {
           const isActive = activeCategory === category.label;
           return (
             <div
@@ -215,7 +200,9 @@ export default function CustomerHomePage() {
           filteredCars.map((car) => <AvailableCarCard key={car.id} car={car} />)
         ) : (
           <div className="text-gray-600 text-center py-10">
-            <p className="font-semibold text-lg">We do not have a car with these attributes</p>
+            <p className="font-semibold text-lg">
+              We do not have a car with these attributes
+            </p>
           </div>
         )}
       </div>

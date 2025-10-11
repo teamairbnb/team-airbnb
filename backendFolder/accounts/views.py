@@ -8,8 +8,11 @@ from .serializers import CustomUserSerializer
 import uuid
 from django.utils.crypto import get_random_string
 from rest_framework_simplejwt.tokens import RefreshToken
+from drf_spectacular.utils import extend_schema
+from car_rental_app.config import supabase
 
 
+@extend_schema(request=CustomUserSerializer, responses=CustomUserSerializer)
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]
     def get(self, request):
@@ -21,6 +24,17 @@ class UpdateUserProfileView(APIView):
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
+        image=request.FILES["avatar"]
+        res = supabase.storage.from_("airbnb users").upload(
+            f"images/{image.name}",
+            image.read(),
+            {"content-type":image.content_type}
+        )
+
+        image_url = supabase.storage.from_("airbnb users").get_public_url(f"image/{image.name}")
+        data = request.data
+        data['avatar']=image_url
+        
         serializer = CustomUserSerializer(
             request.user, data=request.data, partial=True
         )

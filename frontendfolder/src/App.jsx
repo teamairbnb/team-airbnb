@@ -9,6 +9,10 @@ import VerificationSuccess from "./pages/VerificationSuccess";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import PaymentDetails from "./pages/PaymentDetails";
+import BookingSuccess from "./pages/BookingSuccess";
+import MyBookings from "./pages/MyBookings";
+import NoBookings from "./pages/NoBookings";
 import PickUp from "./pages/PickUp";
 import ReviewBooking from "./pages/ReviewBooking";
 import DrivingSecurity from "./pages/DrivingSecurity";
@@ -25,6 +29,10 @@ function App() {
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/car-booking" element={<CarBookingScreen />} />
+        <Route path="/payment" element={<PaymentDetails />} />
+        <Route path="/bookingsuccess" element={<BookingSuccess />} />
+        <Route path="/mybookings" element={<MyBookings />} />
+        <Route path="/nobookings" element={<NoBookings />} />
         <Route path="/PickUp" element={<PickUp />} />
         <Route path="/ReviewBooking" element={<ReviewBooking />} />
         <Route path="/DrivingSecurity" element={<DrivingSecurity />} />

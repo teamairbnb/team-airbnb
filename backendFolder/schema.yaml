@@ -404,13 +404,44 @@ paths:
   /api/v1/app/guest-signup/:
     post:
       operationId: app_guest_signup_create
+      description: "\n    Creates a guest user account.\n- Returns JWT access and\
+        \ refresh tokens for authentication.\n- Guest users have limited access and\
+        \ reservations expire in 3 days.\n- No password or email required.\n- The\
+        \ response includes the guest user's ID, username, is_guest flag, and JWT\
+        \ tokens.\n    "
       tags:
       - app
       security:
       - jwtAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Guest user ID.
+                  username:
+                    type: string
+                    description: Generated guest username.
+                  is_guest:
+                    type: boolean
+                    description: True if user is a guest.
+                  access:
+                    type: string
+                    description: JWT access token.
+                  refresh:
+                    type: string
+                    description: JWT refresh token.
+                required:
+                - id
+                - username
+                - is_guest
+                - access
+                - refresh
+          description: ''
   /api/v1/app/profile/:
     get:
       operationId: app_profile_retrieve
@@ -428,28 +459,143 @@ paths:
   /api/v1/app/profile/change-password/:
     put:
       operationId: app_profile_change_password_update
+      description: "\n    Changes the user's password. Requires the current password\
+        \ and the new password as parameters.\n    "
       tags:
       - app
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                current_password:
+                  type: string
+                  description: Current password of the user.
+                new_password:
+                  type: string
+                  description: New password to set.
+              required:
+              - current_password
+              - new_password
       security:
       - jwtAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Password updated successfully.
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Current password is incorrect.
+          description: ''
   /api/v1/app/profile/update/:
     put:
       operationId: app_profile_update_update
+      description: "\n    Updates the user's profile. Accepts avatar image upload\
+        \ and other profile fields.\nFor guest users, only limited fields may be editable.\
+        \ The avatar field should be sent as a file in multipart/form-data.\n    "
       tags:
       - app
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  description: First name of the user.
+                last_name:
+                  type: string
+                  description: Last name of the user.
+                email:
+                  type: string
+                  description: Email address.
+                phone_number:
+                  type: string
+                  description: Phone number.
+                country:
+                  type: string
+                  description: Country.
+                state:
+                  type: string
+                  description: State.
+                address:
+                  type: string
+                  description: Address.
+                avatar:
+                  type: string
+                  format: binary
+                  description: Avatar image file.
+              required:
+              - avatar
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                first_name:
+                  type: string
+                  description: First name of the user.
+                last_name:
+                  type: string
+                  description: Last name of the user.
+                email:
+                  type: string
+                  description: Email address.
+                phone_number:
+                  type: string
+                  description: Phone number.
+                country:
+                  type: string
+                  description: Country.
+                state:
+                  type: string
+                  description: State.
+                address:
+                  type: string
+                  description: Address.
+                avatar:
+                  type: string
+                  format: binary
+                  description: Avatar image file.
+              required:
+              - avatar
       security:
       - jwtAuth: []
       responses:
         '200':
-          description: No response body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomUser'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+                    example: Invalid data.
+          description: ''
   /api/v1/auth/jwt/create/:
     post:
       operationId: auth_jwt_create_create
       description: |-
-        This is for login.
         Takes a set of user credentials and returns an access and refresh JSON web
         token pair to prove the authentication of those credentials.
       tags:
@@ -549,7 +695,6 @@ paths:
                 $ref: '#/components/schemas/PaginatedCustomUserList'
           description: ''
     post:
-      description: 'This endpoint allows for registration of a new user.'
       operationId: auth_users_create
       tags:
       - auth
@@ -1203,6 +1348,64 @@ paths:
                       updated_at: '2025-10-02T12:00:00Z'
                   summary: Car Example
           description: ''
+  /api/v1/reservations/:
+    get:
+      operationId: reservations_list
+      tags:
+      - reservations
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Reservation'
+          description: ''
+  /api/v1/reservations/create:
+    post:
+      operationId: reservations_create_create
+      tags:
+      - reservations
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Reservation'
+        required: true
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Reservation'
+          description: ''
+  /api/v1/reservations/delete/{id}/:
+    delete:
+      operationId: reservations_delete_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - reservations
+      security:
+      - jwtAuth: []
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
     Activation:
@@ -1239,9 +1442,8 @@ components:
           $ref: '#/components/schemas/ModelEnum'
         year:
           type: integer
-          maximum: 9223372036854775807
-          minimum: 0
-          format: int64
+          maximum: 2026
+          minimum: 2000
         car_type:
           $ref: '#/components/schemas/CarTypeEnum'
         color:
@@ -1249,9 +1451,8 @@ components:
           maxLength: 30
         seats:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 0
-          format: int64
         transmission:
           $ref: '#/components/schemas/TransmissionEnum'
         fuel_type:
@@ -1522,9 +1723,8 @@ components:
           $ref: '#/components/schemas/ModelEnum'
         year:
           type: integer
-          maximum: 9223372036854775807
-          minimum: 0
-          format: int64
+          maximum: 2026
+          minimum: 2000
         car_type:
           $ref: '#/components/schemas/CarTypeEnum'
         color:
@@ -1532,9 +1732,8 @@ components:
           maxLength: 30
         seats:
           type: integer
-          maximum: 9223372036854775807
+          maximum: 2147483647
           minimum: 0
-          format: int64
         transmission:
           $ref: '#/components/schemas/TransmissionEnum'
         fuel_type:
@@ -1612,6 +1811,29 @@ components:
           maxLength: 255
         is_guest:
           type: boolean
+    Reservation:
+      type: object
+      properties:
+        car:
+          type: integer
+        status:
+          allOf:
+          - $ref: '#/components/schemas/StatusEnum'
+          readOnly: true
+        expires_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - car
+      - created_at
+      - expires_at
+      - status
     SendEmailReset:
       type: object
       properties:
@@ -1645,6 +1867,18 @@ components:
       required:
       - current_password
       - new_username
+    StatusEnum:
+      enum:
+      - soft
+      - firm
+      - cancelled
+      - expired
+      type: string
+      description: |-
+        * `soft` - Soft Reservation
+        * `firm` - Firm Reservation
+        * `cancelled` - Cancelled
+        * `expired` - Expired
     TokenObtainPair:
       type: object
       properties:

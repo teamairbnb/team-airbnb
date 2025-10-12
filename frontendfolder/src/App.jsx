@@ -16,6 +16,9 @@ import NoBookings from "./pages/NoBookings";
 import PickUp from "./pages/PickUp";
 import ReviewBooking from "./pages/ReviewBooking";
 import DrivingSecurity from "./pages/DrivingSecurity";
+import BookingDetails from "./pages/BookingDetails";
+import BusinessOwnerDashboard from "./pages/BusinessOwnerDashboard";
+import Cars from "./components/Cars";
 import UserProfile from "./pages/UserProfile";
 import FetchCarDetails from "./components/FetchCarDetails";
 
@@ -38,7 +41,10 @@ function App() {
           <Route path="/book/:carId/PaymentDetails" element={<PaymentDetails />} />
           <Route path="/book/:carId/BookingSuccess" element={<BookingSuccess />} />
         </Route>
-
+        
+        <Route path="/BookingDetails" element={<BookingDetails />} />
+        <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
+        <Route path="/Cars" element={<Cars />} />
         <Route path="/NoBookings" element={<NoBookings />} />
         <Route path="/MyBookings" element={<MyBookings />} />
         <Route path="/UserProfile" element={<UserProfile />} />

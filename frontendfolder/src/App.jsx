@@ -20,11 +20,11 @@ import BookingDetails from "./pages/BookingDetails";
 import BusinessOwnerDashboard from "./pages/BusinessOwnerDashboard";
 import Cars from "./components/Cars";
 import UserProfile from "./pages/UserProfile";
-import FetchCarDetails from "./components/FetchCarDetails";
 import CustomerPersonalInfo from "./pages/CustomerPersonalInfo";
 import DriverLicense from "./pages/DriverLicense";
 import PaymentMethod from "./pages/PaymentMethod";
 import AddCard from "./pages/AddCard";
+import FetchCarDetails from "./components/FetchCarDetails";
 
 function App() {
   return (
@@ -44,9 +44,9 @@ function App() {
           <Route path="/book/:carId/DrivingSecurity" element={<DrivingSecurity />} />
           <Route path="/book/:carId/PaymentDetails" element={<PaymentDetails />} />
           <Route path="/book/:carId/BookingSuccess" element={<BookingSuccess />} />
+          <Route path="/book/:carId/BookingDetails" element={<BookingDetails />} />
         </Route>
         
-        <Route path="/BookingDetails" element={<BookingDetails />} />
         <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
         <Route path="/Cars" element={<Cars />} />
         <Route path="/NoBookings" element={<NoBookings />} />

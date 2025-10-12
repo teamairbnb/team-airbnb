@@ -6,7 +6,8 @@ const CarContext = createContext(null);
 
 export const useCarContext = () => {
   const context = useContext(CarContext);
-  if (!context) throw new Error("useCarContext must be used within FetchCarDetails");
+  if (!context)
+    throw new Error("useCarContext must be used within FetchCarDetails");
   return context;
 };
 
@@ -18,14 +19,28 @@ export default function FetchCarDetails() {
     return foundCar || null;
   });
 
-  const [bookingDetails, setBookingDetails] = useState({
-    pickUpDate: "",
-    pickUpTime: "",
-    returnDate: "",
-    returnTime: "",
+  const [bookingDetails, setBookingDetails] = useState(() => {
+    const saved = localStorage.getItem("bookingDetails");
+    return saved
+      ? JSON.parse(saved)
+      : {
+          pickUpDate: "",
+          pickUpTime: "",
+          returnDate: "",
+          returnTime: "",
+          pickUpLocation: "",
+          dropOffLocation: "",
+          bookingId: "",
+          driverName: "",
+          driverPhone: "",
+        };
   });
 
   const [totalPrice, setTotalPrice] = useState(car ? car.price : 0);
+
+  useEffect(() => {
+    localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
+  }, [bookingDetails]);
 
   if (!car) {
     return (

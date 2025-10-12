@@ -62,7 +62,6 @@ function PaymentDetails() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log({ cardNumber, cardHolder, expiry, cvv, total });
       alert("Payment submitted successfully!");
       navigate(`/book/${car.id}/BookingSuccess`);
     }

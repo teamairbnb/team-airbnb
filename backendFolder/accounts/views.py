@@ -134,23 +134,27 @@ class ChangePasswordView(APIView):
 
 # Guest user views
 
-class GuestSignupView(APIView):
-    permission_classes = []  # open endpoint
-
-    @extend_schema(
+@extend_schema(
     request=None,
     responses={
-        200: CustomUserSerializer,
+        200: {
+            'type': 'object',
+            'properties': {
+                'id': {'type': 'integer', 'description': 'Guest user ID.'},
+                'username': {'type': 'string', 'description': 'Generated guest username.'},
+                'is_guest': {'type': 'boolean', 'description': 'True if user is a guest.'},
+                'access': {'type': 'string', 'description': 'JWT access token.'},
+                'refresh': {'type': 'string', 'description': 'JWT refresh token.'}
+            },
+            'required': ['id', 'username', 'is_guest', 'access', 'refresh']
+        }
     },
     description="""
-    Creates a guest user account. 
-    - Returns JWT access and refresh tokens for authentication.
-    - Guest users have limited access and reservations expire in 3 days.
-    - No password or email required.
+    Creates a guest user account.\n- Returns JWT access and refresh tokens for authentication.\n- Guest users have limited access and reservations expire in 3 days.\n- No password or email required.\n- The response includes the guest user's ID, username, is_guest flag, and JWT tokens.
     """
 )
-
-
+class GuestSignupView(APIView):
+    permission_classes = []  # open endpoint
     def post(self, request):
         # Generate random username
         username = f"guest_{uuid.uuid4().hex[:8]}"

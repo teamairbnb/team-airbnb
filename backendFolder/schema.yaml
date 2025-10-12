@@ -404,10 +404,11 @@ paths:
   /api/v1/app/guest-signup/:
     post:
       operationId: app_guest_signup_create
-      description: "\n    Creates a guest user account. \n    - Returns JWT access\
-        \ and refresh tokens for authentication.\n    - Guest users have limited access\
-        \ and reservations expire in 3 days.\n    - No password or email required.\n\
-        \    "
+      description: "\n    Creates a guest user account.\n- Returns JWT access and\
+        \ refresh tokens for authentication.\n- Guest users have limited access and\
+        \ reservations expire in 3 days.\n- No password or email required.\n- The\
+        \ response includes the guest user's ID, username, is_guest flag, and JWT\
+        \ tokens.\n    "
       tags:
       - app
       security:
@@ -417,7 +418,29 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CustomUser'
+                type: object
+                properties:
+                  id:
+                    type: integer
+                    description: Guest user ID.
+                  username:
+                    type: string
+                    description: Generated guest username.
+                  is_guest:
+                    type: boolean
+                    description: True if user is a guest.
+                  access:
+                    type: string
+                    description: JWT access token.
+                  refresh:
+                    type: string
+                    description: JWT refresh token.
+                required:
+                - id
+                - username
+                - is_guest
+                - access
+                - refresh
           description: ''
   /api/v1/app/profile/:
     get:

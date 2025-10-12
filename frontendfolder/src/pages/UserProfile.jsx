@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { ChevronRight, ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ChevronRight, ChevronLeft } from "lucide-react";
 import cancelbookingwarning from "../assets/cancelbookingwarning.svg";
 import close from "../assets/close.svg";
 
 export default function UserProfile() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const menuItems = [
     { title: "Personal info", path: "/CustomerPersonalInfo" },
@@ -27,8 +27,8 @@ export default function UserProfile() {
         {/* Back Button */}
         <div className="px-4 py-6">
           <button
-            className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center"
             onClick={() => navigate("/CustomerHomePage")}
+            className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center"
           >
             <ChevronLeft className="w-5 h-5 text-gray-700" />
           </button>

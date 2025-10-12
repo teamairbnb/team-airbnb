@@ -7,11 +7,13 @@ from .models import Reservation
 from accounts.models import CustomUser
 from car_inventories.models import Car
 from .serializers import ReservationSerializer
+from drf_spectacular.utils import extend_schema
 from django.shortcuts import get_object_or_404
 
 class CreateReservationView(APIView):
     permission_classes = [IsAuthenticated]
 
+    @extend_schema(request=ReservationSerializer, responses=ReservationSerializer)
     def post(self,request):
         serializer = ReservationSerializer(data=request.data)
 
@@ -67,6 +69,7 @@ class CreateReservationView(APIView):
 
 class ViewReservationView(APIView):
     permission_classes = [IsAuthenticated]
+    @extend_schema(responses=ReservationSerializer(many=True))
     def get(self, request):
         profile = CustomUser.objects.get(id=request.user.id)
         reservations = Reservation.objects.filter(user=profile)

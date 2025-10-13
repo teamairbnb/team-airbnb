@@ -28,10 +28,12 @@ import FetchCarDetails from "./components/FetchCarDetails";
 import Security from "./pages/Security";
 import ChangePassword from "./pages/ChangePassword";
 import EditCarDetails from "./components/EditCarDetails";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Onboarding />} />
         <Route path="/Login" element={<Login />} />

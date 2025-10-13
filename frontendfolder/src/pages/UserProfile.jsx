@@ -13,7 +13,7 @@ export default function UserProfile() {
     { title: "Saved Payment Methods", path: "/PaymentMethod" },
     { title: "Account Settings", path: "/profile/account-settings" },
     { title: "Notifications Preferences", path: "/profile/notifications" },
-    { title: "Security", path: "/profile/security" },
+    { title: "Security", path: "/Security" },
   ];
 
   const [showModal, setShowModal] = useState(false);
@@ -53,7 +53,7 @@ export default function UserProfile() {
             <button
               key={index}
               onClick={() => navigate(item.path)} 
-              className="w-full bg-white px-5 py-4 flex items-center justify-between rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+              className="w-full bg-white px-5 py-4 flex items-center justify-between rounded-xl border border-[#D3D3D3] hover:bg-gray-50 transition-colors"
             >
               <span className="text-gray-900 text-sm font-normal">
                 {item.title}

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
 import menu from "../assets/darkhamburgermenu.svg";
 import chaticon from "../assets/darkchat.svg";
 import blackusericon from "../assets/blackusericon.svg";
@@ -13,7 +13,7 @@ import { useCarContext } from "../components/FetchCarDetails";
 export default function BookingDetails() {
   const [showModal, setShowModal] = useState(false);
   const { car, bookingDetails } = useCarContext();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleCancelClick = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
@@ -26,8 +26,17 @@ export default function BookingDetails() {
   const handleConfirmBooking = () => {
     alert("🎉 Thank you! Your booking has been confirmed successfully.");
     localStorage.removeItem("bookingDetails");
-    navigate("/CustomerHomePage"); 
+    navigate("/CustomerHomePage");
   };
+
+  function formatTimeTo12Hour(time) {
+    if (!time) return "--:--";
+    const [hour, minute] = time.split(":");
+    const h = parseInt(hour);
+    const suffix = h >= 12 ? "PM" : "AM";
+    const formattedHour = ((h + 11) % 12) + 1; 
+    return `${formattedHour}:${minute} ${suffix}`;
+  }
 
   return (
     <div className="text-[#111827] px-[16px] pb-[43px] relative">
@@ -68,7 +77,11 @@ export default function BookingDetails() {
         </p>
         <div className="flex gap-[16px] mt-[8px]">
           <p>Status : </p>
-          <img className="w-20 mt-[2px]" src={confirmedstatus} alt="Confirmed" />
+          <img
+            className="w-20 mt-[2px]"
+            src={confirmedstatus}
+            alt="Confirmed"
+          />
         </div>
       </div>
 
@@ -91,7 +104,7 @@ export default function BookingDetails() {
           <p>
             Time :
             <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.pickUpTime || "--:--"}
+              {formatTimeTo12Hour(bookingDetails?.pickUpTime)}
             </span>
           </p>
         </div>
@@ -116,7 +129,7 @@ export default function BookingDetails() {
           <p>
             Time :
             <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.returnTime || "--:--"}
+              {formatTimeTo12Hour(bookingDetails?.returnTime)}
             </span>
           </p>
         </div>

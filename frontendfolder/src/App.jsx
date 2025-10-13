@@ -25,6 +25,8 @@ import DriverLicense from "./pages/DriverLicense";
 import PaymentMethod from "./pages/PaymentMethod";
 import AddCard from "./pages/AddCard";
 import FetchCarDetails from "./components/FetchCarDetails";
+import Security from "./pages/Security";
+import ChangePassword from "./pages/ChangePassword";
 
 function App() {
   return (
@@ -56,6 +58,9 @@ function App() {
         <Route path="/DriverLicense" element={<DriverLicense />} />
         <Route path="/PaymentMethod" element={<PaymentMethod />} />
         <Route path="/AddCard" element={<AddCard />} />
+        <Route path="/Security" element={<Security />} />
+        <Route path="/ChangePassword" element={<ChangePassword />} />
+
       </Routes>
     </BrowserRouter>
   );

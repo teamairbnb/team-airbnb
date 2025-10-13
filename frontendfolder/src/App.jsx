@@ -27,6 +27,7 @@ import AddCard from "./pages/AddCard";
 import FetchCarDetails from "./components/FetchCarDetails";
 import Security from "./pages/Security";
 import ChangePassword from "./pages/ChangePassword";
+import EditCarDetails from "./components/EditCarDetails";
 
 function App() {
   return (
@@ -60,6 +61,7 @@ function App() {
         <Route path="/AddCard" element={<AddCard />} />
         <Route path="/Security" element={<Security />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
+        <Route path="/EditCarDetails" element={<EditCarDetails />} />
 
       </Routes>
     </BrowserRouter>

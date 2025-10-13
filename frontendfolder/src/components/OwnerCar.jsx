@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import mercedes from "../assets/mercedes.svg";
 import editicon from "../assets/editicon.svg";
 import benzlogo from "../assets/benzlogo.svg";
 import deleteicon from "../assets/delete.svg";
+
 
 export default function OwnerCar() {
   return (
@@ -12,11 +14,6 @@ export default function OwnerCar() {
         <p className="text-[17px]">Available</p>
       </div>
       <img className="" src={mercedes} alt="" />
-      {/* <img
-        className="w-5 translate-x-[300px] -translate-y-[150px]"
-        src={editicon}
-        alt=""
-      /> */}
       <div className="w-full border shadow-lg rounded-b-xl px-4 pt-[18px] pb-5">
         <div className="flex justify-between">
           <div className="flex gap-[14px]">
@@ -29,7 +26,9 @@ export default function OwnerCar() {
           </div>
           <div className="mt-4 flex flex-col gap-7">
             <img className="w-4 -translate-y-5" src={deleteicon} alt="" />
-            <img className="w-4 -translate-y-5" src={editicon} alt="" />
+            <Link to="/EditCarDetails">
+              <img className="w-4 -translate-y-5" src={editicon} alt="" />
+            </Link>
           </div>
         </div>
 

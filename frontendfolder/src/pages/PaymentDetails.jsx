@@ -62,7 +62,6 @@ function PaymentDetails() {
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log({ cardNumber, cardHolder, expiry, cvv, total });
       alert("Payment submitted successfully!");
       navigate(`/book/${car.id}/BookingSuccess`);
     }
@@ -230,7 +229,7 @@ function PaymentDetails() {
               <p className="text-xl font-bold">${total.toFixed(2)}</p>
             </div>
           </div>
-
+          
           <button
             type="submit"
             className="block w-full mb-4 mt-7 py-4 rounded-xl font-semibold text-lg text-center transition bg-blue-600 text-white hover:bg-blue-700"

@@ -1,9 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import successIcon from "../assets/successIcon.png";
 
 
 function BookingSuccess() {
+  const { carId } = useParams();
+
   return (
     <div className="flex flex-col mt-10 w-full min-h-screen px-4 text-center justify-between bg-white">
       <div className="flex flex-col items-center justify-center mt-12">
@@ -19,7 +21,7 @@ function BookingSuccess() {
       </div>
 
        <Link
-        to="/MyBookings"
+        to={`/book/${carId}/BookingDetails`}
         className="block w-full mb-20 bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"
       >
         View Reservation

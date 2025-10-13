@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
 import back from "../assets/back.svg";
+import car from "../assets/blackcar.svg";
 import arrow from "../assets/arrowdn.svg";
 
-export default function AddCar({ onBack }) {
+
+export default function EditCarDetails() {
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
   const [isSeatDropdownOpen, setIsSeatDropdownOpen] = useState(false);
   const [selectedType, setSelectedType] = useState("");
@@ -29,25 +32,23 @@ export default function AddCar({ onBack }) {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
   return (
-    <div className="tracking-wide">
-      <div className="flex justify-center items-center relative">
-        <div
-          onClick={onBack}
-          className="cursor-pointer left-0 absolute inline-flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
-        >
-          <img className="w-4" src={back} alt="Back" />
-        </div>
+    <div className="px-4 py-8">
+      <div className="relative flex items-center justify-center">
+        <Link to="/BusinessOwnerDashboard" className="absolute left-0">
+          <div className="cursor-pointer inline-flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black">
+            <img className="w-4" src={back} alt="Back" />
+          </div>
+        </Link>
 
         <p className="text-[20px] font-semibold">
-          <span className="text-[#6B7280]">Cars / </span>Add Car
+          <span className="text-[#6B7280]">Cars / </span>Edit
         </p>
       </div>
 
-      <p className="mt-[50px] text-start text-[20px] font-semibold">
-        Car Details
-      </p>
+      <div className="flex justify-center">
+        <img src={car} alt="" className="mt-[70px]" />
+      </div>
 
       {/* Model */}
       <div className="mt-[25px] text-start">

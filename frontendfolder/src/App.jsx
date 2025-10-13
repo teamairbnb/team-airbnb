@@ -20,11 +20,20 @@ import BookingDetails from "./pages/BookingDetails";
 import BusinessOwnerDashboard from "./pages/BusinessOwnerDashboard";
 import Cars from "./components/Cars";
 import UserProfile from "./pages/UserProfile";
+import CustomerPersonalInfo from "./pages/CustomerPersonalInfo";
+import DriverLicense from "./pages/DriverLicense";
+import PaymentMethod from "./pages/PaymentMethod";
+import AddCard from "./pages/AddCard";
 import FetchCarDetails from "./components/FetchCarDetails";
+import Security from "./pages/Security";
+import ChangePassword from "./pages/ChangePassword";
+import EditCarDetails from "./components/EditCarDetails";
+import ScrollToTop from "./components/ScrollToTop";
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<Onboarding />} />
         <Route path="/Login" element={<Login />} />
@@ -40,14 +49,22 @@ function App() {
           <Route path="/book/:carId/DrivingSecurity" element={<DrivingSecurity />} />
           <Route path="/book/:carId/PaymentDetails" element={<PaymentDetails />} />
           <Route path="/book/:carId/BookingSuccess" element={<BookingSuccess />} />
+          <Route path="/book/:carId/BookingDetails" element={<BookingDetails />} />
         </Route>
         
-        <Route path="/BookingDetails" element={<BookingDetails />} />
         <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
         <Route path="/Cars" element={<Cars />} />
         <Route path="/NoBookings" element={<NoBookings />} />
         <Route path="/MyBookings" element={<MyBookings />} />
         <Route path="/UserProfile" element={<UserProfile />} />
+        <Route path="/CustomerPersonalInfo" element={<CustomerPersonalInfo />} />
+        <Route path="/DriverLicense" element={<DriverLicense />} />
+        <Route path="/PaymentMethod" element={<PaymentMethod />} />
+        <Route path="/AddCard" element={<AddCard />} />
+        <Route path="/Security" element={<Security />} />
+        <Route path="/ChangePassword" element={<ChangePassword />} />
+        <Route path="/EditCarDetails" element={<EditCarDetails />} />
+
       </Routes>
     </BrowserRouter>
   );

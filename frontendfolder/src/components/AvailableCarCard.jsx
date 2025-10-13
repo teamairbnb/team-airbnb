@@ -6,7 +6,6 @@ export default function AvailableCarCard({ car }) {
   const navigate = useNavigate();
 
   const handleReserve = () => {
-    // Saving selected car to localStorage
     localStorage.setItem("selectedCar", JSON.stringify(car));
 
     navigate(`/book/${car.id}/car-booking`, { state: { car } });

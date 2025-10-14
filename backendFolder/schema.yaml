@@ -1106,6 +1106,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/SetUsername'
           description: ''
+  /api/v1/bookings/create:
+    post:
+      operationId: bookings_create_create
+      description: "\n    Books a car using a reservation.\nSend a POST request with\
+        \ a valid reservation_id.\nReservation must have status 'soft' or 'firm'.\n\
+        Returns booking details on success.\n    "
+      tags:
+      - bookings
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reservation_id:
+                  type: integer
+                  description: ID of the reservation to book.
+              required:
+              - reservation_id
+      security:
+      - jwtAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: Invalid reservation status
+          description: ''
   /api/v1/cars/:
     get:
       operationId: cars_list
@@ -1430,6 +1468,28 @@ components:
         * `rented` - Rented
         * `maintenance` - Maintenance
         * `unavailable` - Unavailable
+    Booking:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        user:
+          type: integer
+        reservation:
+          type: integer
+        start_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+      required:
+      - end_date
+      - id
+      - reservation
+      - start_date
+      - user
     Car:
       type: object
       properties:
@@ -1873,12 +1933,14 @@ components:
       - firm
       - cancelled
       - expired
+      - booked
       type: string
       description: |-
         * `soft` - Soft Reservation
         * `firm` - Firm Reservation
         * `cancelled` - Cancelled
         * `expired` - Expired
+        * `booked` - Booked
     TokenObtainPair:
       type: object
       properties:

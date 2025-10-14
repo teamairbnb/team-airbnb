@@ -1,10 +1,48 @@
-import React, { useState } from "react";
-import { ChevronLeft, MapPin, Calendar, Settings, Info } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { Link, useParams } from "react-router-dom";
+import { MapPin, Calendar, Settings, Info } from "lucide-react";
+import back from "../assets/back.svg";
 import CarDetailsImg from "../assets/cardetailspage.jpg";
+import { useCarContext } from "../components/FetchCarDetails";
 
 export default function CarBookingScreen() {
-  const [selectedBooking, setSelectedBooking] = useState("best");
-  const [selectedMileage, setSelectedMileage] = useState("unlimited");
+  const { carId } = useParams();
+  const { car, setCar } = useCarContext();
+
+  // If no car is found 
+  if (!car) {
+    return (
+      <div className="text-center mt-20">
+        <p>No car selected.</p>
+        <Link to="/CustomerHomePage" className="mt-4 underline text-blue-600">
+          Go back
+        </Link>
+      </div>
+    );
+  }
+
+  // Preserve the base/original price
+  const basePrice = car?.originalPrice || car?.price || 0;
+
+  const savedBooking = localStorage.getItem("selectedBooking") || "best";
+  const savedMileage = localStorage.getItem("selectedMileage") || "unlimited";
+
+  const [selectedBooking, setSelectedBooking] = useState(savedBooking);
+  const [selectedMileage, setSelectedMileage] = useState(savedMileage);
+  const [displayPrice, setDisplayPrice] = useState(basePrice);
+
+  // Persist selections
+  useEffect(() => {
+    localStorage.setItem("selectedBooking", selectedBooking);
+  }, [selectedBooking]);
+
+  useEffect(() => {
+    localStorage.setItem("selectedMileage", selectedMileage);
+  }, [selectedMileage]);
+
+  const totalPrice = selectedBooking === "flexible" ? basePrice * 0.2 : basePrice;
+
+
 
   return (
     <div className="flex justify-center">
@@ -13,20 +51,26 @@ export default function CarBookingScreen() {
         <div className="relative mb-6 bg-black">
           <img
             src={CarDetailsImg}
-            alt="Mercedes Benz"
-            className="w-full h-full"
+            alt={car.name}
+            className="w-full h-full object-cover"
           />
+          <Link
+            to="/CustomerHomePage"
+            className="absolute top-4 left-4 flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
+          >
+            <img className="w-4" src={back} alt="Back" />
+          </Link>
         </div>
 
         {/* Car Details */}
         <div className="px-[16px]">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-4 text-left">Mercedes Benz</h1>
+            <h1 className="text-2xl font-bold mb-4 text-left">{car.name}</h1>
 
             <div className="flex items-center mb-3">
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
                 <Settings className="w-4 h-4" />
-                <span className="text-sm">5 Seats</span>
+                <span className="text-sm">{car.seatnum} Seats</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
                 <MapPin className="w-4 h-4" />
@@ -37,22 +81,22 @@ export default function CarBookingScreen() {
             <div className="flex items-center">
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
                 <Calendar className="w-4 h-4" />
-                <span className="text-sm">2025</span>
+                <span className="text-sm">{car.year}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
                 <Settings className="w-4 h-4" />
-                <span className="text-sm">Auto</span>
+                <span className="text-sm">{car.mode}</span>
               </div>
             </div>
           </div>
 
           {/* Booking Options */}
-          <div className="px-0 mb-6">
+          <div className="px-0 mb-6 mt-11">
             <h2 className="text-lg font-semibold mb-3 text-left">
               Booking option
             </h2>
 
-            {/* Best Price Option */}
+            {/* Best Price */}
             <div
               onClick={() => setSelectedBooking("best")}
               className={`border-2 rounded-2xl p-4 mb-3 cursor-pointer transition ${
@@ -85,7 +129,7 @@ export default function CarBookingScreen() {
               </div>
             </div>
 
-            {/* Stay Flexible Option */}
+            {/* Flexible */}
             <div
               onClick={() => setSelectedBooking("flexible")}
               className={`border-2 rounded-2xl p-4 cursor-pointer transition ${
@@ -124,7 +168,6 @@ export default function CarBookingScreen() {
           {/* Mileage */}
           <div className="px-0 mb-6">
             <h2 className="text-lg font-semibold mb-3 text-left">Mileage</h2>
-
             <div
               onClick={() => setSelectedMileage("unlimited")}
               className={`border-2 rounded-2xl p-4 cursor-pointer transition ${
@@ -160,21 +203,34 @@ export default function CarBookingScreen() {
             </div>
           </div>
 
-          {/* Total and Next Button */}
           <div className="px-0 pb-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-6">
               <div>
                 <h3 className="text-lg font-bold text-left">Total</h3>
                 <button className="text-sm text-gray-600 underline">
                   Price details
                 </button>
               </div>
-              <div className="text-2xl font-bold">$200.60</div>
+              <div className="text-2xl font-bold">${totalPrice}</div>
             </div>
 
-            <button className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg hover:bg-blue-700 transition">
+            {/* Updating car in context and localStorage */}
+            <Link
+              to={`/book/${carId}/PickUp`}
+              state={{ carName: car?.name }}
+              onClick={() => {
+                const updatedCar = {
+                  ...car,
+                  price: totalPrice,
+                  originalPrice: basePrice,
+                };
+                setCar(updatedCar);
+                localStorage.setItem("selectedCar", JSON.stringify(updatedCar));
+              }}
+              className="block w-full my-4 bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"
+            >
               Next
-            </button>
+            </Link>
           </div>
         </div>
       </div>

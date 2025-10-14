@@ -9,6 +9,11 @@ import VerificationSuccess from "./pages/VerificationSuccess";
 import CustomerHomePage from "./pages/CustomerHomePage";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import Header from "./components/Header";
+import BusinessInfo from "./pages/BusinessInfo";
+import BusinessProfile from "./pages/BusinessProfile";
+import UploadImage from "./pages/UploadImage";
+import BusinessPayment from "./pages/BusinessPayment";
 
 function App() {
   return (
@@ -21,6 +26,13 @@ function App() {
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
         <Route path="/car-booking" element={<CarBookingScreen />} />
+        <Route path="/header" element={<Header />} />
+        <Route path="/business-info" element={<BusinessInfo />} />
+        <Route path="/business-profile" element={<BusinessProfile />} />
+        <Route path="/upload" element={<UploadImage/>} />
+        <Route path="/payment" element={<BusinessPayment/>} />
+        
+        
       </Routes>
     </BrowserRouter>
   );

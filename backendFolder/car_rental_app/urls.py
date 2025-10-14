@@ -25,6 +25,7 @@ urlpatterns = [
         path('auth/', include('djoser.urls.jwt')),
         path('app/', include('accounts.urls')),
         path('reservations/',include('reservations.urls')),
+        path('bookings/',include('bookings.urls')),
     ]
 
     ),

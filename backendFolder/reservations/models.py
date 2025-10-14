@@ -9,6 +9,7 @@ STATUS_CHOICES = [
     ('firm','Firm Reservation'),
     ('cancelled','Cancelled'),
     ('expired','Expired'),
+    ('booked','Booked'),
 ]
 class Reservation(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,related_name="reservations")

@@ -15,6 +15,8 @@ class Booking(models.Model):
     car = models.ForeignKey(Car, on_delete=models.CASCADE)
     start_date = models.DateField()
     end_date = models.DateField()
+    total_price = models.PositiveIntegerField(help_text="Total price in cents", default=0)
+    deposit_amount = models.PositiveIntegerField(help_text="Deposit amount in cents", default=0)
     status = models.CharField(max_length=20, choices=BOOKING_STATUS, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -14,6 +14,8 @@ from .models import PaymentMethod, Payment, Refund
 from django.core.mail import send_mail
 from django.conf import settings
 import uuid
+from bookings.models import Booking
+
 
 
 def send_payment_confirmation_email(payment: Payment):
@@ -58,13 +60,12 @@ class DirectProcessPaymentView(APIView):
         except PaymentMethod.DoesNotExist:
             return Response({"detail": "Unknown or unauthorized payment token."}, status=status.HTTP_400_BAD_REQUEST)
         
-        # TODO: Validate booking exists and belong to user
-        # from bookings.models import Booking
-        # booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        # Validate booking exists and belong to user
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
 
         payment = Payment.objects.create(
             user=request.user,
-            booking_id=booking_id,
+            booking_id=booking,
             amount=amount,
             payment_method=payment_method,
             status="succeeded",
@@ -105,14 +106,13 @@ class DirectProcessDummyView(APIView):
         card_brand = self.detect_card_brand(card_number)
 
 
-        # TODO: Validate if booking exists and belongs to user
-        # from bookings.models import Booking
-        # booking = get_object_or_404(Booking, id=booking_id, user=request.user)
-        # if booking.status not in ['pending', 'confirmed']:
-        #     return Response(
-        #         {"detail": "Booking cannot be paid"},
-        #         status=status.HTTP_400_BAD_REQUEST
-        #     )
+        # Validate if booking exists and belongs to user
+        booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+        if booking.status not in ['pending', 'confirmed']:
+            return Response(
+                {"detail": "Booking cannot be paid"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
         
         payment_method = None
         if save_card:

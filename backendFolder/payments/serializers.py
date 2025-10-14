@@ -1,6 +1,7 @@
 import datetime
 from rest_framework import serializers
 from .models import PaymentMethod, Payment
+from bookings import Booking
 
 
 def check_expiry_month(value):
@@ -13,13 +14,6 @@ def check_expiry_year(value):
     if not int(value) >= today.year:
         raise serializers.ValidationError("invalid expiry year")
 
-
-# def check_expiry_date(expiry_month, expiry_year):
-#     """Check if card expiry date is in the future"""
-#     today = datetime.datetime.now()
-#     expiry = datetime.datetime(year=expiry_year, month=expiry_month, day=1)
-#     if expiry < today:
-#         raise serializers.ValidationError("Card has expired.")
 
 
 def check_cvc(value):
@@ -50,15 +44,6 @@ def check_card_number(value):
     if not luhn_checksum(num):
         raise serializers.ValidationError("Invalid card number.")
 
-# class PaymentMethodCreateSerializer(serializers.Serializer):
-#     # Accept only tokenized references and masked card data
-#     token = serializers.CharField(max_length=128, required=True)
-#     card_brand = serializers.CharField(max_length=50, required=False, allow_blank=True)
-#     last4 = serializers.CharField(max_length=4, required=True)
-#     exp_month = serializers.IntegerField(required=False, validators=[check_expiry_month])
-#     exp_year = serializers.IntegerField(required=False, validators=[check_expiry_year])
-#     is_default = serializers.BooleanField(default=False)
-
 
 class DirectPaymentCreateSerializer(serializers.Serializer):
     # This serializer is used when user pays with a saved card
@@ -78,9 +63,41 @@ class DirectPaymentCreateSerializer(serializers.Serializer):
         return value
 
     def validate(self, data):
-        # TODO : Once you uncomment the booking validation, apply the same validation as DirectPaymentDummySerializer here
-        """Validate booking and amount"""
+        """Validate expiry date and amount against booking"""
+        #Check if card is not expired
+        today = datetime.datetime.now()
+        expiry_date = datetime.datetime(
+            year=data["expiry_year"], month=data['expiry_month'], day=1
+        )
+        if expiry_date < today:
+            raise serializers.ValidationError("Card has expired")
+        
     
+        #  Validate booking exists and amount matches
+
+
+        try:
+            booking = Booking.objects.get(id=data["booking_id"])
+        except Booking.DoesNotExist:
+            raise serializers.ValidationError('Booking not found')
+        
+
+        #  Check if amount matches booking
+        if data["payment_type"] == 'full':
+            if data["amount"] != booking.total_price:
+                raise serializers.ValidationError(
+                    f"Full payment must be {booking.total_price} cents"
+                    f"Full payment amount must be {booking.total_price} cents."
+                )
+        elif data['payment_type'] == 'deposit':
+            if data['amount'] >= booking.total_price:
+                if data['amount'] != booking.deposit_amount:
+                    raise serializers.ValidationError(
+                        "Deposit must be less than total price"
+                        f"Deposit amount must be {booking.deposit_amount} cents."
+                )
+
+        data['booking'] = booking
         return data
 
 
@@ -108,11 +125,10 @@ class DirectPaymentDummySerializer(serializers.Serializer):
         if expiry_date < today:
             raise serializers.ValidationError("Card has expired")
         
-        """
-        # TODO: Uncomment this block when booking app is ready
+    
         #  Validate booking exists and amount matches
 
-        from booking.models import Booking
+
         try:
             booking = Booking.objects.get(id=data["booking_id"])
         except Booking.DoesNotExist:
@@ -124,16 +140,18 @@ class DirectPaymentDummySerializer(serializers.Serializer):
             if data["amount"] != booking.total_price:
                 raise serializers.ValidationError(
                     f"Full payment must be {booking.total_price} cents"
+                    f"Full payment amount must be {booking.total_price} cents."
                 )
         elif data['payment_type'] == 'deposit':
             if data['amount'] >= booking.total_price:
-                raise serializers.ValidationError(
-                    "Deposit must be less than total price"
+                if data['amount'] != booking.deposit_amount:
+                    raise serializers.ValidationError(
+                        "Deposit must be less than total price"
+                        f"Deposit amount must be {booking.deposit_amount} cents."
                 )
 
         #  Store booking for use in view
         data['booking'] = booking
-        """
         return data
 
 

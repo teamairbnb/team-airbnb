@@ -25,13 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-z)q7e6sr7!^9!_+)fv(ksf8s7()-3+x@oj&t$r6zvj+9@1mr)j'
+SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['car-rental.onrender.com']
-# ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = ['car-rental.onrender.com']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'payments',
     'reservations',
+    'bookings',
 ]
 
 MIDDLEWARE = [

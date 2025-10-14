@@ -9,7 +9,31 @@ from .serializers import BookingSerializer
 from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import timedelta
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(
+    request={
+        'application/json': {
+            'type': 'object',
+            'properties': {
+                'reservation_id': {'type': 'integer', 'description': 'ID of the reservation to book.'}
+            },
+            'required': ['reservation_id']
+        }
+    },
+    responses={
+        201: BookingSerializer,
+        400: {
+            'type': 'object',
+            'properties': {
+                'error': {'type': 'string', 'example': 'Invalid reservation status'}
+            }
+        }
+    },
+    description="""
+    Books a car using a reservation.\nSend a POST request with a valid reservation_id.\nReservation must have status 'soft' or 'firm'.\nReturns booking details on success.
+    """
+)
 class CreateBookingView(APIView):
     permission_classes = [IsAuthenticated]
 

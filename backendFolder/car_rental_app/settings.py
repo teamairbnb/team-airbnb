@@ -55,8 +55,9 @@ INSTALLED_APPS = [
     'car_inventories',
     'drf_spectacular',
     'payments',
-    'reservations',
     'bookings',
+    'notifications',
+    'reservations.apps.ReservationsConfig',
 ]
 
 MIDDLEWARE = [

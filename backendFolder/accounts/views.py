@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework import status
 from .models import CustomUser
-from .serializers import CustomUserSerializer
+from .serializers import CustomUserSerializer,CustomUserCreateSerializer
 import uuid
 from django.utils.crypto import get_random_string
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -194,6 +194,24 @@ class GuestSignupView(APIView):
             "refresh": str(refresh),
         })
 
+
+class BusinessOwnerSignupView(APIView):
+    permission_classes = []  # open endpoint
+    """
+    Endpoint for signing up business owners.
+    """
+    @extend_schema(
+        tags=["Business Owners"],
+        request=CustomUserCreateSerializer,
+        responses={201: CustomUserCreateSerializer},
+        description="Register a new business owner. Sets `is_business_owner=True` automatically.",
+    )
+    def post(self, request):
+        serializer = CustomUserCreateSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.save(is_business_owner=True)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 

@@ -26,6 +26,7 @@ urlpatterns = [
         path('app/', include('accounts.urls')),
         path('reservations/',include('reservations.urls')),
         path('bookings/',include('bookings.urls')),
+        path('notifications/', include('notifications.urls')),
     ]
 
     ),

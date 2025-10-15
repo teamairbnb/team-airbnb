@@ -55,8 +55,9 @@ INSTALLED_APPS = [
     'car_inventories',
     'drf_spectacular',
     'payments',
-    'reservations',
     'bookings',
+    'notifications',
+    'reservations.apps.ReservationsConfig',
 ]
 
 MIDDLEWARE = [
@@ -230,10 +231,6 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=5),   
 }
 
-
-#  Stripe configuration
-STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
-STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
 
 SUPABASE_URL = os.environ.get("SUPABASE_URL")
 SUPABASE_KEY = os.environ.get("SUPABASE_KEY")

@@ -13,7 +13,16 @@ import Header from "./components/Header";
 import BusinessInfo from "./pages/BusinessInfo";
 import BusinessProfile from "./pages/BusinessProfile";
 import UploadImage from "./pages/UploadImage";
-import BusinessPayment from "./pages/BusinessPayment";
+import PaymentMethod from "./pages/PaymentMethod";
+import AccountSettings from "./pages/AccountSettings";
+import ChangeEmail from "./pages/ChangeEmail";
+import ChangePassword from "./pages/ChangePassword";
+import ChangePhone from "./pages/ChangePhone";
+import NotificationPreferences from "./pages/NotificationPreferences"
+import LanguageAndRegion from "./pages/LanguageAndRegion";
+import Security from "./pages/Security";
+import EmailVerification from "./pages/EmailVerification";
+import SMSVerification from "./pages/SMSVerification";
 
 function App() {
   return (
@@ -30,7 +39,17 @@ function App() {
         <Route path="/business-info" element={<BusinessInfo />} />
         <Route path="/business-profile" element={<BusinessProfile />} />
         <Route path="/upload" element={<UploadImage/>} />
-        <Route path="/payment" element={<BusinessPayment/>} />
+        <Route path="/payment" element={<PaymentMethod/>} />
+        <Route path="/account" element={<AccountSettings/>} />
+        <Route path="/change-email" element={<ChangeEmail />} />
+<Route path="/change-phone" element={<ChangePhone />} />
+<Route path="/change-password" element={<ChangePassword />} />
+<Route path="/notification" element={<NotificationPreferences />} />
+<Route path="/language&region" element={<LanguageAndRegion />} />
+<Route path="/security" element={<Security />} />
+<Route path="/verify-email" element={<EmailVerification />} />
+<Route path="/verify-sms" element={<SMSVerification />} />
+
         
         
       </Routes>

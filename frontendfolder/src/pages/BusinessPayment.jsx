@@ -165,9 +165,9 @@ function BusinessPayment() {
 
 
 
-          <div className="mt-6 mb-16">
-            <Button text="Confirm" type="submit" className="w-full max-w-[350px]" />
-          </div>
+          <div className="fixed bottom-0 left-0 right-0 p-4 bg-white shadow-inner">
+  <Button text="Confirm" type="submit" className="w-full" />
+</div>
         </form>
       </div>
     </div>

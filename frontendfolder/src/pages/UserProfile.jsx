@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { ChevronRight, ChevronLeft } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import cancelbookingwarning from "../assets/cancelbookingwarning.svg";
 import close from "../assets/close.svg";
+import NavBar from "../components/NavBar";
 
 export default function UserProfile() {
   const navigate = useNavigate();
@@ -22,18 +23,16 @@ export default function UserProfile() {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white flex flex-col relative">
+      {/* Fixed Top Navbar */}
       <div className="w-full bg-white">
-        {/* Back Button */}
-        <div className="px-4 py-6">
-          <button
-            onClick={() => navigate("/CustomerHomePage")}
-            className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center"
-          >
-            <ChevronLeft className="w-5 h-5 text-gray-700" />
-          </button>
+        <div className="pt-4 pb-10">
+          <NavBar />
         </div>
+      </div>
 
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto pb-24">
         {/* Profile Section */}
         <div className="px-4 flex flex-col items-center mb-6">
           <img
@@ -52,7 +51,7 @@ export default function UserProfile() {
           {menuItems.map((item, index) => (
             <button
               key={index}
-              onClick={() => navigate(item.path)} 
+              onClick={() => navigate(item.path)}
               className="w-full bg-white px-5 py-4 flex items-center justify-between rounded-xl border border-[#D3D3D3] hover:bg-gray-50 transition-colors"
             >
               <span className="text-gray-900 text-sm font-normal">
@@ -62,16 +61,16 @@ export default function UserProfile() {
             </button>
           ))}
         </div>
+      </div>
 
-        {/* Log out Button */}
-        <div className="px-4 mt-6">
-          <button
-            onClick={handleCancelClick}
-            className="w-full text-red-500 text-sm font-medium hover:text-red-600 transition-colors py-2"
-          >
-            Log out
-          </button>
-        </div>
+      {/* Fixed Log Out Button */}
+      <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-4 border-t border-gray-200">
+        <button
+          onClick={handleCancelClick}
+          className="w-full text-red-500 text-sm font-medium hover:text-red-600 transition-colors py-3"
+        >
+          Log out
+        </button>
       </div>
 
       {/* Log Out Modal */}
@@ -89,7 +88,7 @@ export default function UserProfile() {
                   onClick={handleCloseModal}
                   className="w-[24px] mb-2 cursor-pointer"
                   src={close}
-                  alt=""
+                  alt="Close"
                 />
               </div>
               <h2 className="font-bold text-[25px] mb-3">Log Out?</h2>
@@ -98,7 +97,7 @@ export default function UserProfile() {
               </p>
 
               <div className="flex justify-center mb-6">
-                <img src={cancelbookingwarning} alt="" />
+                <img src={cancelbookingwarning} alt="Warning" />
               </div>
 
               <div className="flex justify-center gap-3">

@@ -21,10 +21,8 @@ function PaymentDetails() {
   const location = useLocation();
 
   const passedTotal = location.state?.derivedCarPrice ?? 0;
-
   const storedPlanPrice = localStorage.getItem("selectedPlanPrice");
   const planPrice = storedPlanPrice ? parseFloat(storedPlanPrice) : 0;
-
   const carPrice = car ? parseFloat(car.price) : 0;
 
   const initialTotal = passedTotal || passedTotal + planPrice;
@@ -68,7 +66,7 @@ function PaymentDetails() {
   };
 
   return (
-    <div className="flex flex-col pt-[16px] min-h-screen">
+    <div className="flex flex-col pt-[16px] min-h-screen pb-32 relative">
       <div className="mx-4">
         <Link
           to={car ? `/book/${car.id}/DrivingSecurity` : "/book"}
@@ -78,7 +76,7 @@ function PaymentDetails() {
         </Link>
       </div>
 
-      <div className="flex flex-col w-full max-w-[400px] mt-6 px-4">
+      <div className="flex flex-col w-full mt-6 px-4">
         <div className="text-left mb-4">
           <h1 className="font-bold text-xl">Payment Details</h1>
         </div>
@@ -220,7 +218,7 @@ function PaymentDetails() {
           )}
 
           {/* Total */}
-          <div className="flex justify-between mt-6 border-t pt-4">
+          <div className="flex justify-between mt-6 border-t pt-4 pb-24">
             <div>
               <p className="text-xl font-bold">Total</p>
               <p className="underline text-sm text-[#717171]">Price details</p>
@@ -229,14 +227,18 @@ function PaymentDetails() {
               <p className="text-xl font-bold">${total.toFixed(2)}</p>
             </div>
           </div>
-          
-          <button
-            type="submit"
-            className="block w-full mb-4 mt-7 py-4 rounded-xl font-semibold text-lg text-center transition bg-blue-600 text-white hover:bg-blue-700"
-          >
-            Pay & Book
-          </button>
         </form>
+      </div>
+
+      <div className="fixed bottom-0 left-0 w-full p-4">
+        <button
+          type="submit"
+          form="paymentForm"
+          onClick={handleSubmit}
+          className="block w-full py-4 rounded-xl font-semibold text-lg text-center transition bg-blue-600 text-white hover:bg-blue-700"
+        >
+          Pay & Book
+        </button>
       </div>
     </div>
   );

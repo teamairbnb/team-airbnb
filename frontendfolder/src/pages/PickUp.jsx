@@ -4,17 +4,30 @@ import { Info } from "lucide-react";
 import back from "../assets/back.svg";
 import { useCarContext } from "../components/FetchCarDetails";
 
-
 export default function PickUp() {
   const navigate = useNavigate();
   const { car, bookingDetails, setBookingDetails } = useCarContext();
 
-  const handleNext = () => {
-    navigate("/book/" + car.id + "/ReviewBooking");
-  };
-
   const handleChange = (field, value) => {
     setBookingDetails((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleNext = () => {
+    const { pickUpDate, pickUpTime, returnDate, returnTime } = bookingDetails;
+
+    if (!pickUpDate || !pickUpTime || !returnDate || !returnTime) {
+      alert("Please select both date and time for pick-up and return.");
+      return;
+    }
+
+    const pickUp = new Date(`${pickUpDate}T${pickUpTime}`);
+    const returnD = new Date(`${returnDate}T${returnTime}`);
+    if (returnD <= pickUp) {
+      alert("Return date/time must be after pick-up date/time.");
+      return;
+    }
+
+    navigate(`/book/${car.id}/ReviewBooking`);
   };
 
   const backUrl = `/book/${car.id}/car-booking`;
@@ -47,13 +60,14 @@ export default function PickUp() {
               <div className="border border-gray-200 rounded-xl mt-[16px] p-3">
                 <input
                   type="date"
-                  value={bookingDetails.pickUpDate}
+                  value={bookingDetails.pickUpDate || ""}
                   onChange={(e) => handleChange("pickUpDate", e.target.value)}
                   className="outline-none w-full bg-transparent text-gray-700 mb-3"
+                  min={new Date().toISOString().split("T")[0]}
                 />
                 <input
                   type="time"
-                  value={bookingDetails.pickUpTime}
+                  value={bookingDetails.pickUpTime || ""}
                   onChange={(e) => handleChange("pickUpTime", e.target.value)}
                   className="outline-none w-full bg-transparent text-gray-700"
                 />
@@ -66,13 +80,17 @@ export default function PickUp() {
               <div className="border border-gray-200 rounded-xl mt-[16px] p-3">
                 <input
                   type="date"
-                  value={bookingDetails.returnDate}
+                  value={bookingDetails.returnDate || ""}
                   onChange={(e) => handleChange("returnDate", e.target.value)}
                   className="outline-none w-full bg-transparent text-gray-700 mb-3"
+                  min={
+                    bookingDetails.pickUpDate ||
+                    new Date().toISOString().split("T")[0]
+                  }
                 />
                 <input
                   type="time"
-                  value={bookingDetails.returnTime}
+                  value={bookingDetails.returnTime || ""}
                   onChange={(e) => handleChange("returnTime", e.target.value)}
                   className="outline-none w-full bg-transparent text-gray-700"
                 />

@@ -46,8 +46,8 @@ export default function CustomerHomePage() {
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
-    { label: "Dashboard", icon: smblackcar, path: "/Dashboard" },
-    { label: "My Booking", icon: bookicon, path: "/Bookings" },
+    { label: "Dashboard", icon: smblackcar, path: "/CustomerDashboard" },
+    { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/Chat" },
     { label: "Notification", icon: blacknotificon, path: "/Notifications" },

@@ -29,6 +29,8 @@ import Security from "./pages/Security";
 import ChangePassword from "./pages/ChangePassword";
 import EditCarDetails from "./components/EditCarDetails";
 import ScrollToTop from "./components/ScrollToTop";
+import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
+import LiveChat from "./pages/LiveChat";
 
 function App() {
   return (
@@ -64,6 +66,8 @@ function App() {
         <Route path="/Security" element={<Security />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
         <Route path="/EditCarDetails" element={<EditCarDetails />} />
+        <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
+        <Route path="/LiveChat" element={<LiveChat />} />
 
       </Routes>
     </BrowserRouter>

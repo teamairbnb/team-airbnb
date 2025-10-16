@@ -3,15 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import cancelbookingwarning from "../assets/cancelbookingwarning.svg";
 import close from "../assets/close.svg";
-import NavBar from "../components/NavBar";
 
-export default function UserProfile() {
+export default function BusinessOwnerProfile() {
   const navigate = useNavigate();
 
   const menuItems = [
-    { title: "Personal info", path: "/CustomerPersonalInfo" },
-    { title: "Driver's license", path: "/DriverLicense" },
-    { title: "Saved Payment Methods", path: "/PaymentMethod" },
+    { title: "Business Information", path: "/CustomerPersonalInfo" },
+    { title: "Verification Status", path: "/DriverLicense" },
     { title: "Account Settings", path: "/profile/account-settings" },
     { title: "Notifications Preferences", path: "/profile/notifications" },
     { title: "Security", path: "/Security" },
@@ -23,30 +21,24 @@ export default function UserProfile() {
   const handleCloseModal = () => setShowModal(false);
 
   return (
-    <div className="min-h-screen bg-white flex flex-col relative">
-      {/* Fixed Top Navbar */}
-      <div className="w-full bg-white">
-        <div className="pt-4 pb-10">
-          <NavBar />
-        </div>
-      </div>
-
+    <div className="bg-white flex flex-col relative tracking-wide mt-10 text-center">
+      <p className="text-[20px] font-semibold mb-12">Profile</p>
+      
       <div className="flex-1 overflow-y-auto pb-24">
-        {/* Profile Section */}
-        <div className="px-4 flex flex-col items-center mb-6">
+        <div className="flex flex-col items-center mb-10">
           <img
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop"
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover mb-4"
           />
           <h2 className="text-base font-semibold text-gray-900 mb-1">
-            Rodie Jones
+            Jonny Rentals
           </h2>
-          <div className="text-gray-400 text-sm">@roro</div>
+          <div className="text-gray-400 text-sm mt-1">John Smith - Business Owner</div>
         </div>
 
         {/* Menu Items */}
-        <div className="px-4 space-y-5">
+        <div className="space-y-5">
           {menuItems.map((item, index) => (
             <button
               key={index}
@@ -62,7 +54,7 @@ export default function UserProfile() {
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-4 border-t border-gray-200">
+      <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-3">
         <button
           onClick={handleCancelClick}
           className="w-full text-red-500 text-sm font-medium hover:text-red-600 transition-colors py-3"

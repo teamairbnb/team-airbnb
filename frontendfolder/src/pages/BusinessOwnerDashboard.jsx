@@ -11,6 +11,10 @@ import revenue from "../assets/revenuestats.svg";
 import Cars from "../components/Cars";
 import RecentActivity from "../components/recentactivity";
 import Reservations from "../components/Reservations";
+import BusinessOwnerReport from "./BusinessOwnerReport";
+import BusinessOwnerProfile from "./BusinessOwnerProfile";
+import BusinessNotification from "./BusinessNotification";
+import Chat from "./Chat";
 
 export default function BusinessOwnerDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -28,9 +32,17 @@ export default function BusinessOwnerDashboard() {
         return <Cars />;
       case "Reservations":
         return <Reservations />;
+      case "Reports":
+        return <BusinessOwnerReport />;
+      case "Profile":
+        return <BusinessOwnerProfile />;
+      case "Notification":
+        return <BusinessNotification />;
+      case "Chat":
+        return <Chat />;
       default:
         return (
-          <div className="text-center text-[#111827] mt-10">
+          <div className="text-center text-[#111827] mt-10 tracking-wide">
             <p className="text-lg font-semibold">Dashboard</p>
             <div className="mt-[32px] mb-4 font-semibold tracking-wide">
               <div className="flex gap-[16px] text-start">
@@ -120,24 +132,30 @@ export default function BusinessOwnerDashboard() {
             <img className="w-16" src={logo_textblack} alt="Logo" />
           </button>
           <ul className="space-y-[8px] text-[#111827] font-semibold tracking-wide">
-            {["Dashboard", "Cars", "Reservations", "Reports", "Profile"].map(
-              (item) => (
-                <li
-                  key={item}
-                  className={`cursor-pointer gap-[8px] p-[16px] flex ${
-                    activePage === item
-                      ? "bg-[#DEE8FC] text-blue-600"
-                      : "hover:bg-gray-100"
-                  }`}
-                  onClick={() => {
-                    setActivePage(item);
-                    setSidebarOpen(false);
-                  }}
-                >
-                  <p>{item}</p>
-                </li>
-              )
-            )}
+            {[
+              "Dashboard",
+              "Cars",
+              "Reservations",
+              "Reports",
+              "Profile",
+              "Notification",
+              "Chat",
+            ].map((item) => (
+              <li
+                key={item}
+                className={`cursor-pointer gap-[8px] p-[16px] flex ${
+                  activePage === item
+                    ? "bg-[#DEE8FC] text-blue-600"
+                    : "hover:bg-gray-100"
+                }`}
+                onClick={() => {
+                  setActivePage(item);
+                  setSidebarOpen(false);
+                }}
+              >
+                <p>{item}</p>
+              </li>
+            ))}
           </ul>
         </div>
       </div>
@@ -152,12 +170,22 @@ export default function BusinessOwnerDashboard() {
         />
         <img className="w-8" src={logo} alt="logo" />
         <div className="flex gap-3">
-          <img className="w-6" src={notificon} alt="notifications" />
-          <img className="w-9" src={userimg} alt="user" />
+          <img
+            onClick={() => setActivePage("Notification")}
+            className="w-6"
+            src={notificon}
+            alt="notifications"
+          />
+          <img
+            onClick={() => setActivePage("Profile")}
+            className="w-9"
+            src={userimg}
+            alt="user"
+          />
         </div>
 
         <div className="fixed top-[440px] right-0 z-50 border border-[#D3D3D3] bg-white shadow-md w-[95px] translate-x-5 py-1 rounded-full flex justify-center items-center">
-          <img className="w-8" src={chaticon} alt="Chat Icon" />
+          <img onClick={() => setActivePage("Chat")} className="w-8" src={chaticon} alt="Chat Icon" />
         </div>
       </div>
 

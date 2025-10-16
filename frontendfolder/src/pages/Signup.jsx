@@ -3,20 +3,30 @@ import { useState } from "react";
 import Button from "../components/Button.jsx";
 
 function Signup() {
-  const [businessName, setBusinessName] = useState("");
-  const [ownerName, setOwnerName] = useState("");
+  // CHANGED: Replaced businessName with username, ownerName with firstName/lastName
+  const [username, setUsername] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [isLoading, setIsLoading] = useState(false); // ADDED: Loading state
 
   const validate = () => {
     const newErrors = {};
 
-    // Business & Owner check
-    if (!businessName) newErrors.businessName = "Business name is required";
-    if (!ownerName) newErrors.ownerName = "Owner name is required";
+    // Username check
+    if (!username) {
+      newErrors.username = "Username is required";
+    } else if (username.length < 3) {
+      newErrors.username = "Username must be at least 3 characters";
+    }
+
+    // First & Last name check
+    if (!firstName) newErrors.firstName = "First name is required";
+    if (!lastName) newErrors.lastName = "Last name is required";
 
     // Email validation
     if (!email) {
@@ -40,8 +50,16 @@ function Signup() {
     }
 
     // Password check
-    if (!password) newErrors.password = "Password is required";
-    if (!rePassword) newErrors.rePassword = "Please re-enter your password";
+    if (!password) {
+      newErrors.password = "Password is required";
+    } else if (password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+
+    if (!rePassword) {
+      newErrors.rePassword = "Please re-enter your password";
+    }
+
     if (password && rePassword && password !== rePassword) {
       newErrors.rePassword = "Passwords do not match";
     }
@@ -49,25 +67,91 @@ function Signup() {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      console.log({ businessName, ownerName, email, phone, password });
-      alert("Signup submitted successfully!");
+      setIsLoading(true);
 
-      // Reset form fields
-      setBusinessName("");
-      setOwnerName("");
-      setEmail("");
-      setPhone("");
-      setPassword("");
-      setRePassword("");
+      // Prepare the request body according to API specification
+      const requestBody = {
+        username: username.trim(),
+        email: email.trim().toLowerCase(),
+        password: password,
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        phone_number: phone.trim(),
+        country: "Nigeria",
+        state: "Rivers",
+        address: "N/A",
+      };
 
-      // Redirect to CodeVerification page on success
-      window.location.href = "/CodeVerification";
+      console.log("Sending request body:", requestBody);
+
+      try {
+        const response = await fetch(
+          "https://team-airbnb.onrender.com/api/v1/auth/users/",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Accept: "application/json",
+            },
+            body: JSON.stringify(requestBody),
+          }
+        );
+
+        const data = await response.json();
+
+        // Log the full response for debugging
+        console.log("Full API Response:", response.status, data);
+
+        if (response.ok) {
+          console.log("Signup successful:", data);
+          alert("Signup submitted successfully!");
+
+          // Reset form fields
+          setUsername("");
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPhone("");
+          setPassword("");
+          setRePassword("");
+
+          // Redirect to Login page on success
+          window.location.href = "/Login";
+        } else {
+          // Handle API errors
+          console.error("Signup failed:", data);
+
+          // Extract error message from API response
+          let errorMessage = "Please try again";
+          if (typeof data === "string") {
+            errorMessage = data;
+          } else if (data.message) {
+            errorMessage = data.message;
+          } else if (data.error) {
+            errorMessage = data.error;
+          } else if (Array.isArray(data) && data.length > 0) {
+            errorMessage = data[0];
+          }
+
+          alert(`Signup failed: ${errorMessage}`);
+
+          // Set field-specific errors if provided by API
+          if (data.errors) {
+            setErrors(data.errors);
+          }
+        }
+      } catch (error) {
+        console.error("Network error:", error);
+        alert("Network error. Please check your connection and try again.");
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -81,42 +165,62 @@ function Signup() {
         </div>
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 w-full">
-          {/* Business Name */}
+          {/* Username */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="businessName" className="block mb-2">
-              Business Name
+            <label htmlFor="username" className="block mb-2">
+              Username
             </label>
             <input
               type="text"
-              id="businessName"
-              placeholder="Enter Business Name"
-              value={businessName}
-              onChange={(e) => setBusinessName(e.target.value)}
+              id="username"
+              placeholder="Enter Username"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
-            {errors.businessName && (
+            {errors.username && (
               <p className="text-sm text-red-500 text-right">
-                {errors.businessName}
+                {errors.username}
               </p>
             )}
           </div>
 
-          {/* Owner Name */}
+          {/* First Name */}
           <div className="flex flex-col gap-1 w-full">
-            <label htmlFor="ownerName" className="block mb-2">
-              Owner Name
+            <label htmlFor="firstName" className="block mb-2">
+              First Name
             </label>
             <input
               type="text"
-              id="ownerName"
-              placeholder="Enter Owner Name"
-              value={ownerName}
-              onChange={(e) => setOwnerName(e.target.value)}
+              id="firstName"
+              placeholder="Enter First Name"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
-            {errors.ownerName && (
+            {errors.firstName && (
               <p className="text-sm text-red-500 text-right">
-                {errors.ownerName}
+                {errors.firstName}
+              </p>
+            )}
+          </div>
+
+          {/* Last Name */}
+          <div className="flex flex-col gap-1 w-full">
+            <label htmlFor="lastName" className="block mb-2">
+              Last Name
+            </label>
+            <input
+              type="text"
+              id="lastName"
+              placeholder="Enter Last Name"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
+            />
+            {errors.lastName && (
+              <p className="text-sm text-red-500 text-right">
+                {errors.lastName}
               </p>
             )}
           </div>
@@ -177,6 +281,7 @@ function Signup() {
             )}
           </div>
 
+          {/* Re-enter Password */}
           <div className="flex flex-col gap-1 w-full">
             <label htmlFor="rePassword" className="block mb-2">
               Re-enter Password
@@ -197,7 +302,11 @@ function Signup() {
           </div>
 
           <div className="mt-5 mb-16">
-            <Button text="Sign Up" type="submit" className="w-full max-w-[350px]" />
+            <Button
+              text={isLoading ? "Signing Up..." : "Sign Up"}
+              type="submit"
+              className="w-full max-w-[350px]"
+            />
           </div>
         </form>
       </div>

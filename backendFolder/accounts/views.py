@@ -12,6 +12,19 @@ from drf_spectacular.utils import extend_schema
 from car_rental_app.config import supabase
 
 
+from rest_framework.decorators import api_view
+
+@api_view(['GET'])  # or ['POST'] if you prefer
+def run_cron_task(request):
+    # Example task: print something or trigger a function
+    # You can also call any helper function here
+    print("Cron job executed successfully!")
+
+    # Return a 200 OK response
+    return Response({"status": "success"}, status=status.HTTP_200_OK)
+
+
+
 @extend_schema(request=CustomUserSerializer, responses=CustomUserSerializer)
 class UserProfileView(APIView):
     permission_classes = [IsAuthenticated]

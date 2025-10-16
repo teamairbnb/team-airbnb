@@ -29,6 +29,7 @@ import Security from "./pages/Security";
 import ChangePassword from "./pages/ChangePassword";
 import EditCarDetails from "./components/EditCarDetails";
 import ScrollToTop from "./components/ScrollToTop";
+// import Signup from "./pages/UserSignup";
 
 function App() {
   return (
@@ -43,28 +44,52 @@ function App() {
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
 
         <Route path="/book/:carId" element={<FetchCarDetails />}>
-          <Route path="/book/:carId/car-booking" element={<CarBookingScreen />} />
+          <Route
+            path="/book/:carId/car-booking"
+            element={<CarBookingScreen />}
+          />
           <Route path="/book/:carId/PickUp" element={<PickUp />} />
-          <Route path="/book/:carId/ReviewBooking" element={<ReviewBooking />} />
-          <Route path="/book/:carId/DrivingSecurity" element={<DrivingSecurity />} />
-          <Route path="/book/:carId/PaymentDetails" element={<PaymentDetails />} />
-          <Route path="/book/:carId/BookingSuccess" element={<BookingSuccess />} />
-          <Route path="/book/:carId/BookingDetails" element={<BookingDetails />} />
+          <Route
+            path="/book/:carId/ReviewBooking"
+            element={<ReviewBooking />}
+          />
+          <Route
+            path="/book/:carId/DrivingSecurity"
+            element={<DrivingSecurity />}
+          />
+          <Route
+            path="/book/:carId/PaymentDetails"
+            element={<PaymentDetails />}
+          />
+          <Route
+            path="/book/:carId/BookingSuccess"
+            element={<BookingSuccess />}
+          />
+          <Route
+            path="/book/:carId/BookingDetails"
+            element={<BookingDetails />}
+          />
         </Route>
-        
-        <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
+
+        <Route
+          path="/BusinessOwnerDashboard"
+          element={<BusinessOwnerDashboard />}
+        />
         <Route path="/Cars" element={<Cars />} />
         <Route path="/NoBookings" element={<NoBookings />} />
         <Route path="/MyBookings" element={<MyBookings />} />
         <Route path="/UserProfile" element={<UserProfile />} />
-        <Route path="/CustomerPersonalInfo" element={<CustomerPersonalInfo />} />
+        <Route
+          path="/CustomerPersonalInfo"
+          element={<CustomerPersonalInfo />}
+        />
         <Route path="/DriverLicense" element={<DriverLicense />} />
         <Route path="/PaymentMethod" element={<PaymentMethod />} />
         <Route path="/AddCard" element={<AddCard />} />
         <Route path="/Security" element={<Security />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
         <Route path="/EditCarDetails" element={<EditCarDetails />} />
-
+        <Route path="/UserSignup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );

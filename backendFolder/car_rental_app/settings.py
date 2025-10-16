@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'payments',
     'reservations',
     'bookings',
+    'chatbots',
+    'django_filters',
 ]
 
 MIDDLEWARE = [

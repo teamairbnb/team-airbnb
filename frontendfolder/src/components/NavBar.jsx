@@ -22,7 +22,7 @@ function NavBar() {
     { label: "Dashboard", icon: smblackcar, path: "/CustomerDashboard" },
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
-    { label: "Chat", icon: blackchaticon, path: "/Chat" },
+    { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/Notifications" },
     { label: "Settings", icon: settingsicon, path: "/Settings" },
   ];
@@ -61,7 +61,17 @@ function NavBar() {
                   key={index}
                   onClick={() => {
                     setSidebarOpen(false);
-                    navigate(item.path);
+
+                    if (item.path === "/LiveChat") {
+                      navigate(item.path, {
+                        state: {
+                          backTo: "/UserProfile",
+                          role: "Customer",
+                        },
+                      });
+                    } else {
+                      navigate(item.path);
+                    }
                   }}
                   className={`cursor-pointer gap-[8px] p-[16px] flex transition-all duration-200 ${
                     isActive
@@ -69,7 +79,7 @@ function NavBar() {
                       : "hover:text-blue-600"
                   }`}
                 >
-                  <img className="w-[22px]" src={item.icon} alt={item.label} />
+                  <img className="w-[22px]" src={item.icon} alt="" />
                   <p>{item.label}</p>
                 </li>
               );
@@ -96,7 +106,14 @@ function NavBar() {
             src={chatIcon}
             alt="Chat"
             className="h-6 w-6 cursor-pointer"
-            onClick={() => navigate("/Chat")}
+            onClick={() =>
+              navigate("/LiveChat", {
+                state: {
+                  backTo: "/UserProfile",
+                  role: "Customer",
+                },
+              })
+            }
           />
           <img
             src={profileIcon}

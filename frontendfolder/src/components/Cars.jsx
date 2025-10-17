@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 import OwnerCar from "./OwnerCar";
-import AddCar from "./AddCar"; // ← this is the component you want to show when Add Car is clicked
-
+import AddCar from "./AddCar";
 export default function Cars() {
   const [showAddCar, setShowAddCar] = useState(false);
 
   return (
-    <div className="text-center text-[#111827] mt-10 relative">
+    <div className="text-center text-[#111827] mt-10 relative tracking-wide">
       {!showAddCar ? (
         <>
           <p className="text-[20px] font-semibold">Cars</p>

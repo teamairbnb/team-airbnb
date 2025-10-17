@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'payments',
     'bookings',
+    'chatbots',
+    'django_filters',
     'notifications',
     'reservations.apps.ReservationsConfig',
 ]

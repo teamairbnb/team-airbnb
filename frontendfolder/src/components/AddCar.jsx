@@ -8,7 +8,8 @@ export default function AddCar({ onBack }) {
   const [isSeatDropdownOpen, setIsSeatDropdownOpen] = useState(false);
   const [isMakeDropdownOpen, setIsMakeDropdownOpen] = useState(false);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
-  const [isTransmissionDropdownOpen, setIsTransmissionDropdownOpen] = useState(false);
+  const [isTransmissionDropdownOpen, setIsTransmissionDropdownOpen] =
+    useState(false);
   const [isFuelDropdownOpen, setIsFuelDropdownOpen] = useState(false);
 
   const [selectedType, setSelectedType] = useState("");
@@ -18,9 +19,17 @@ export default function AddCar({ onBack }) {
   const [selectedTransmission, setSelectedTransmission] = useState("");
   const [selectedFuel, setSelectedFuel] = useState("");
 
+  const [year, setYear] = useState("");
+  const [color, setColor] = useState("");
+  const [hourlyRate, setHourlyRate] = useState("");
+  const [dailyPrice, setDailyPrice] = useState("");
+
   const [hasAC, setHasAC] = useState(false);
   const [hasGPS, setHasGPS] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
 
   const typeRef = useRef(null);
   const seatRef = useRef(null);
@@ -63,7 +72,59 @@ export default function AddCar({ onBack }) {
     if (file) setSelectedImage(file);
   };
 
-  const Dropdown = ({ label, selected, options, isOpen, setOpen, setSelected, innerRef }) => (
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("make", selectedMake);
+    formData.append("model", selectedModel);
+    formData.append("year", year);
+    formData.append("car_type", selectedType);
+    formData.append("color", color);
+    formData.append("seats", selectedSeat);
+    formData.append("transmission", selectedTransmission);
+    formData.append("fuel_type", selectedFuel);
+    formData.append("has_ac", hasAC);
+    formData.append("has_gps", hasGPS);
+    formData.append("hourly_rate", hourlyRate);
+    formData.append("deposit_amount", dailyPrice);
+    formData.append("image", selectedImage);
+
+    setLoading(true);
+    setMessage("");
+
+    try {
+      const response = await fetch(
+        "https://team-airbnb.onrender.com/api/v1/admin/cars/",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (response.ok) {
+        setMessageType("success");
+        setMessage("Car added successfully!");
+        setTimeout(() => onBack(), 2000);
+      } else {
+        setMessageType("error");
+        setMessage("Failed to add car. Please try again.");
+      }
+    } catch (error) {
+      setMessageType("error");
+      setMessage("Error: " + error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const Dropdown = ({
+    label,
+    selected,
+    options,
+    isOpen,
+    setOpen,
+    setSelected,
+    innerRef,
+  }) => (
     <div className="mt-[25px] text-start relative" ref={innerRef}>
       <p className="text-[17px] font-semibold">{label}</p>
       <div
@@ -76,7 +137,9 @@ export default function AddCar({ onBack }) {
         <img
           src={arrow}
           alt="Dropdown Arrow"
-          className={`w-4 h-4 transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"}`}
+          className={`w-4 h-4 transition-transform duration-300 ${
+            isOpen ? "rotate-180" : "rotate-0"
+          }`}
         />
       </div>
 
@@ -114,7 +177,9 @@ export default function AddCar({ onBack }) {
         </p>
       </div>
 
-      <p className="mt-[50px] text-start text-[20px] font-semibold">Car Details</p>
+      <p className="mt-[50px] text-start text-[20px] font-semibold">
+        Car Details
+      </p>
 
       {/* Make Dropdown */}
       <Dropdown
@@ -144,6 +209,8 @@ export default function AddCar({ onBack }) {
         <input
           type="text"
           placeholder="Enter Year"
+          value={year}
+          onChange={(e) => setYear(e.target.value)}
           className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
         />
       </div>
@@ -154,6 +221,8 @@ export default function AddCar({ onBack }) {
         <input
           type="text"
           placeholder="Enter Color"
+          value={color}
+          onChange={(e) => setColor(e.target.value)}
           className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
         />
       </div>
@@ -233,6 +302,8 @@ export default function AddCar({ onBack }) {
         <input
           type="text"
           placeholder="Enter Hourly Rate"
+          value={hourlyRate}
+          onChange={(e) => setHourlyRate(e.target.value)}
           className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
         />
       </div>
@@ -243,6 +314,8 @@ export default function AddCar({ onBack }) {
         <input
           type="text"
           placeholder="Enter Daily Price"
+          value={dailyPrice}
+          onChange={(e) => setDailyPrice(e.target.value)}
           className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
         />
       </div>
@@ -277,8 +350,25 @@ export default function AddCar({ onBack }) {
       </div>
 
       {/* Submit */}
-      <div className="mt-[34px]">
-        <button className="bg-[#2563EB] w-full rounded-[10px] text-white py-4">Done</button>
+      <div className="mt-[34px] pb-10">
+        <button
+          onClick={handleSubmit}
+          disabled={loading}
+          className="bg-[#2563EB] w-full rounded-[10px] text-white py-4 font-semibold cursor-pointer hover:bg-[#1d4ed8] transition-colors disabled:bg-gray-400 disabled:cursor-not-allowed"
+        >
+          {loading ? "Submitting..." : "Done"}
+        </button>
+        {message && (
+          <div
+            className={`mt-4 p-3 rounded-[10px] text-center font-semibold ${
+              messageType === "success"
+                ? "bg-green-100 text-green-800"
+                : "bg-red-100 text-red-800"
+            }`}
+          >
+            {message}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,15 +6,22 @@ from django.core.validators import MinValueValidator
 import secrets
 from django.db.models import Sum
 from django.core.exceptions import ValidationError
+from bookings.models import Booking
 
 # Create your models here.
 
+
+def generate_uuid_hex():
+    return uuid.uuid4().hex
+
+def generate_secrets_token():
+    return secrets.token_urlsafe(32)
 
 
 class PaymentMethod(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     # A simple token representing the stored payment method
-    token = models.CharField(max_length=64, unique=True, default=lambda: uuid.uuid4().hex)
+    token = models.CharField(max_length=64, unique=True, default=generate_uuid_hex)
     card_brand = models.CharField(max_length=50, blank=True)
     last4 = models.CharField(max_length=4, blank=True)
     exp_month = models.PositiveSmallIntegerField(null=True, blank=True)
@@ -41,16 +48,10 @@ class Payment(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-
-    """
-    # I WROTE THIS TWO LINES TO LINK PAYMENT TO BOOKING AND RENTAL, SEDAN IS THE ONE HANDLING THE BOOKING/RESERVATION APP, SO ANYTHING HE CALLS HIS MODEL WILL BE USED HERE. 
-
-    # booking = models.ForeignKey('bookings.Booking', on_delete=models.CASCADE, related_name='payments')
-    # rental = models.ForeignKey('rentals.Rental', on_delete=models.CASCADE, related_name='payments')
-    """
-    
-    reference = models.CharField(max_length=64, unique=True, default=lambda: uuid.uuid4().hex)
-    client_secret = models.CharField(max_length=128, unique=True, default=lambda: secrets.token_urlsafe(32))
+    booking = models.ForeignKey(Booking, on_delete=models.CASCADE, related_name='payments')
+    # rental = models.ForeignKey('rentals.Rental', on_delete=models.CASCADE, related_name='payments')    
+    reference = models.CharField(max_length=64, unique=True, default=generate_uuid_hex)
+    client_secret = models.CharField(max_length=128, unique=True, default=generate_secrets_token)
     amount = models.PositiveIntegerField(validators=[MinValueValidator(1)])
     currency = models.CharField(max_length=5, default="usd", editable=False)
     payment_method = models.ForeignKey(PaymentMethod, null=True, blank=True, on_delete=models.SET_NULL)
@@ -72,7 +73,6 @@ class Payment(models.Model):
 
     def __str__(self) -> str:
             return f"Payment {self.reference} - {self.user} - {self.amount} {self.currency} ({self.status})"
-    
 
 
 

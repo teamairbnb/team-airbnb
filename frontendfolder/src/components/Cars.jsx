@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import OwnerCar from "./OwnerCar";
-import AddCar from "./AddCar"; // ← this is the component you want to show when Add Car is clicked
-
+import AddCar from "./AddCar";
 export default function Cars() {
   const [showAddCar, setShowAddCar] = useState(false);
 

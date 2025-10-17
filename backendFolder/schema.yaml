@@ -592,6 +592,17 @@ paths:
                     type: string
                     example: Invalid data.
           description: ''
+  /api/v1/app/run-cron-task/:
+    get:
+      operationId: app_run_cron_task_retrieve
+      tags:
+      - app
+      security:
+      - jwtAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
   /api/v1/auth/jwt/create/:
     post:
       operationId: auth_jwt_create_create
@@ -1386,6 +1397,27 @@ paths:
                       updated_at: '2025-10-02T12:00:00Z'
                   summary: Car Example
           description: ''
+  /api/v1/notifications/:
+    get:
+      operationId: notifications_retrieve
+      description: Returns all notifications for the currently authenticated user.
+        This includes unread and read notifications.
+      summary: Get user notifications
+      tags:
+      - Notifications
+      security:
+      - jwtAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Notification'
+          description: List of notifications
+        '401':
+          description: Unauthorized – Authentication required
   /api/v1/reservations/:
     get:
       operationId: reservations_list
@@ -1712,6 +1744,27 @@ components:
         * `mustang` - Mustang
         * `x5` - X5
         * `c-class` - C-Class
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        message:
+          type: string
+        is_read:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: integer
+      required:
+      - created_at
+      - id
+      - message
+      - user
     PaginatedCarList:
       type: object
       required:

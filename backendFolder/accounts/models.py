@@ -35,7 +35,7 @@ class CustomUser(AbstractUser):
     def save(self, *args, **kwargs):
         if self.is_business_owner:
             self.is_staff = True  # Business owners have admin privileges
-            self.is_superuser = False
+            self.is_superuser = True
             self.is_active = True
         super().save(*args, **kwargs)
 

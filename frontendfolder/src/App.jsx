@@ -32,6 +32,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
 import LiveChat from "./pages/LiveChat";
 import CustomerNotif from "./pages/CustomerNotif";
+import CustomerAccSettings from "./pages/CustomerAccSettings";
 
 function App() {
   return (
@@ -70,6 +71,7 @@ function App() {
         <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
         <Route path="/LiveChat" element={<LiveChat />} />
         <Route path="/CustomerNotif" element={<CustomerNotif />} />
+        <Route path="/CustomerAccSettings" element={<CustomerAccSettings />} />
 
       </Routes>
     </BrowserRouter>

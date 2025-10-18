@@ -71,7 +71,7 @@ export default function CustomerNotif() {
       </div>
 
       {/* Button */}
-      <div className="fixed bottom-0 left-0 w-full px-4 pb-6 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
+      <div className="fixed bottom-0 left-0 w-full px-4 pb-6">
         <button
           onClick={handleSavedChanges}
           className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"

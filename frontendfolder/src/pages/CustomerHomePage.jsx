@@ -50,7 +50,7 @@ export default function CustomerHomePage() {
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
-    { label: "Settings", icon: settingsicon, path: "/Settings" },
+    { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
   ];
 
   return (

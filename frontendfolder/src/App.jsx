@@ -41,9 +41,9 @@ import BusinessOwnerChangePassword from "./pages/BusinessOwnerChangePassword.jsx
 import NotificationPreferences from "./pages/NotificationPreferences.jsx";
 import LanguageAndRegion from "./pages/LanguageAndRegion.jsx"
 import BusinessOwnerSecurity from "./pages/BusinessOwnerSecurity.jsx"
-
-
-
+import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
+import LiveChat from "./pages/LiveChat";
+// import Signup from "./pages/UserSignup";
 
 function App() {
   return (
@@ -58,21 +58,45 @@ function App() {
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
 
         <Route path="/book/:carId" element={<FetchCarDetails />}>
-          <Route path="/book/:carId/car-booking" element={<CarBookingScreen />} />
+          <Route
+            path="/book/:carId/car-booking"
+            element={<CarBookingScreen />}
+          />
           <Route path="/book/:carId/PickUp" element={<PickUp />} />
-          <Route path="/book/:carId/ReviewBooking" element={<ReviewBooking />} />
-          <Route path="/book/:carId/DrivingSecurity" element={<DrivingSecurity />} />
-          <Route path="/book/:carId/PaymentDetails" element={<PaymentDetails />} />
-          <Route path="/book/:carId/BookingSuccess" element={<BookingSuccess />} />
-          <Route path="/book/:carId/BookingDetails" element={<BookingDetails />} />
+          <Route
+            path="/book/:carId/ReviewBooking"
+            element={<ReviewBooking />}
+          />
+          <Route
+            path="/book/:carId/DrivingSecurity"
+            element={<DrivingSecurity />}
+          />
+          <Route
+            path="/book/:carId/PaymentDetails"
+            element={<PaymentDetails />}
+          />
+          <Route
+            path="/book/:carId/BookingSuccess"
+            element={<BookingSuccess />}
+          />
+          <Route
+            path="/book/:carId/BookingDetails"
+            element={<BookingDetails />}
+          />
         </Route>
-        
-        <Route path="/BusinessOwnerDashboard" element={<BusinessOwnerDashboard />} />
+
+        <Route
+          path="/BusinessOwnerDashboard"
+          element={<BusinessOwnerDashboard />}
+        />
         <Route path="/Cars" element={<Cars />} />
         <Route path="/NoBookings" element={<NoBookings />} />
         <Route path="/MyBookings" element={<MyBookings />} />
         <Route path="/UserProfile" element={<UserProfile />} />
-        <Route path="/CustomerPersonalInfo" element={<CustomerPersonalInfo />} />
+        <Route
+          path="/CustomerPersonalInfo"
+          element={<CustomerPersonalInfo />}
+        />
         <Route path="/DriverLicense" element={<DriverLicense />} />
         <Route path="/PaymentMethod" element={<PaymentMethod />} />
         <Route path="/AddCard" element={<AddCard />} />
@@ -91,7 +115,10 @@ function App() {
         <Route path="/Language&Region" element={<LanguageAndRegion />} />
         <Route path="/EmailVerification" element={<EmailVerification />} />
         <Route path="/AccountSettings" element={<AccountSettings />} />
+        <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
+        <Route path="/LiveChat" element={<LiveChat />} />
 
+        <Route path="/UserSignup" element={<Signup />} />
       </Routes>
     </BrowserRouter>
   );

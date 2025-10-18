@@ -18,10 +18,9 @@ import AvailableCarCard from "../components/AvailableCarCard";
 import CarFilterMenu from "../components/CarFilterMenu";
 import { CARS_DATA, CATEGORY_DATA } from "../utils/cars";
 
-
 export default function CustomerHomePage() {
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
   const [activeCategory, setActiveCategory] = useState("All");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
@@ -46,10 +45,10 @@ export default function CustomerHomePage() {
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
-    { label: "Dashboard", icon: smblackcar, path: "/Dashboard" },
-    { label: "My Booking", icon: bookicon, path: "/Bookings" },
+    { label: "Dashboard", icon: smblackcar, path: "/CustomerDashboard" },
+    { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
-    { label: "Chat", icon: blackchaticon, path: "/Chat" },
+    { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/Notifications" },
     { label: "Settings", icon: settingsicon, path: "/Settings" },
   ];
@@ -86,7 +85,17 @@ export default function CustomerHomePage() {
                   key={index}
                   onClick={() => {
                     setSidebarOpen(false);
-                    navigate(item.path);
+
+                    if (item.path === "/LiveChat") {
+                      navigate(item.path, {
+                        state: {
+                          backTo: "/CustomerHomePage",
+                          role: "Customer",
+                        },
+                      });
+                    } else {
+                      navigate(item.path);
+                    }
                   }}
                   className={`cursor-pointer gap-[8px] p-[16px] flex transition-all duration-200 ${
                     isActive

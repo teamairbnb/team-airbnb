@@ -23,7 +23,7 @@ function NavBar() {
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
-    { label: "Notification", icon: blacknotificon, path: "/Notifications" },
+    { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
     { label: "Settings", icon: settingsicon, path: "/Settings" },
   ];
 
@@ -125,7 +125,7 @@ function NavBar() {
             src={notifications}
             alt="Notifications"
             className="h-6 w-6 cursor-pointer"
-            onClick={() => navigate("/Notifications")}
+            onClick={() => navigate("/CustomerNotif")}
           />
         </div>
       </div>

@@ -31,6 +31,7 @@ import EditCarDetails from "./components/EditCarDetails";
 import ScrollToTop from "./components/ScrollToTop";
 import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
 import LiveChat from "./pages/LiveChat";
+import CustomerNotif from "./pages/CustomerNotif";
 
 function App() {
   return (
@@ -68,6 +69,7 @@ function App() {
         <Route path="/EditCarDetails" element={<EditCarDetails />} />
         <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
         <Route path="/LiveChat" element={<LiveChat />} />
+        <Route path="/CustomerNotif" element={<CustomerNotif />} />
 
       </Routes>
     </BrowserRouter>

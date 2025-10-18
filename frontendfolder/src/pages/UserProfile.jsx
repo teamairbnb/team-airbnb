@@ -13,7 +13,7 @@ export default function UserProfile() {
     { title: "Driver's license", path: "/DriverLicense" },
     { title: "Saved Payment Methods", path: "/PaymentMethod" },
     { title: "Account Settings", path: "/profile/account-settings" },
-    { title: "Notifications Preferences", path: "/profile/notifications" },
+    { title: "Notifications Preferences", path: "/CustomerNotif" },
     { title: "Security", path: "/Security" },
   ];
 

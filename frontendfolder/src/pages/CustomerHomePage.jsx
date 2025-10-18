@@ -49,7 +49,7 @@ export default function CustomerHomePage() {
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
-    { label: "Notification", icon: blacknotificon, path: "/Notifications" },
+    { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
     { label: "Settings", icon: settingsicon, path: "/Settings" },
   ];
 
@@ -136,7 +136,10 @@ export default function CustomerHomePage() {
                 <img src={usericon} alt="User" className="cursor-pointer" />
               </Link>
 
-              <img src={notificon} alt="" />
+              <Link to="/CustomerNotif" className="p-[6px] rounded-full">
+                <img src={notificon} alt="notif" className="cursor-pointer" />
+              </Link>
+
             </div>
           </div>
 

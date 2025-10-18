@@ -27,7 +27,6 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     responses={200: CarSerializer(many=True)}
 )
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AdminCarViewSet(viewsets.ModelViewSet):
     queryset =  Car.objects.all()
     serializer_class = CarSerializer

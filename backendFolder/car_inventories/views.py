@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from .models import Car
 from .serializers import CarSerializer
-from supabase_config import supabase
+from .supabase_config import supabase
 from rest_framework.response import Response
 from supabase import create_client
 from django.conf import settings

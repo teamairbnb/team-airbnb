@@ -193,8 +193,6 @@ class GuestSignupView(APIView):
             "access": access_token,
             "refresh": str(refresh),
         })
-
-
 class BusinessOwnerSignupView(APIView):
     permission_classes = []  # open endpoint
     """

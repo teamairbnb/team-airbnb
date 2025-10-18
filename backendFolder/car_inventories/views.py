@@ -7,6 +7,7 @@ from django.conf import settings
 from accounts.permissions import IsBusinessOwner
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 
+
 # Create your views here.
 
 
@@ -25,6 +26,8 @@ class IsAdminOrReadOnly(permissions.BasePermission):
     ],
     responses={200: CarSerializer(many=True)}
 )
+
+@method_decorator(csrf_exempt, name='dispatch')
 class AdminCarViewSet(viewsets.ModelViewSet):
     queryset =  Car.objects.all()
     serializer_class = CarSerializer
@@ -43,7 +46,7 @@ class AdminCarViewSet(viewsets.ModelViewSet):
 
             if not res.error:
                 public_url = supabase.storage.from_('car inventories').get_public_url(file_path)
-                car.images = public_url.public_url
+                car.images = public_url
                 car.save() 
             else:
                 print("Error uploading file to Supabase:", res.error.message)
@@ -58,7 +61,7 @@ class AdminCarViewSet(viewsets.ModelViewSet):
 
                 if not res.error:
                     public_url = supabase.storage.from_('car inventories').get_public_url(file_path)
-                    car.images = public_url.public_url
+                    car.images = public_url
                     car.save() 
                 else:
                     print("Error uploading file to Supabase:", res.error.message)                          

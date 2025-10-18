@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import Header from "../components/Header.jsx";
+import { ChevronLeft } from "lucide-react";
+import { Link } from "react-router-dom";
 import Button from "../components/Button.jsx";
 
 function NotificationPreferences() {
@@ -13,8 +14,18 @@ function NotificationPreferences() {
   };
 
   return (
-    <div className="flex flex-col w-full bg-gray-50 min-h-screen relative">
-      <Header title="Profile / Notifications" />
+    <div className="flex flex-col w-full bg-gray-50 min-h-screen relative px-4">
+      <div className="relative flex items-center justify-center my-6">
+        <Link to="/BusinessOwnerDashboard" className="absolute left-0">
+          <button className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+            <ChevronLeft className="w-5 h-5 text-gray-700" />
+          </button>
+        </Link>
+
+        <p className="font-semibold text-[#11182773]">
+          Profile / <span className="text-[#111827]">Notifications</span>
+        </p>
+      </div>
 
       {/* Preferences Container */}
       <div className="flex flex-col w-full max-w-[400px] mt-8 px-4 bg-white rounded-2xl shadow-sm divide-y divide-gray-200 mx-auto">

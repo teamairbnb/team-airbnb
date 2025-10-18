@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Header from "../components/Header.jsx";
-import { Edit } from "lucide-react";
-
+import { Link } from "react-router-dom";
+import { ChevronLeft } from "lucide-react";
 
 function BusinessInfo() {
   const [businessName, setBusinessName] = useState("");
@@ -62,10 +61,15 @@ function BusinessInfo() {
   };
 
   return (
-    <div className="flex flex-col  justify-center w-full">
-      <Header title="Edit" />
+    <div className="flex flex-col  justify-center w-full px-4">
 
-      <div className="flex flex-col w-full max-w-[400px] mt-6 px-4">
+      <Link to="/BusinessOwnerDashboard">
+        <button className="w-10 h-10 my-6 bg-gray-100 rounded-lg flex items-center justify-center">
+          <ChevronLeft className="w-5 h-5 text-gray-700" />
+        </button>
+      </Link>
+
+      <div className="flex flex-col w-full max-w-[400px] mt-6">
         <div className="text-left mb-4">
           <h1 className="font-semibold text-xl">Business Information</h1>
         </div>

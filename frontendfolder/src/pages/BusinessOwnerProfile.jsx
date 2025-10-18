@@ -8,11 +8,10 @@ export default function BusinessOwnerProfile() {
   const navigate = useNavigate();
 
   const menuItems = [
-    { title: "Business Information", path: "/CustomerPersonalInfo" },
-    { title: "Verification Status", path: "/DriverLicense" },
-    { title: "Account Settings", path: "/profile/account-settings" },
-    { title: "Notifications Preferences", path: "/profile/notifications" },
-    { title: "Security", path: "/Security" },
+    { title: "Business Information", path: "/BusinessInfo" },
+    { title: "Account Settings", path: "/AccountSettings" },
+    { title: "Notifications Preferences", path: "/NotificationPreferences" },
+    { title: "Security", path: "/BusinessOwnerSecurity" },
   ];
 
   const [showModal, setShowModal] = useState(false);

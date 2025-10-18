@@ -1,2 +1,13 @@
 .venv/
-node_modules
+node_modules/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Django stuff
+\db.sqlite3
+
+
+.env
+\.env

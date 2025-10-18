@@ -43,6 +43,7 @@ import LanguageAndRegion from "./pages/LanguageAndRegion.jsx"
 import BusinessOwnerSecurity from "./pages/BusinessOwnerSecurity.jsx"
 import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
 import LiveChat from "./pages/LiveChat";
+import CustomerReservation from "./pages/CustomerReservation";
 // import Signup from "./pages/UserSignup";
 
 function App() {
@@ -56,6 +57,7 @@ function App() {
         <Route path="/CodeVerification" element={<CodeVerification />} />
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
+        <Route path="/CustomerReservation" element={<CustomerReservation />} />
 
         <Route path="/book/:carId" element={<FetchCarDetails />}>
           <Route
@@ -117,7 +119,6 @@ function App() {
         <Route path="/AccountSettings" element={<AccountSettings />} />
         <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
         <Route path="/LiveChat" element={<LiveChat />} />
-
         <Route path="/UserSignup" element={<Signup />} />
       </Routes>
     </BrowserRouter>

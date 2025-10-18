@@ -38,6 +38,34 @@ export default function FetchCarDetails() {
 
   const [totalPrice, setTotalPrice] = useState(car ? car.price : 0);
 
+  // storing all reserved cars
+  const [reservations, setReservations] = useState(() => {
+    const saved = localStorage.getItem("reservations");
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // Adding car to reservations
+  const addReservation = (car) => {
+    setReservations((prev) => {
+      const exists = prev.some((item) => item.id === car.id);
+      if (!exists) {
+        const updated = [...prev, car];
+        localStorage.setItem("reservations", JSON.stringify(updated));
+        return updated;
+      }
+      return prev;
+    });
+  };
+
+  // removing a car
+  const removeReservation = (carId) => {
+    setReservations((prev) => {
+      const updated = prev.filter((c) => c.id !== carId);
+      localStorage.setItem("reservations", JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   useEffect(() => {
     localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
   }, [bookingDetails]);
@@ -52,6 +80,7 @@ export default function FetchCarDetails() {
 
   return (
     <CarContext.Provider
+      key={carId}
       value={{
         car,
         setCar,
@@ -59,6 +88,9 @@ export default function FetchCarDetails() {
         setBookingDetails,
         totalPrice,
         setTotalPrice,
+        reservations,
+        addReservation,
+        removeReservation,
       }}
     >
       <Outlet />

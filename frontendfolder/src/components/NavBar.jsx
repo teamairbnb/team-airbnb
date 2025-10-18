@@ -23,8 +23,10 @@ function NavBar() {
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
+    { label: "Reservation", icon: bookicon, path: "/CustomerReservation" },
     { label: "Notification", icon: blacknotificon, path: "/Notifications" },
     { label: "Settings", icon: settingsicon, path: "/Settings" },
+    
   ];
 
   return (

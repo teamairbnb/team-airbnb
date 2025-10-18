@@ -6,9 +6,18 @@ export default function AvailableCarCard({ car }) {
   const navigate = useNavigate();
 
   const handleReserve = () => {
-    localStorage.setItem("selectedCar", JSON.stringify(car));
+    // Get existing reservations
+    const existing = JSON.parse(localStorage.getItem("reservations")) || [];
 
-    navigate(`/book/${car.id}/car-booking`, { state: { car } });
+    // Check if this car already exists (avoid duplicates)
+    const alreadyReserved = existing.some((item) => item.id === car.id);
+    if (!alreadyReserved) {
+      existing.push(car);
+      localStorage.setItem("reservations", JSON.stringify(existing));
+    }
+
+    // Navigate to reservation page
+    navigate(`/CustomerReservation`);
   };
 
   return (

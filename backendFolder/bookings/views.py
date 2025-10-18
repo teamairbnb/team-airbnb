@@ -10,6 +10,7 @@ from django.shortcuts import get_object_or_404
 from django.utils import timezone
 from datetime import timedelta
 from drf_spectacular.utils import extend_schema
+import datetime
 
 @extend_schema(
     request={
@@ -59,8 +60,8 @@ class CreateBookingView(APIView):
             user=request.user,
             car=car,
             reservation=reservation,
-            start_date=timezone.now(),
-            end_date=timezone.now() + timedelta(days=3)  # example duration
+            start_date= datetime.date.today(),
+            end_date= datetime.date.today()
         )
 
         # Update reservation and car

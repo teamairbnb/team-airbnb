@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 export default function Security() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const backTo = location.state?.backTo || "/";
+
   const [isEnabled, setIsEnabled] = useState(false);
 
   useEffect(() => {
@@ -20,11 +23,9 @@ export default function Security() {
 
   return (
     <div className="px-4 text-[#111827] min-h-screen pb-[100px] relative tracking-wide">
-      <Link to="/UserProfile">
-        <button className="w-10 h-10 my-6 bg-gray-100 rounded-lg flex items-center justify-center">
+        <button onClick={() => navigate(backTo)} className="w-10 h-10 my-6 bg-gray-100 rounded-lg flex items-center justify-center">
           <ChevronLeft className="w-5 h-5 text-gray-700" />
         </button>
-      </Link>
 
       <p className="font-semibold text-[22px]">Security</p>
 

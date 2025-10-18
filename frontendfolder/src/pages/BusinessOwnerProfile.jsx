@@ -42,7 +42,7 @@ export default function BusinessOwnerProfile() {
           {menuItems.map((item, index) => (
             <button
               key={index}
-              onClick={() => navigate(item.path)}
+              onClick={() => navigate(item.path, {state: { backTo: "/BusinessOwnerDashboard" } })}
               className="w-full bg-white px-5 py-4 flex items-center justify-between rounded-xl border border-[#D3D3D3] hover:bg-gray-50 transition-colors"
             >
               <span className="text-gray-900 text-sm font-normal">

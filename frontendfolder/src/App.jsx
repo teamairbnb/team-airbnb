@@ -31,6 +31,7 @@ import EditCarDetails from "./components/EditCarDetails";
 import ScrollToTop from "./components/ScrollToTop";
 import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
 import LiveChat from "./pages/LiveChat";
+import CustomerReservation from "./pages/CustomerReservation";
 import BusinessOwnerSignup from "./pages/BusinessOwnerSignup";
 import BusinessOwnerLogin from "./pages/BusinessOwnerLogin";
 function App() {
@@ -44,6 +45,7 @@ function App() {
         <Route path="/CodeVerification" element={<CodeVerification />} />
         <Route path="/VerificationSuccess" element={<VerificationSuccess />} />
         <Route path="/CustomerHomePage" element={<CustomerHomePage />} />
+        <Route path="/CustomerReservation" element={<CustomerReservation />} />
 
         <Route path="/book/:carId" element={<FetchCarDetails />}>
           <Route
@@ -96,7 +98,6 @@ function App() {
           element={<BusinessOwnerProfile />}
         />
         <Route path="/LiveChat" element={<LiveChat />} />
-
         <Route path="/UserSignup" element={<Signup />} />
         <Route path="/BusinessOwnerSignup" element={<BusinessOwnerSignup />} />
         <Route path="/BusinessOwnerLogin" element={<BusinessOwnerLogin />} />

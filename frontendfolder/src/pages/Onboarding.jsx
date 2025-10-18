@@ -15,7 +15,7 @@ function Onboarding() {
       </div>
       <div className="mt-5 mb-2">
         <button
-          onClick={() => (window.location.href = "/Login")}
+          onClick={() => (window.location.href = "/BusinessOwnerLogin")}
           className="flex items-center justify-center gap-[10px] bg-blue-600 text-white w-[350px] h-[48px] p-2.5 rounded-[10px]"
         >
           Get Started as a Business Owner

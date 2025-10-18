@@ -38,12 +38,12 @@ export default function AddCar({ onBack }) {
   const transmissionRef = useRef(null);
   const fuelRef = useRef(null);
 
-  const carTypes = ["SUV", "Sedan", "Hatchback", "Coupe", "Convertible"];
+  const carTypes = ["suv", "sedan", "hatchback", "coupe", "convertible"];
   const seatNums = ["2", "4", "5+"];
-  const carMakes = ["Toyota", "Honda", "BMW", "Mercedes", "Ford"];
-  const carModels = ["Corolla", "Civic", "Mustang", "X5", "C-Class"];
-  const transmissions = ["Automatic", "Manual"];
-  const fuelTypes = ["Petrol", "Diesel", "Electric", "Hybrid"];
+  const carMakes = ["toyota", "honda", "bmw", "mercedes", "ford"];
+  const carModels = ["corolla", "civic", "mustang", "x5", "c-class"];
+  const transmissions = ["automatic", "manual"];
+  const fuelTypes = ["petrol", "diesel", "electric", "hybrid"];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -73,32 +73,60 @@ export default function AddCar({ onBack }) {
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("make", selectedMake);
-    formData.append("model", selectedModel);
-    formData.append("year", year);
-    formData.append("car_type", selectedType);
-    formData.append("color", color);
-    formData.append("seats", selectedSeat);
-    formData.append("transmission", selectedTransmission);
-    formData.append("fuel_type", selectedFuel);
-    formData.append("has_ac", hasAC);
-    formData.append("has_gps", hasGPS);
-    formData.append("hourly_rate", hourlyRate);
-    formData.append("deposit_amount", dailyPrice);
-    formData.append("image", selectedImage);
-
     setLoading(true);
     setMessage("");
 
     try {
+      // Get access token from localStorage
+      const accessToken = localStorage.getItem("access_token");
+
+      if (!accessToken) {
+        setMessageType("error");
+        setMessage("Authentication error. Please login again.");
+        setLoading(false);
+        return;
+      }
+
+      // Parse seats - extract number from strings like "2", "4", "5+"
+      let seatsNum = 0;
+      if (selectedSeat === "2") seatsNum = 2;
+      else if (selectedSeat === "4") seatsNum = 4;
+      else if (selectedSeat === "5+") seatsNum = 5;
+
+      // Build request body according to API schema
+      const requestBody = {
+        make: selectedMake,
+        model: selectedModel,
+        year: parseInt(year) || new Date().getFullYear(),
+        car_type: selectedType,
+        color: color,
+        seats: seatsNum,
+        transmission: selectedTransmission,
+        fuel_type: selectedFuel,
+        has_ac: hasAC,
+        has_gps: hasGPS,
+        hourly_rate: hourlyRate || "0.00",
+        deposit_amount: dailyPrice || "0.00",
+      };
+
+      console.log("Request body being sent:", requestBody);
+
       const response = await fetch(
         "https://team-airbnb.onrender.com/api/v1/admin/cars/",
         {
           method: "POST",
-          body: formData,
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(requestBody),
         }
       );
+
+      const responseData = await response.json();
+      console.log("API Response Status:", response.status);
+      console.log("API Response Data:", responseData);
 
       if (response.ok) {
         setMessageType("success");
@@ -106,11 +134,27 @@ export default function AddCar({ onBack }) {
         setTimeout(() => onBack(), 2000);
       } else {
         setMessageType("error");
-        setMessage("Failed to add car. Please try again.");
+        let errorMsg = "Failed to add car. Please try again.";
+
+        if (typeof responseData === "object") {
+          // Check for various error formats
+          if (responseData.detail) errorMsg = responseData.detail;
+          else if (responseData.message) errorMsg = responseData.message;
+          else if (responseData.non_field_errors)
+            errorMsg = responseData.non_field_errors[0];
+          else {
+            // Show first field error if available
+            const firstError = Object.entries(responseData)[0];
+            if (firstError) errorMsg = `${firstError[0]}: ${firstError[1]}`;
+          }
+        }
+
+        setMessage(errorMsg);
       }
     } catch (error) {
       setMessageType("error");
       setMessage("Error: " + error.message);
+      console.error("Fetch error:", error);
     } finally {
       setLoading(false);
     }
@@ -211,7 +255,8 @@ export default function AddCar({ onBack }) {
           placeholder="Enter Year"
           value={year}
           onChange={(e) => setYear(e.target.value)}
-          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
+          disabled={loading}
+          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB] disabled:bg-gray-100"
         />
       </div>
 
@@ -223,7 +268,8 @@ export default function AddCar({ onBack }) {
           placeholder="Enter Color"
           value={color}
           onChange={(e) => setColor(e.target.value)}
-          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
+          disabled={loading}
+          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB] disabled:bg-gray-100"
         />
       </div>
 
@@ -280,6 +326,7 @@ export default function AddCar({ onBack }) {
               type="checkbox"
               checked={hasAC}
               onChange={() => setHasAC(!hasAC)}
+              disabled={loading}
               className="w-5 h-5 accent-[#2563EB]"
             />
             Has AC
@@ -289,6 +336,7 @@ export default function AddCar({ onBack }) {
               type="checkbox"
               checked={hasGPS}
               onChange={() => setHasGPS(!hasGPS)}
+              disabled={loading}
               className="w-5 h-5 accent-[#2563EB]"
             />
             Has GPS
@@ -304,7 +352,8 @@ export default function AddCar({ onBack }) {
           placeholder="Enter Hourly Rate"
           value={hourlyRate}
           onChange={(e) => setHourlyRate(e.target.value)}
-          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
+          disabled={loading}
+          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB] disabled:bg-gray-100"
         />
       </div>
 
@@ -316,7 +365,8 @@ export default function AddCar({ onBack }) {
           placeholder="Enter Daily Price"
           value={dailyPrice}
           onChange={(e) => setDailyPrice(e.target.value)}
-          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB]"
+          disabled={loading}
+          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB] disabled:bg-gray-100"
         />
       </div>
 
@@ -345,6 +395,7 @@ export default function AddCar({ onBack }) {
             accept="image/*"
             onChange={handleImageChange}
             className="hidden"
+            disabled={loading}
           />
         </label>
       </div>

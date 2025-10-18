@@ -31,8 +31,8 @@ import EditCarDetails from "./components/EditCarDetails";
 import ScrollToTop from "./components/ScrollToTop";
 import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
 import LiveChat from "./pages/LiveChat";
-// import Signup from "./pages/UserSignup";
-
+import BusinessOwnerSignup from "./pages/BusinessOwnerSignup";
+import BusinessOwnerLogin from "./pages/BusinessOwnerLogin";
 function App() {
   return (
     <BrowserRouter>
@@ -91,10 +91,15 @@ function App() {
         <Route path="/Security" element={<Security />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
         <Route path="/EditCarDetails" element={<EditCarDetails />} />
-        <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
+        <Route
+          path="/BusinessOwnerProfile"
+          element={<BusinessOwnerProfile />}
+        />
         <Route path="/LiveChat" element={<LiveChat />} />
 
         <Route path="/UserSignup" element={<Signup />} />
+        <Route path="/BusinessOwnerSignup" element={<BusinessOwnerSignup />} />
+        <Route path="/BusinessOwnerLogin" element={<BusinessOwnerLogin />} />
       </Routes>
     </BrowserRouter>
   );

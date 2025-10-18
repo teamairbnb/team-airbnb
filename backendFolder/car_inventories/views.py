@@ -2,6 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets, permissions
 from .models import Car
 from .serializers import CarSerializer
+from supabase_config import supabase
+from rest_framework.response import Response
 from supabase import create_client
 from django.conf import settings
 from accounts.permissions import IsBusinessOwner
@@ -32,38 +34,40 @@ class AdminCarViewSet(viewsets.ModelViewSet):
     serializer_class = CarSerializer
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly,IsBusinessOwner]
 
-    def get_supabase(self):
-        return create_client(settings.SUPABASE_URL, settings.SUPABASE_KEY)
+    def post(self,request):
+        data = request.data
+        images = request.FILES.get('images')
+        images_url = []
 
-    def perform_create(self, serializer):
-        car = serializer.save()
-        file = self.request.FILES.get('images')
-        if file:
-            supabase = self.get_supabase()
-            file_path = f"car_images/{file.name}"
-            res = supabase.storage.from_('car inventories').upload(file_path, file)
+        for image in images:
+            res = supabase.storage.from_('car inventories').upload(
+                f"car_images/{image.name}",
+                image.read(),
+                {"content-type": image.content_type}
+            )
 
-            if not res.error:
-                public_url = supabase.storage.from_('car inventories').get_public_url(file_path)
-                car.images = public_url
-                car.save() 
-            else:
-                print("Error uploading file to Supabase:", res.error.message)
+            url = supabase.storage.from_('car inventories').get_public_url(f"car_images/{image.name}")
+            images_url.append(url)
 
-        def perform_update(self, serializer):
-            car = serializer.save()
-            file = self.request.FILES.get('images')
-            if file:
-                supabase = self.get_supabase()
-                file_path = f"car_images/{file.name}"
-                res = supabase.storage.from_('car inventories').upload(file_path, file)
-
-                if not res.error:
-                    public_url = supabase.storage.from_('car inventories').get_public_url(file_path)
-                    car.images = public_url
-                    car.save() 
+            data['images'] = images_url
+            clean_data = {}
+            for key,value in data.lists():
+                if len(value) == 1:
+                    clean_data[key] = value[0]
                 else:
-                    print("Error uploading file to Supabase:", res.error.message)                          
+                    clean_data[key] = value
+
+            if "year" in clean_data:
+                clean_data["year"] = int(clean_data["year"])
+            if "deposit_amount" in clean_data:
+                clean_data["deposit_amount"] = float(clean_data["deposit_amount"])
+
+            serializer = CarSerializer(data=clean_data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+            return Response(serializer.errors, status=400)    
+                        
 
 @extend_schema(
     tags=['User Cars'],

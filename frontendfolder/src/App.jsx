@@ -29,6 +29,18 @@ import Security from "./pages/Security";
 import ChangePassword from "./pages/ChangePassword";
 import EditCarDetails from "./components/EditCarDetails";
 import ScrollToTop from "./components/ScrollToTop";
+import BusinessInfo from "./pages/BusinessInfo";
+import BusinessProfile from "./pages/BusinessProfile.jsx"
+import UploadImage from "./pages/UploadImage.jsx"
+import AccountSettings from "./pages/AccountSettings.jsx"
+import ChangeEmail from "./pages/ChangeEmail.jsx";
+import EmailVerification from "./pages/EmailVerification.jsx"
+import ChangePhone from "./pages/ChangePhone.jsx";
+import SMSVerification from "./pages/SMSVerification.jsx";
+import BusinessOwnerChangePassword from "./pages/BusinessOwnerChangePassword.jsx";
+import NotificationPreferences from "./pages/NotificationPreferences.jsx";
+import LanguageAndRegion from "./pages/LanguageAndRegion.jsx"
+import BusinessOwnerSecurity from "./pages/BusinessOwnerSecurity.jsx"
 import BusinessOwnerProfile from "./pages/BusinessOwnerProfile";
 import LiveChat from "./pages/LiveChat";
 import CustomerReservation from "./pages/CustomerReservation";
@@ -92,11 +104,20 @@ function App() {
         <Route path="/AddCard" element={<AddCard />} />
         <Route path="/Security" element={<Security />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
+        <Route path="/ChangePhone" element={<ChangePhone />} />
         <Route path="/EditCarDetails" element={<EditCarDetails />} />
-        <Route
-          path="/BusinessOwnerProfile"
-          element={<BusinessOwnerProfile />}
-        />
+        <Route path="/ChangeEmail" element={<ChangeEmail />} />
+        <Route path="/SMSVerification" element={<SMSVerification />} />
+        <Route path="/NotificationPreferences" element={<NotificationPreferences />} />
+        <Route path="/BusinessOwnerSecurity" element={<BusinessOwnerSecurity />} />
+        <Route path="/BusinessInfo" element={<BusinessInfo />} />
+        <Route path="/BusinessOwnerChangePassword" element={<BusinessOwnerChangePassword />} />
+        <Route path="/BusinessProfile" element={<BusinessProfile />} />
+        <Route path="/UploadImage" element={<UploadImage />} />
+        <Route path="/Language&Region" element={<LanguageAndRegion />} />
+        <Route path="/EmailVerification" element={<EmailVerification />} />
+        <Route path="/AccountSettings" element={<AccountSettings />} />
+        <Route path="/BusinessOwnerProfile" element={<BusinessOwnerProfile />} />
         <Route path="/LiveChat" element={<LiveChat />} />
         <Route path="/UserSignup" element={<Signup />} />
       </Routes>

@@ -32,7 +32,6 @@ from drf_spectacular.utils import OpenApiExample, extend_schema_serializer
     ]
 )
 class CarSerializer(serializers.ModelSerializer):
-    images = serializers.ImageField(required=False, allow_null=True, write_only=True)
     class Meta:
         model = Car
         fields = '__all__'

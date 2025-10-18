@@ -37,7 +37,6 @@ class AdminCarViewSet(viewsets.ModelViewSet):
     def post(self,request):
         data = request.data
         images = request.FILES.get('images')
-        images_url = []
 
         
         res = supabase.storage.from_('car inventories').upload(
@@ -47,22 +46,22 @@ class AdminCarViewSet(viewsets.ModelViewSet):
         )
 
         url = supabase.storage.from_('car inventories').get_public_url(f"car_images/{images.name}")
-        images_url.append(url)
+        
 
-        data['images'] = images_url
-        clean_data = {}
-        for key,value in data.lists():
-            if len(value) == 1:
-                clean_data[key] = value[0]
-            else:
-                clean_data[key] = value
+        data['images'] = url
+        # clean_data = {}
+        # for key,value in data.lists():
+        #     if len(value) == 1:
+        #         clean_data[key] = value[0]
+        #     else:
+        #         clean_data[key] = value
 
-        if "year" in clean_data:
-            clean_data["year"] = int(clean_data["year"])
-        if "deposit_amount" in clean_data:
-            clean_data["deposit_amount"] = float(clean_data["deposit_amount"])
+        # if "year" in clean_data:
+        #     clean_data["year"] = int(clean_data["year"])
+        # if "deposit_amount" in clean_data:
+        #     clean_data["deposit_amount"] = float(clean_data["deposit_amount"])
 
-        serializer = CarSerializer(data=clean_data)
+        serializer = CarSerializer(data=data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)

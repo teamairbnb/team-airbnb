@@ -234,8 +234,8 @@ SIMPLE_JWT = {
 }
 
 
-# SUPABASE_URL = os.environ.get("SUPABASE_URL")
-# SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_KEY")
 
-SUPABASE_URL="https://nnbjpcitzvxkkcjqmoei.supabase.co"
-SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5uYmpwY2l0enZ4a2tjanFtb2VpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTUwMjUxOSwiZXhwIjoyMDc1MDc4NTE5fQ.RleovbY8ChXyIkpn0Hr1UPEvmCWo9KiStLkLIcb693Y"
+# SUPABASE_URL="https://nnbjpcitzvxkkcjqmoei.supabase.co"
+# SUPABASE_KEY="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5uYmpwY2l0enZ4a2tjanFtb2VpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1OTUwMjUxOSwiZXhwIjoyMDc1MDc4NTE5fQ.RleovbY8ChXyIkpn0Hr1UPEvmCWo9KiStLkLIcb693Y"

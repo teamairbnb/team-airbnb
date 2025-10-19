@@ -36,7 +36,10 @@ class AdminCarViewSet(viewsets.ModelViewSet):
 
     def post(self,request):
         data = request.data
-        images = request.FILES.get('images')
+        images = request.FILES["images"]
+        
+
+        # image=request.FILES["post_images"]
 
         
         res = supabase.storage.from_('car inventories').upload(
@@ -61,7 +64,7 @@ class AdminCarViewSet(viewsets.ModelViewSet):
         # if "deposit_amount" in clean_data:
         #     clean_data["deposit_amount"] = float(clean_data["deposit_amount"])
 
-        serializer = CarSerializer(data=data)
+        serializer = CarSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=201)

@@ -45,17 +45,16 @@ export default function CustomerHomePage() {
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
-    { label: "Dashboard", icon: smblackcar, path: "/CustomerDashboard" },
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
+    { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
+    { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
     {
       label: "Reservation",
       icon: bookicon,
       pathTemplate: "/CustomerReservation",
     },
-    { label: "Notification", icon: blacknotificon, path: "/Notifications" },
-    { label: "Settings", icon: settingsicon, path: "/Settings" },
   ];
 
   return (
@@ -160,7 +159,10 @@ export default function CustomerHomePage() {
                 <img src={usericon} alt="User" className="cursor-pointer" />
               </Link>
 
-              <img src={notificon} alt="" />
+              <Link to="/CustomerNotif" className="p-[6px] rounded-full">
+                <img src={notificon} alt="notif" className="cursor-pointer" />
+              </Link>
+
             </div>
           </div>
 
@@ -184,7 +186,7 @@ export default function CustomerHomePage() {
                 />
                 <input
                   type="text"
-                  placeholder="Murtala Int Airport"
+                  placeholder="Search Car"
                   className="border border-[#D3D3D3] rounded-[5px] py-[11px] pl-[45px] pr-[16px] w-full tracking-wide text-[#111827] focus:outline-none focus:border-[#2563EB] placeholder-[#111827]"
                 />
               </div>
@@ -198,7 +200,7 @@ export default function CustomerHomePage() {
             </div>
 
             <button className="bg-[#2563EB] mt-[24px] w-full tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px]">
-              Search anywhere
+              Search any car
             </button>
           </div>
         </div>

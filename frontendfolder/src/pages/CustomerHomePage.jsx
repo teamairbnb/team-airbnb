@@ -186,7 +186,7 @@ export default function CustomerHomePage() {
                 />
                 <input
                   type="text"
-                  placeholder="Murtala Int Airport"
+                  placeholder="Search Car"
                   className="border border-[#D3D3D3] rounded-[5px] py-[11px] pl-[45px] pr-[16px] w-full tracking-wide text-[#111827] focus:outline-none focus:border-[#2563EB] placeholder-[#111827]"
                 />
               </div>
@@ -200,7 +200,7 @@ export default function CustomerHomePage() {
             </div>
 
             <button className="bg-[#2563EB] mt-[24px] w-full tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px]">
-              Search anywhere
+              Search any car
             </button>
           </div>
         </div>

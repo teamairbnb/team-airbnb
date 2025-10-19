@@ -21,7 +21,7 @@ export default function CarBookingScreen() {
     );
   }
 
-  // Preserve the base/original price
+  // Preserving the base/original price
   const basePrice = car?.originalPrice || car?.price || 0;
 
   const savedBooking = localStorage.getItem("selectedBooking") || "best";
@@ -55,7 +55,7 @@ export default function CarBookingScreen() {
             className="w-full h-full object-cover"
           />
           <Link
-            to="/CustomerHomePage"
+            to="/CustomerReservation"
             className="absolute top-4 left-4 flex items-center gap-2 text-gray-600 py-[13px] pl-[16.5px] pr-[10px] rounded-[10px] bg-[#D3D3D399] hover:text-black"
           >
             <img className="w-4" src={back} alt="Back" />

@@ -8,11 +8,10 @@ export default function BusinessOwnerProfile() {
   const navigate = useNavigate();
 
   const menuItems = [
-    { title: "Business Information", path: "/CustomerPersonalInfo" },
-    { title: "Verification Status", path: "/DriverLicense" },
-    { title: "Account Settings", path: "/profile/account-settings" },
-    { title: "Notifications Preferences", path: "/profile/notifications" },
-    { title: "Security", path: "/Security" },
+    { title: "Business Information", path: "/BusinessInfo" },
+    { title: "Account Settings", path: "/AccountSettings" },
+    { title: "Notifications Preferences", path: "/NotificationPreferences" },
+    { title: "Security", path: "/BusinessOwnerSecurity" },
   ];
 
   const [showModal, setShowModal] = useState(false);
@@ -42,7 +41,7 @@ export default function BusinessOwnerProfile() {
           {menuItems.map((item, index) => (
             <button
               key={index}
-              onClick={() => navigate(item.path)}
+              onClick={() => navigate(item.path, {state: { backTo: "/BusinessOwnerDashboard" } })}
               className="w-full bg-white px-5 py-4 flex items-center justify-between rounded-xl border border-[#D3D3D3] hover:bg-gray-50 transition-colors"
             >
               <span className="text-gray-900 text-sm font-normal">

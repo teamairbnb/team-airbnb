@@ -24,6 +24,8 @@ function NavBar() {
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
     { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
+    { label: "Reservation", icon: bookicon, path: "/CustomerReservation" },
+    
   ];
 
   return (

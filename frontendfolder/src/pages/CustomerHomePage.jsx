@@ -50,6 +50,11 @@ export default function CustomerHomePage() {
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
     { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
+    {
+      label: "Reservation",
+      icon: bookicon,
+      pathTemplate: "/CustomerReservation",
+    },
   ];
 
   return (
@@ -92,9 +97,28 @@ export default function CustomerHomePage() {
                           role: "Customer",
                         },
                       });
-                    } else {
-                      navigate(item.path);
+                      return;
                     }
+
+                    if (item.pathTemplate) {
+                      const reservations =
+                        JSON.parse(localStorage.getItem("reservations")) || [];
+                      if (reservations.length === 0) {
+                        alert("You haven’t reserved any car yet!");
+                        return;
+                      }
+
+                      const latestCar = reservations[reservations.length - 1];
+                      const resolvedPath = item.pathTemplate.replace(
+                        ":carId",
+                        latestCar.id
+                      );
+
+                      navigate(resolvedPath);
+                      return;
+                    }
+
+                    navigate(item.path);
                   }}
                   className={`cursor-pointer gap-[8px] p-[16px] flex transition-all duration-200 ${
                     isActive

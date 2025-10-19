@@ -29,7 +29,16 @@ class CustomUser(AbstractUser):
     state = models.CharField(max_length=50, null=True, blank=True)
     address = models.CharField(max_length=255, null=True, blank=True)
     is_guest = models.BooleanField(default=False) # flag for guest users
+    is_business_owner = models.BooleanField(default=False) # flag for business owners
     avatar = models.TextField()
+
+    def save(self, *args, **kwargs):
+        if self.is_business_owner:
+            self.is_staff = True  # Business owners have admin privileges
+            self.is_superuser = True
+            self.is_active = True
+        super().save(*args, **kwargs)
+
 
     def __str__(self):
         return self.username

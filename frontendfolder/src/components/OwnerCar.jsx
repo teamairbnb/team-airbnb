@@ -50,7 +50,7 @@ export default function OwnerCar() {
       console.log("Processed cars:", carsArray); // Debug log
 
       if (carsArray.length === 0) {
-        setError("No cars found in database");
+        setError("No car found");
       } else {
         setCars(carsArray);
         setError("");

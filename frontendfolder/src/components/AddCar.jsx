@@ -27,6 +27,8 @@ export default function AddCar({ onBack }) {
 
   const [hasAC, setHasAC] = useState(false);
   const [hasGPS, setHasGPS] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
@@ -109,12 +111,14 @@ export default function AddCar({ onBack }) {
       formData.append("year", parseInt(year) || new Date().getFullYear());
       formData.append("car_type", selectedType);
       formData.append("color", color);
-      formData.append("availability", selectedAvailability); // ✅ New field
+      formData.append("availability", selectedAvailability); 
       formData.append("seats", seatsNum);
       formData.append("transmission", selectedTransmission);
       formData.append("fuel_type", selectedFuel);
       formData.append("has_ac", hasAC);
       formData.append("has_gps", hasGPS);
+      formData.append("is_available", isAvailable);
+      formData.append("is_active", isActive);
       formData.append("hourly_rate", hourlyRate || "0.00");
       formData.append("deposit_amount", dailyPrice || "0.00");
 
@@ -294,7 +298,6 @@ export default function AddCar({ onBack }) {
         innerRef={typeRef}
       />
 
-      {/* ✅ New Availability Dropdown */}
       <Dropdown
         label="Availability Status"
         selected={selectedAvailability}
@@ -341,7 +344,7 @@ export default function AddCar({ onBack }) {
       {/* Features */}
       <div className="mt-[25px] text-start">
         <p className="text-[17px] font-semibold">Features</p>
-        <div className="flex gap-5 mt-2">
+        <div className="grid grid-cols-2 gap-5 mt-2">
           <label className="flex items-center gap-2 text-[15px]">
             <input
               type="checkbox"
@@ -352,6 +355,7 @@ export default function AddCar({ onBack }) {
             />
             Has AC
           </label>
+
           <label className="flex items-center gap-2 text-[15px]">
             <input
               type="checkbox"
@@ -361,6 +365,28 @@ export default function AddCar({ onBack }) {
               className="w-5 h-5 accent-[#2563EB]"
             />
             Has GPS
+          </label>
+
+          <label className="flex items-center gap-2 text-[15px]">
+            <input
+              type="checkbox"
+              checked={isAvailable}
+              onChange={() => setIsAvailable(!isAvailable)}
+              disabled={loading}
+              className="w-5 h-5 accent-[#2563EB]"
+            />
+            Is Available
+          </label>
+
+          <label className="flex items-center gap-2 text-[15px]">
+            <input
+              type="checkbox"
+              checked={isActive}
+              onChange={() => setIsActive(!isActive)}
+              disabled={loading}
+              className="w-5 h-5 accent-[#2563EB]"
+            />
+            Is Active
           </label>
         </div>
       </div>

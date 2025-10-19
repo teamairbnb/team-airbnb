@@ -27,7 +27,8 @@ export default function AvailableCarCard({ car }) {
         return;
       }
 
-      const requestBody = { car: carId };
+      // FIXED: Use "car_id" instead of "car"
+      const requestBody = { car_id: carId };
       console.log("Creating reservation with:", requestBody);
 
       // Create reservation via API
@@ -73,10 +74,10 @@ export default function AvailableCarCard({ car }) {
             );
             return;
           }
-        } else if (data.car) {
-          errorMessage = Array.isArray(data.car)
-            ? data.car.join(", ")
-            : data.car;
+        } else if (data.car_id) {
+          errorMessage = Array.isArray(data.car_id)
+            ? data.car_id.join(", ")
+            : data.car_id;
         } else if (data.detail) {
           errorMessage = data.detail;
         } else if (data.message) {

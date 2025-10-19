@@ -45,17 +45,16 @@ export default function CustomerHomePage() {
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
-    { label: "Dashboard", icon: smblackcar, path: "/CustomerDashboard" },
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
+    { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
+    { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
     {
       label: "Reservation",
       icon: bookicon,
       pathTemplate: "/CustomerReservation",
     },
-    { label: "Notification", icon: blacknotificon, path: "/Notifications" },
-    { label: "Settings", icon: settingsicon, path: "/Settings" },
   ];
 
   return (
@@ -160,7 +159,10 @@ export default function CustomerHomePage() {
                 <img src={usericon} alt="User" className="cursor-pointer" />
               </Link>
 
-              <img src={notificon} alt="" />
+              <Link to="/CustomerNotif" className="p-[6px] rounded-full">
+                <img src={notificon} alt="notif" className="cursor-pointer" />
+              </Link>
+
             </div>
           </div>
 

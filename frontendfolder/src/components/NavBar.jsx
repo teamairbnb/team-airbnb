@@ -19,13 +19,12 @@ function NavBar() {
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
-    { label: "Dashboard", icon: smblackcar, path: "/CustomerDashboard" },
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
     { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
+    { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
+    { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
     { label: "Reservation", icon: bookicon, path: "/CustomerReservation" },
-    { label: "Notification", icon: blacknotificon, path: "/Notifications" },
-    { label: "Settings", icon: settingsicon, path: "/Settings" },
     
   ];
 
@@ -127,7 +126,7 @@ function NavBar() {
             src={notifications}
             alt="Notifications"
             className="h-6 w-6 cursor-pointer"
-            onClick={() => navigate("/Notifications")}
+            onClick={() => navigate("/CustomerNotif")}
           />
         </div>
       </div>

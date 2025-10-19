@@ -12,8 +12,8 @@ export default function UserProfile() {
     { title: "Personal info", path: "/CustomerPersonalInfo" },
     { title: "Driver's license", path: "/DriverLicense" },
     { title: "Saved Payment Methods", path: "/PaymentMethod" },
-    { title: "Account Settings", path: "/profile/account-settings" },
-    { title: "Notifications Preferences", path: "/profile/notifications" },
+    { title: "Account Settings", path: "/CustomerAccSettings" },
+    { title: "Notifications Preferences", path: "/CustomerNotif" },
     { title: "Security", path: "/Security" },
   ];
 

@@ -95,6 +95,7 @@ class AdminCarViewSet(viewsets.ModelViewSet):
     #     return Response(serializer.errors, status=400) 
     # 
         data = request.data
+        print(data)
 
         images = request.FILES.getlist("images")
         image_url = []
@@ -126,6 +127,7 @@ class AdminCarViewSet(viewsets.ModelViewSet):
             clean_data["deposit_amount"] = float(clean_data["deposit_amount"])
 
         serializer = CarSerializer(data=clean_data)
+        print(clean_data)
 
 
         if serializer.is_valid():

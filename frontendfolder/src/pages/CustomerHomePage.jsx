@@ -43,9 +43,12 @@ export default function CustomerHomePage() {
         }
 
         const data = await response.json();
+        console.log("API Response:", data);
 
         // Extract cars from the results array
         const cars = data.results || [];
+        console.log("Extracted cars:", cars);
+        console.log("Number of cars:", cars.length);
 
         // Transform API data to match your existing car structure
         const transformedCars = cars.map((car) => ({
@@ -65,7 +68,7 @@ export default function CustomerHomePage() {
           isAvailable: car.is_available,
           isActive: car.is_active,
           availabilityStatus: car.availability_status,
-          // Add any other fields your AvailableCarCard component needs
+          image: car.images || car.image,
         }));
 
         setAllCars(transformedCars);
@@ -231,7 +234,6 @@ export default function CustomerHomePage() {
               <Link to="/CustomerNotif" className="p-[6px] rounded-full">
                 <img src={notificon} alt="notif" className="cursor-pointer" />
               </Link>
-
             </div>
           </div>
 
@@ -299,7 +301,7 @@ export default function CustomerHomePage() {
       </div>
 
       {/* Cars */}
-      <div className="flex flex-col items-center mt-[24px] px-[16px]">
+      <div className="flex flex-col items-center mt-[24px] px-[16px] pb-[24px]">
         {loading ? (
           <div className="text-gray-600 text-center py-10">
             <p className="font-semibold text-lg">Loading cars...</p>

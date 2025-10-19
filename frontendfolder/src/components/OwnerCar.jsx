@@ -8,10 +8,11 @@ export default function OwnerCar() {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     fetchCars();
-  }, []);
+  }, [refreshTrigger]);
 
   const fetchCars = async () => {
     try {
@@ -41,13 +42,12 @@ export default function OwnerCar() {
       }
 
       const data = await response.json();
-      console.log("API Response:", data); // Debug log
+      console.log("API Response:", data);
 
-      // Handle paginated response
       const carsData = data.results || data;
       const carsArray = Array.isArray(carsData) ? carsData : [];
 
-      console.log("Processed cars:", carsArray); // Debug log
+      console.log("Processed cars:", carsArray);
 
       if (carsArray.length === 0) {
         setError("No cars found in database");
@@ -95,6 +95,11 @@ export default function OwnerCar() {
   const handleEdit = (carId) => {
     window.location.href = `/EditCarDetails/${carId}`;
   };
+
+  // Export refresh function for parent components
+  useEffect(() => {
+    window.refreshOwnerCars = () => setRefreshTrigger((prev) => prev + 1);
+  }, []);
 
   if (loading) {
     return <div className="text-center py-10">Loading cars...</div>;

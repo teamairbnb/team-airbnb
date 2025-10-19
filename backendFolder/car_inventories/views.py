@@ -36,27 +36,27 @@ class AdminCarViewSet(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated, IsAdminOrReadOnly,IsBusinessOwner]
 
     def post(self, request):
-        image=request.FILES["images"] # to specify that we are getting file
-        res = supabase.storage.from_("airbnb users").upload(
-            f"images/{image.name}",
-            image.read(),
-            {"content-type":image.content_type}
-        ) # storage - shows we are storing
-        #    from_(bucket name)- the file location on supabase
-        #   images/{image.name} - creates a folder call images and stores the images in there by their names
-        #   content-type - description of the image(optional)
+        # image=request.FILES["images"] # to specify that we are getting file
+        # res = supabase.storage.from_("airbnb users").upload(
+        #     f"images/{image.name}",
+        #     image.read(),
+        #     {"content-type":image.content_type}
+        # ) # storage - shows we are storing
+        # #    from_(bucket name)- the file location on supabase
+        # #   images/{image.name} - creates a folder call images and stores the images in there by their names
+        # #   content-type - description of the image(optional)
 
-        image_url=supabase.storage.from_("airbnb users").get_public_url(f"images/{image.name}")
-        # get image url from supabase 
-        data = request.data # get the request sent by the user
-        data['images']=image_url # point to the image request and stores the image url there 
+        # image_url=supabase.storage.from_("airbnb users").get_public_url(f"images/{image.name}")
+        # # get image url from supabase 
+        # data = request.data # get the request sent by the user
+        # data['images']=image_url # point to the image request and stores the image url there 
 
-        serializer = CarSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            car = Car.objects.first()
-            return Response({"car": serializer.data}, status=status.HTTP_201_CREATED)
-        return Response({"Error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        # serializer = CarSerializer(data=data)
+        # if serializer.is_valid():
+        #     serializer.save(user=request.user)
+        #     car = Car.objects.first()
+        #     return Response({"car": serializer.data}, status=status.HTTP_201_CREATED)
+        # return Response({"Error": serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
     # def post(self,request):
     #     data = request.data
@@ -92,7 +92,47 @@ class AdminCarViewSet(viewsets.ModelViewSet):
     #     if serializer.is_valid():
     #         serializer.save()
     #         return Response(serializer.data, status=201)
-    #     return Response(serializer.errors, status=400)    
+    #     return Response(serializer.errors, status=400) 
+    # 
+        data = request.data
+        print(data)
+
+        images = request.FILES.getlist("images")
+        image_url = []
+
+
+        for image in images:
+            res = supabase.storage.from_("airbnb users").upload(
+                f"car_images/{image.name}",
+                image.read(),
+                {"content-type":image.content_type}
+            )
+
+            url = supabase.storage.from_("airbnb users").get_public_url(f"car_images/{image.name}")
+            image_url.append(url)
+
+        data["images"] = image_url
+        clean_data = {}
+        for key, value in data.lists():
+            if len(value) == 1:
+                clean_data[key] = value[0]
+            else:
+                clean_data[key] = value
+
+        # ✅ Convert string types properly
+        clean_data["is_available"] = str(clean_data.get("is_available", "")).lower() in ["true", "1", "yes"]
+        if "year" in clean_data:
+            clean_data["year"] = int(clean_data["year"])
+        if "deposit_amount" in clean_data:
+            clean_data["deposit_amount"] = float(clean_data["deposit_amount"])
+
+        serializer = CarSerializer(data=clean_data)
+        print(clean_data)
+
+
+        if serializer.is_valid():
+            serializer.save(user= request.user)
+
                         
 
 @extend_schema(

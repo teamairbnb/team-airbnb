@@ -34,8 +34,17 @@ export default function CustomerHomePage() {
     const fetchCars = async () => {
       try {
         setLoading(true);
+        const accessToken = localStorage.getItem("access_token");
         const response = await fetch(
-          "https://team-airbnb.onrender.com/api/v1/cars/"
+          "https://team-airbnb.onrender.com/api/v1/admin/cars/",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
 
         if (!response.ok) {

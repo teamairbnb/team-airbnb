@@ -391,12 +391,12 @@ export default function AddCar({ onBack }) {
         </div>
       </div>
 
-      {/* Hourly Rate */}
+      {/* Daily Price */}
       <div className="mt-[25px] text-start">
-        <p className="text-[17px] font-semibold">Hourly Rate</p>
+        <p className="text-[17px] font-semibold">Daily Price</p>
         <input
           type="text"
-          placeholder="Enter Hourly Rate"
+          placeholder="Enter Daily Price Rate"
           value={hourlyRate}
           onChange={(e) => setHourlyRate(e.target.value)}
           disabled={loading}
@@ -404,12 +404,12 @@ export default function AddCar({ onBack }) {
         />
       </div>
 
-      {/* Daily Price */}
+      {/* Hourly Rate */}
       <div className="mt-[25px] text-start">
-        <p className="text-[17px] font-semibold">Daily Price</p>
+        <p className="text-[17px] font-semibold">Hourly Rate</p>
         <input
           type="text"
-          placeholder="Enter Daily Price"
+          placeholder="Enter Hourly Rate"
           value={dailyPrice}
           onChange={(e) => setDailyPrice(e.target.value)}
           disabled={loading}

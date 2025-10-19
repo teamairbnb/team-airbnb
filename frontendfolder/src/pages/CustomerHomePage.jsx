@@ -34,14 +34,30 @@ export default function CustomerHomePage() {
     const fetchCars = async () => {
       try {
         setLoading(true);
+        const accessToken = localStorage.getItem("access_token");
         const response = await fetch(
-          "https://team-airbnb.onrender.com/api/v1/cars/"
+          "https://team-airbnb.onrender.com/api/v1/admin/cars/",
+          {
+            method: "GET",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
         );
         if (!response.ok) {
           throw new Error("Failed to fetch cars");
         }
         const data = await response.json();
+        console.log("API Response:", data);
+
+        // Extract cars from the results array
         const cars = data.results || [];
+        console.log("Extracted cars:", cars);
+        console.log("Number of cars:", cars.length);
+
+        // Transform API data to match your existing car structure
         const transformedCars = cars.map((car) => ({
           id: car.id || car._id,
           make: car.make,
@@ -59,6 +75,7 @@ export default function CustomerHomePage() {
           isAvailable: car.is_available,
           isActive: car.is_active,
           availabilityStatus: car.availability_status,
+          image: car.images || car.image,
         }));
         setAllCars(transformedCars);
         setFilteredCars(transformedCars);
@@ -289,7 +306,7 @@ export default function CustomerHomePage() {
       </div>
 
       {/* Cars */}
-      <div className="flex flex-col items-center mt-[24px] px-[16px]">
+      <div className="flex flex-col items-center mt-[24px] px-[16px] pb-[24px]">
         {loading ? (
           <div className="text-gray-600 text-center py-10">
             <p className="font-semibold text-lg">Loading cars...</p>

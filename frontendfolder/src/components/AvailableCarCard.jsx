@@ -91,11 +91,29 @@ export default function AvailableCarCard({ car }) {
 
       console.log("Reservation created successfully:", data);
 
-      // Save to localStorage
+      // Save the reservation data to localStorage
       const existing = JSON.parse(localStorage.getItem("reservations")) || [];
-      const alreadyReserved = existing.some((item) => item.id === car.id);
+
+      // Create reservation object matching CustomerReservation format
+      const reservationData = {
+        id: car.id,
+        reservationId: data.id || data._id,
+        status: data.status || "pending",
+        expiresAt: data.expires_at,
+        createdAt: data.created_at,
+        name: `${car.make} ${car.model}`,
+        type: car.type,
+        year: car.year,
+        image: car.image,
+      };
+
+      // Check if already exists
+      const alreadyReserved = existing.some(
+        (item) => item.reservationId === reservationData.reservationId
+      );
+
       if (!alreadyReserved) {
-        existing.push(car);
+        existing.push(reservationData);
         localStorage.setItem("reservations", JSON.stringify(existing));
       }
 
@@ -111,12 +129,23 @@ export default function AvailableCarCard({ car }) {
     }
   };
 
+  // Handle image - could be string, array, or undefined
+  const getCarImage = () => {
+    if (!car.image) return mercedes;
+    if (typeof car.image === "string") return car.image;
+    if (Array.isArray(car.image) && car.image.length > 0) return car.image[0];
+    return mercedes;
+  };
+
   return (
     <div className="w-full rounded-[10px] bg-white mb-[25px] shadow-lg">
       <img
-        className="w-full"
-        src={car.image || mercedes}
+        className="w-full rounded-t-[10px]"
+        src={getCarImage()}
         alt={`${car.make} ${car.model}`}
+        onError={(e) => {
+          e.target.src = mercedes;
+        }}
       />
 
       <div className="m-[16px] tracking-wide">

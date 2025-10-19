@@ -41,8 +41,23 @@ function BusinessOwnerSignup() {
     // Password check
     if (!password) {
       newErrors.password = "Password is required";
-    } else if (password.length < 6) {
-      newErrors.password = "Password must be at least 6 characters";
+    } else {
+      const hasMinLength = password.length >= 8;
+      const hasUppercase = /[A-Z]/.test(password);
+      const hasLowercase = /[a-z]/.test(password);
+      const hasNumber = /[0-9]/.test(password);
+      const hasSymbol = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+      if (
+        !hasMinLength ||
+        !hasUppercase ||
+        !hasLowercase ||
+        !hasNumber ||
+        !hasSymbol
+      ) {
+        newErrors.password =
+          "Password must contain at least 8 characters, uppercase, lowercase, number, symbols";
+      }
     }
 
     if (!rePassword) {

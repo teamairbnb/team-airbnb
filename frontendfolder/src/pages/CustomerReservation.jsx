@@ -6,19 +6,139 @@ import carimg from "../assets/bookingcarimg.svg";
 function CustomerReservation() {
   const navigate = useNavigate();
   const [reservations, setReservations] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Loading reservations from localStorage
+  // Fetch reservations from API
   useEffect(() => {
-    const storedReservations =
-      JSON.parse(localStorage.getItem("reservations")) || [];
-    setReservations(storedReservations);
-  }, []);
+    const fetchReservations = async () => {
+      try {
+        setLoading(true);
 
-  // Removing a reservation
-  const handleRemove = (id) => {
-    const updated = reservations.filter((car) => car.id !== id);
-    setReservations(updated);
-    localStorage.setItem("reservations", JSON.stringify(updated));
+        // Get the access token from localStorage
+        const accessToken = localStorage.getItem("accessToken");
+
+        if (!accessToken) {
+          alert("Please login to view reservations");
+          navigate("/Login");
+          return;
+        }
+
+        const response = await fetch(
+          "https://team-airbnb.onrender.com/api/v1/reservations/",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`, // Add Bearer token
+            },
+          }
+        );
+
+        if (response.status === 401) {
+          alert("Session expired. Please login again.");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          navigate("/Login");
+          return;
+        }
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch reservations");
+        }
+
+        const data = await response.json();
+        console.log("Reservations data:", data);
+
+        // The API returns an object with a 'data' property containing the array
+        const reservationsArray = data.data || data.results || data || [];
+
+        if (!Array.isArray(reservationsArray)) {
+          throw new Error("Invalid reservations data format");
+        }
+
+        // Transform reservations to match UI format
+        const transformedReservations = reservationsArray.map((reservation) => {
+          // Access the car object from the response
+          const car = reservation.car;
+
+          return {
+            id: car?.id || reservation.car, // Car ID
+            reservationId: reservation.id || reservation._id, // Reservation ID
+            status: reservation.status,
+            expiresAt: reservation.expires_at,
+            createdAt: reservation.created_at,
+            // Get actual data from the car object
+            name: `${car?.make || "Unknown"} ${car?.model || "Car"}`, // e.g., "Toyota Corolla"
+            type: car?.car_type || "Unknown", // e.g., "suv"
+            year: car?.year || new Date().getFullYear(),
+            image: car?.images || null, // Car images
+          };
+        });
+
+        setReservations(transformedReservations);
+
+        // Also save to localStorage as backup
+        localStorage.setItem(
+          "reservations",
+          JSON.stringify(transformedReservations)
+        );
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching reservations:", err);
+        setError(err.message);
+
+        // Fallback to localStorage if API fails
+        const storedReservations =
+          JSON.parse(localStorage.getItem("reservations")) || [];
+        setReservations(storedReservations);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReservations();
+  }, [navigate]);
+
+  // Remove a reservation
+  const handleRemove = async (reservationId, carId) => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+
+      if (!accessToken) {
+        alert("Please login to remove reservations");
+        navigate("/Login");
+        return;
+      }
+
+      // Delete reservation from API
+      const response = await fetch(
+        `https://team-airbnb.onrender.com/api/v1/reservations/delete/${reservationId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete reservation");
+      }
+
+      // Update local state
+      const updated = reservations.filter(
+        (car) => car.reservationId !== reservationId
+      );
+      setReservations(updated);
+      localStorage.setItem("reservations", JSON.stringify(updated));
+
+      alert("Reservation removed successfully!");
+    } catch (err) {
+      console.error("Error removing reservation:", err);
+      alert("Failed to remove reservation");
+    }
   };
 
   return (
@@ -38,10 +158,24 @@ function CustomerReservation() {
 
       {/* Reserved Cars */}
       <div className="flex flex-col gap-4 mt-6 w-[350px]">
-        {reservations.length > 0 ? (
+        {loading ? (
+          <p className="text-center text-gray-500 mt-6">
+            Loading reservations...
+          </p>
+        ) : error ? (
+          <div className="text-center text-red-600 mt-6">
+            <p>Error: {error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-2 text-blue-600 underline"
+            >
+              Retry
+            </button>
+          </div>
+        ) : reservations.length > 0 ? (
           reservations.map((car) => (
             <div
-              key={car.id}
+              key={car.reservationId || car.id}
               className="flex items-center gap-6 px-3 py-4 border rounded-lg shadow-md w-full"
             >
               {/* Car image */}
@@ -57,22 +191,29 @@ function CustomerReservation() {
               <div className="flex flex-col justify-between w-[50%] mt-2">
                 <p className="font-semibold text-gray-900">{car.name}</p>
                 <div className="flex gap-2 mt-1 text-[12px] text-[#6B7280]">
-                  <p>{car.type}</p>
+                  <p className="capitalize">{car.type}</p>
                   <p>{car.year}</p>
                 </div>
+                {car.status && (
+                  <p className="text-[10px] text-gray-500 mt-1 capitalize">
+                    Status: {car.status}
+                  </p>
+                )}
 
                 {/* Buttons */}
                 <div className="mt-4 flex gap-2 text-white text-sm">
                   <button
-                    onClick={() => handleRemove(car.id)}
-                    className="bg-red-500 w-full px-4 py-3 rounded-md"
+                    onClick={() =>
+                      handleRemove(car.reservationId || car.id, car.id)
+                    }
+                    className="bg-red-500 w-full px-4 py-3 rounded-md hover:bg-red-600 transition"
                   >
                     Remove
                   </button>
 
                   <button
                     onClick={() => navigate(`/book/${car.id}/car-booking`)}
-                    className="bg-blue-600 w-full px-4 py-3 rounded-md"
+                    className="bg-blue-600 w-full px-4 py-3 rounded-md hover:bg-blue-700 transition"
                   >
                     Book
                   </button>

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import OwnerCar from "./OwnerCar";
 import AddCar from "./AddCar";
+
 export default function Cars() {
   const [showAddCar, setShowAddCar] = useState(false);
 
@@ -17,8 +18,6 @@ export default function Cars() {
           </button>
 
           <div className="mt-20">
-            <OwnerCar />
-            <OwnerCar />
             <OwnerCar />
           </div>
         </>

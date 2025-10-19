@@ -53,10 +53,9 @@ function Login() {
         if (response.ok) {
           console.log("Login successful:", data);
 
-          // Store the tokens in memory (not localStorage as per restrictions)
-          // In a real app, you'd use a state management solution or React Context
-          window.accessToken = data.access;
-          window.refreshToken = data.refresh;
+          // Store access and refresh tokens in localStorage
+          localStorage.setItem("accessToken", data.access);
+          localStorage.setItem("refreshToken", data.refresh);
 
           alert("Login successful!");
 
@@ -64,7 +63,7 @@ function Login() {
           setUsername("");
           setPassword("");
 
-          // Redirect to BusinessOwnerDashboard or home page
+          // Redirect to CustomerHomePage
           navigate("/CustomerHomePage");
         } else {
           // Handle API errors

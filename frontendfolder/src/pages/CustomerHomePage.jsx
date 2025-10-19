@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import homebg from "../assets/homebg.jpg";
 import menu from "../assets/menu.svg";
@@ -16,7 +16,7 @@ import blacknotificon from "../assets/blacknotificon.svg";
 import settingsicon from "../assets/settingsicon.svg";
 import AvailableCarCard from "../components/AvailableCarCard";
 import CarFilterMenu from "../components/CarFilterMenu";
-import { CARS_DATA, CATEGORY_DATA } from "../utils/cars";
+import { CATEGORY_DATA } from "../utils/cars";
 
 export default function CustomerHomePage() {
   const navigate = useNavigate();
@@ -24,12 +24,75 @@ export default function CustomerHomePage() {
   const [activeCategory, setActiveCategory] = useState("All");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
-  const [filteredCars, setFilteredCars] = useState(CARS_DATA.slice(0, 8));
+  const [allCars, setAllCars] = useState([]);
+  const [filteredCars, setFilteredCars] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Fetch cars from API
+  useEffect(() => {
+    const fetchCars = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          "https://team-airbnb.onrender.com/api/v1/cars/"
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch cars");
+        }
+
+        const data = await response.json();
+
+        // Extract cars from the results array
+        const cars = data.results || [];
+
+        // Transform API data to match your existing car structure
+        const transformedCars = cars.map((car) => ({
+          id: car.id || car._id,
+          make: car.make,
+          model: car.model,
+          year: car.year,
+          type: car.car_type,
+          color: car.color,
+          seats: car.seats,
+          transmission: car.transmission,
+          fuelType: car.fuel_type,
+          hasAC: car.has_ac,
+          hasGPS: car.has_gps,
+          price: parseFloat(car.hourly_rate),
+          deposit: parseFloat(car.deposit_amount),
+          isAvailable: car.is_available,
+          isActive: car.is_active,
+          availabilityStatus: car.availability_status,
+          // Add any other fields your AvailableCarCard component needs
+        }));
+
+        setAllCars(transformedCars);
+        setFilteredCars(transformedCars);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching cars:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCars();
+  }, []);
 
   const handleApplyFilters = ({ carYear, priceRange, carType }) => {
-    let results = CARS_DATA;
-    if (carType) results = results.filter((c) => c.type === carType);
-    if (carYear) results = results.filter((c) => c.year === carYear);
+    let results = allCars;
+
+    if (carType) {
+      results = results.filter((c) => c.type === carType);
+    }
+
+    if (carYear) {
+      results = results.filter((c) => c.year === parseInt(carYear));
+    }
+
     if (priceRange) {
       const [min, max] = priceRange
         .replace(/\$/g, "")
@@ -37,11 +100,17 @@ export default function CustomerHomePage() {
         .map((p) => parseInt(p));
       results = results.filter((c) => c.price >= min && c.price <= max);
     }
-    if (!carType && !carYear && !priceRange) results = CARS_DATA;
+
+    if (!carType && !carYear && !priceRange) {
+      results = allCars;
+    }
+
     setFilteredCars(results);
   };
 
-  const handleResetFilters = () => setFilteredCars(CARS_DATA);
+  const handleResetFilters = () => {
+    setFilteredCars(allCars);
+  };
 
   const sidebarItems = [
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
@@ -105,7 +174,7 @@ export default function CustomerHomePage() {
                       const reservations =
                         JSON.parse(localStorage.getItem("reservations")) || [];
                       if (reservations.length === 0) {
-                        alert("You haven’t reserved any car yet!");
+                        alert("You haven't reserved any car yet!");
                         return;
                       }
 
@@ -229,7 +298,21 @@ export default function CustomerHomePage() {
 
       {/* Cars */}
       <div className="flex flex-col items-center mt-[24px] px-[16px]">
-        {filteredCars.length > 0 ? (
+        {loading ? (
+          <div className="text-gray-600 text-center py-10">
+            <p className="font-semibold text-lg">Loading cars...</p>
+          </div>
+        ) : error ? (
+          <div className="text-red-600 text-center py-10">
+            <p className="font-semibold text-lg">Error: {error}</p>
+            <button
+              onClick={() => window.location.reload()}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-lg"
+            >
+              Retry
+            </button>
+          </div>
+        ) : filteredCars.length > 0 ? (
           filteredCars.map((car) => <AvailableCarCard key={car.id} car={car} />)
         ) : (
           <div className="text-gray-600 text-center py-10">

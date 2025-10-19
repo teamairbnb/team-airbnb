@@ -87,40 +87,51 @@ export default function AddCar({ onBack }) {
         return;
       }
 
+      // Validate required fields
+      if (!selectedMake || !selectedModel || !selectedType || !selectedSeat) {
+        setMessageType("error");
+        setMessage("Please fill in all required fields");
+        setLoading(false);
+        return;
+      }
+
       // Parse seats - extract number from strings like "2", "4", "5+"
       let seatsNum = 0;
       if (selectedSeat === "2") seatsNum = 2;
       else if (selectedSeat === "4") seatsNum = 4;
       else if (selectedSeat === "5+") seatsNum = 5;
 
-      // Build request body according to API schema
-      const requestBody = {
-        make: selectedMake,
-        model: selectedModel,
-        year: parseInt(year) || new Date().getFullYear(),
-        car_type: selectedType,
-        color: color,
-        seats: seatsNum,
-        transmission: selectedTransmission,
-        fuel_type: selectedFuel,
-        has_ac: hasAC,
-        has_gps: hasGPS,
-        hourly_rate: hourlyRate || "0.00",
-        deposit_amount: dailyPrice || "0.00",
-      };
+      // Create FormData to handle file upload
+      const formData = new FormData();
+      formData.append("make", selectedMake);
+      formData.append("model", selectedModel);
+      formData.append("year", parseInt(year) || new Date().getFullYear());
+      formData.append("car_type", selectedType);
+      formData.append("color", color);
+      formData.append("seats", seatsNum);
+      formData.append("transmission", selectedTransmission);
+      formData.append("fuel_type", selectedFuel);
+      formData.append("has_ac", hasAC);
+      formData.append("has_gps", hasGPS);
+      formData.append("hourly_rate", hourlyRate || "0.00");
+      formData.append("deposit_amount", dailyPrice || "0.00");
 
-      console.log("Request body being sent:", requestBody);
+      // Add the image file if selected
+      if (selectedImage) {
+        formData.append("images", selectedImage);
+      }
+
+      console.log("Submitting form data with image");
 
       const response = await fetch(
         "https://team-airbnb.onrender.com/api/v1/admin/cars/",
         {
           method: "POST",
           headers: {
-            "Content-Type": "application/json",
             Accept: "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-          body: JSON.stringify(requestBody),
+          body: formData,
         }
       );
 
@@ -137,13 +148,11 @@ export default function AddCar({ onBack }) {
         let errorMsg = "Failed to add car. Please try again.";
 
         if (typeof responseData === "object") {
-          // Check for various error formats
           if (responseData.detail) errorMsg = responseData.detail;
           else if (responseData.message) errorMsg = responseData.message;
           else if (responseData.non_field_errors)
             errorMsg = responseData.non_field_errors[0];
           else {
-            // Show first field error if available
             const firstError = Object.entries(responseData)[0];
             if (firstError) errorMsg = `${firstError[0]}: ${firstError[1]}`;
           }

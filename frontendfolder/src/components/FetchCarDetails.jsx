@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { useParams, Outlet } from "react-router-dom";
-import { CARS_DATA } from "../utils/cars";
+import { useParams, Outlet, useNavigate } from "react-router-dom";
 
 const CarContext = createContext(null);
 
@@ -13,11 +12,10 @@ export const useCarContext = () => {
 
 export default function FetchCarDetails() {
   const { carId } = useParams();
-
-  const [car, setCar] = useState(() => {
-    const foundCar = CARS_DATA.find((c) => c.id === parseInt(carId));
-    return foundCar || null;
-  });
+  const navigate = useNavigate();
+  const [car, setCar] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const [bookingDetails, setBookingDetails] = useState(() => {
     const saved = localStorage.getItem("bookingDetails");
@@ -36,13 +34,83 @@ export default function FetchCarDetails() {
         };
   });
 
-  const [totalPrice, setTotalPrice] = useState(car ? car.price : 0);
+  const [totalPrice, setTotalPrice] = useState(0);
 
-  // storing all reserved cars
+  // Storing all reserved cars
   const [reservations, setReservations] = useState(() => {
     const saved = localStorage.getItem("reservations");
     return saved ? JSON.parse(saved) : [];
   });
+
+  // Fetch car details from API
+  useEffect(() => {
+    const fetchCar = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          `https://team-airbnb.onrender.com/api/v1/cars/${carId}/`,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Car not found");
+        }
+
+        const data = await response.json();
+
+        // Transform API data to match your existing structure
+        const transformedCar = {
+          id: data.id || data._id,
+          make: data.make,
+          model: data.model,
+          year: data.year,
+          type: data.car_type,
+          color: data.color,
+          seats: data.seats,
+          transmission: data.transmission,
+          fuelType: data.fuel_type,
+          hasAC: data.has_ac,
+          hasGPS: data.has_gps,
+          price: parseFloat(data.hourly_rate),
+          deposit: parseFloat(data.deposit_amount),
+          isAvailable: data.is_available,
+          isActive: data.is_active,
+          availabilityStatus: data.availability_status,
+          name: `${data.make} ${data.model}`, // Combined name
+        };
+
+        setCar(transformedCar);
+        setTotalPrice(transformedCar.price);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching car:", err);
+        setError(err.message);
+
+        // Fallback: Try to find in localStorage reservations
+        const savedReservations =
+          JSON.parse(localStorage.getItem("reservations")) || [];
+        const foundCar = savedReservations.find(
+          (c) => c.id === parseInt(carId)
+        );
+
+        if (foundCar) {
+          setCar(foundCar);
+          setTotalPrice(foundCar.price);
+          setError(null);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (carId) {
+      fetchCar();
+    }
+  }, [carId]);
 
   // Adding car to reservations
   const addReservation = (car) => {
@@ -57,7 +125,7 @@ export default function FetchCarDetails() {
     });
   };
 
-  // removing a car
+  // Removing a car
   const removeReservation = (carId) => {
     setReservations((prev) => {
       const updated = prev.filter((c) => c.id !== carId);
@@ -70,10 +138,30 @@ export default function FetchCarDetails() {
     localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
   }, [bookingDetails]);
 
-  if (!car) {
+  if (loading) {
     return (
-      <div className="text-center mt-20">
-        <p className="text-gray-600">Car not found.</p>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-gray-600 text-lg">Loading car details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !car) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <p className="text-red-600 text-lg mb-4">
+            {error || "Car not found."}
+          </p>
+          <button
+            onClick={() => navigate("/CustomerHomePage")}
+            className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          >
+            Back to Home
+          </button>
+        </div>
       </div>
     );
   }

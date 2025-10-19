@@ -30,21 +30,31 @@ export default function OwnerCar() {
           method: "GET",
           headers: {
             Accept: "application/json",
+            "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
         }
       );
 
       if (!response.ok) {
-        throw new Error("Failed to fetch cars");
+        throw new Error(`API Error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      console.log("Fetched cars:", data);
+      console.log("API Response:", data); // Debug log
 
-      const carsData = data.results ? data.results : data;
-      setCars(Array.isArray(carsData) ? carsData : []);
-      setError("");
+      // Handle paginated response
+      const carsData = data.results || data;
+      const carsArray = Array.isArray(carsData) ? carsData : [];
+
+      console.log("Processed cars:", carsArray); // Debug log
+
+      if (carsArray.length === 0) {
+        setError("No cars found in database");
+      } else {
+        setCars(carsArray);
+        setError("");
+      }
     } catch (err) {
       setError(err.message);
       console.error("Error fetching cars:", err);

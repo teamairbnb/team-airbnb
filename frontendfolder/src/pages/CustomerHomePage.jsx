@@ -37,17 +37,11 @@ export default function CustomerHomePage() {
         const response = await fetch(
           "https://team-airbnb.onrender.com/api/v1/cars/"
         );
-
         if (!response.ok) {
           throw new Error("Failed to fetch cars");
         }
-
         const data = await response.json();
-
-        // Extract cars from the results array
         const cars = data.results || [];
-
-        // Transform API data to match your existing car structure
         const transformedCars = cars.map((car) => ({
           id: car.id || car._id,
           make: car.make,
@@ -65,9 +59,7 @@ export default function CustomerHomePage() {
           isAvailable: car.is_available,
           isActive: car.is_active,
           availabilityStatus: car.availability_status,
-          // Add any other fields your AvailableCarCard component needs
         }));
-
         setAllCars(transformedCars);
         setFilteredCars(transformedCars);
         setError(null);
@@ -78,7 +70,6 @@ export default function CustomerHomePage() {
         setLoading(false);
       }
     };
-
     fetchCars();
   }, []);
 
@@ -231,7 +222,6 @@ export default function CustomerHomePage() {
               <Link to="/CustomerNotif" className="p-[6px] rounded-full">
                 <img src={notificon} alt="notif" className="cursor-pointer" />
               </Link>
-
             </div>
           </div>
 
@@ -332,7 +322,6 @@ export default function CustomerHomePage() {
         onApply={handleApplyFilters}
         onReset={handleResetFilters}
       />
-
     </>
   );
 }

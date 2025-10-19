@@ -51,7 +51,7 @@ class AdminCarViewSet(viewsets.ModelViewSet):
         data = request.data # get the request sent by the user
         data['images']=image_url # point to the image request and stores the image url there 
 
-        serializer = CarSerializer(data=request.data)
+        serializer = CarSerializer(data=data)
         if serializer.is_valid():
             serializer.save(user=request.user)
             car = Car.objects.first()

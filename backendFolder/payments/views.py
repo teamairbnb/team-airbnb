@@ -18,6 +18,7 @@ from bookings.models import Booking
 
 
 
+
 def send_payment_confirmation_email(payment: Payment):
     """Send a simple confirmation email to the user associated with the payment.
     Uses Django EMAIL settings (DEFAULT_FROM_EMAIL)."""

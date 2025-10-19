@@ -1,7 +1,7 @@
 import datetime
 from rest_framework import serializers
 from .models import PaymentMethod, Payment
-from bookings import Booking
+from bookings.models import Booking
 
 
 def check_expiry_month(value):

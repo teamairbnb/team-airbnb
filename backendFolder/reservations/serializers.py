@@ -1,9 +1,17 @@
 from rest_framework  import serializers
 from .models import Reservation
+from car_inventories.models import Car
+from car_inventories.serializers import CarSerializer
+
 
 
 class ReservationSerializer(serializers.ModelSerializer):
+    car = CarSerializer(read_only=True)
+    car_id = serializers.PrimaryKeyRelatedField(
+        queryset=Car.objects.all(), source='car', write_only=True
+    )
+
     class Meta:
         model = Reservation
-        fields = ["car",'status','expires_at','created_at']
-        read_only_fields =["status","expires_at","created_at"]
+        fields = ["car", "car_id", "status", "expires_at", "created_at"]
+        read_only_fields = ["status", "expires_at", "created_at"]

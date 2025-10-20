@@ -34,7 +34,7 @@ export default function CustomerHomePage() {
     const fetchCars = async () => {
       try {
         setLoading(true);
-        const accessToken = localStorage.getItem("access_token");
+        const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(
           "https://team-airbnb.onrender.com/api/v1/admin/cars/",
           {
@@ -50,12 +50,9 @@ export default function CustomerHomePage() {
           throw new Error("Failed to fetch cars");
         }
         const data = await response.json();
-        console.log("API Response:", data);
 
         // Extract cars from the results array
         const cars = data.results || [];
-        console.log("Extracted cars:", cars);
-        console.log("Number of cars:", cars.length);
 
         // Transform API data to match your existing car structure
         const transformedCars = cars.map((car) => ({

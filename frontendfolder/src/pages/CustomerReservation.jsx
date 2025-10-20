@@ -48,7 +48,6 @@ function CustomerReservation() {
         }
 
         const data = await response.json();
-        console.log("Reservations data:", data);
 
         // The API returns an object with a 'data' property containing the array
         const reservationsArray = data.data || data.results || data || [];

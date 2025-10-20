@@ -73,6 +73,9 @@ class Car(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     images = models.TextField(blank=True, null=True)  # URL to the car image
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return f"{self.make} {self.model} ({self.year})"
     

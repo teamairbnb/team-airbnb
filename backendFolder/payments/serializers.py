@@ -64,15 +64,6 @@ class DirectPaymentCreateSerializer(serializers.Serializer):
 
     def validate(self, data):
         """Validate expiry date and amount against booking"""
-        #Check if card is not expired
-        today = datetime.datetime.now()
-        expiry_date = datetime.datetime(
-            year=data["expiry_year"], month=data['expiry_month'], day=1
-        )
-        if expiry_date < today:
-            raise serializers.ValidationError("Card has expired")
-        
-    
         #  Validate booking exists and amount matches
 
 
@@ -204,10 +195,9 @@ class RefundSerializer(serializers.Serializer):
             return data
 
 
-class PaymentDetailSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = ["reference", "user", "booking", "amount", "card_last4", "currency", "status", "type", "metadata", "created_at", "payment_method"]
+class PaymentDetailSerializer(PaymentSerializer):
+    class Meta(PaymentSerializer.Meta):
+        fields = PaymentSerializer.Meta.fields + ["currency", "metadata"]
 
 
 class RefundByReferenceSerializer(serializers.Serializer):

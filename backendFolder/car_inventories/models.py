@@ -74,6 +74,9 @@ class Car(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     images = CloudinaryField('images')
 
+    class Meta:
+        ordering = ['-created_at']
+
     def __str__(self):
         return f"{self.make} {self.model} ({self.year})"
     

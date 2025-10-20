@@ -48,3 +48,4 @@ class UserCarViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = CarSerializer
     permission_classes = [permissions.AllowAny]
     filterset_fields = ['make', 'model', 'year', 'car_type', 'color', 'seats', 'transmission', 'fuel_type', 'has_ac', 'has_gps',]
+    ordering = ['-created_at']

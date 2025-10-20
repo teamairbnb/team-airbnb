@@ -1,40 +1,22 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import mercedes from "../assets/mercedes.svg";
 import editicon from "../assets/editicon.svg";
 import benzlogo from "../assets/benzlogo.svg";
 import deleteicon from "../assets/delete.svg";
 
-export default function OwnerCar({ showAll = false }) {
-  const [cars, setCars] = useState([]); 
-  const [visibleCars, setVisibleCars] = useState([]); 
+export default function OwnerCar() {
+  const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-
-  const allFetchedRef = useRef(false); // tracks whether we've already fetched all pages
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
-    fetchFirstPage();
-  }, [refreshTrigger]);
+    fetchCars();
+  }, []);
 
-  useEffect(() => {
-    if (showAll) {
-      // if all pages have been fetched, show them, else fetch rest
-      if (allFetchedRef.current) {
-        setVisibleCars(cars);
-      } else {
-        fetchAllPagesAndSet();
-      }
-    } else {
-      // collapse back to 5
-      setVisibleCars(cars.slice(0, 5));
-    }
-  }, [showAll, cars]);
-
-  const fetchFirstPage = async () => {
+  const fetchCars = async (fetchAll = false) => {
     try {
       setLoading(true);
-      setError("");
       const accessToken = localStorage.getItem("access_token");
 
       if (!accessToken) {
@@ -43,52 +25,12 @@ export default function OwnerCar({ showAll = false }) {
         return;
       }
 
-      const url = "https://team-airbnb.onrender.com/api/v1/admin/cars/";
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
+      let allData = [];
+      let nextUrl = "https://team-airbnb.onrender.com/api/v1/admin/cars/";
 
-      if (!res.ok) {
-        throw new Error(`API Error: ${res.status} ${res.statusText}`);
-      }
-
-      const data = await res.json();
-
-      const pageCars = Array.isArray(data.results) ? data.results : Array.isArray(data) ? data : [];
-
-      setCars(pageCars);
-      setVisibleCars(showAll ? pageCars : pageCars.slice(0, 5));
-
-      allFetchedRef.current = !data.next; 
-    } catch (err) {
-      console.error("fetchFirstPage error:", err);
-      setError(err.message || "Failed to load cars");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const fetchAllPagesAndSet = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const accessToken = localStorage.getItem("access_token");
-      if (!accessToken) {
-        setError("Authentication error. Please login again.");
-        setLoading(false);
-        return;
-      }
-
-      let url = "https://team-airbnb.onrender.com/api/v1/admin/cars/?page=1"; 
-      const all = [];
-
-      while (url) {
-        const res = await fetch(url, {
+      // Fetching all cars if "See All" is clicked
+      while (nextUrl) {
+        const response = await fetch(nextUrl, {
           method: "GET",
           headers: {
             Accept: "application/json",
@@ -97,32 +39,39 @@ export default function OwnerCar({ showAll = false }) {
           },
         });
 
-        if (!res.ok) {
-          throw new Error(`API Error while paging: ${res.status}`);
-        }
+        if (!response.ok)
+          throw new Error(`API Error: ${response.status} ${response.statusText}`);
 
-        const data = await res.json();
-
-        const pageCars = Array.isArray(data.results) ? data.results : Array.isArray(data) ? data : [];
-        all.push(...pageCars);
-
-        if (data.next) {
-          url = data.next;
-        } else {
-          url = null;
-        }
+        const data = await response.json();
+        allData = [...allData, ...(data.results || [])];
+        nextUrl = fetchAll ? data.next : null; // only paginate when See All is triggered
       }
 
-      setCars(all);
-      setVisibleCars(all);
-      allFetchedRef.current = true;
+      const carsArray = Array.isArray(allData) ? allData : [];
+
+      if (carsArray.length === 0) {
+        setError("No cars found in database");
+      } else {
+        setCars(fetchAll ? carsArray : carsArray.slice(0, 5)); // limit to 5 if not showing all
+        setError("");
+      }
     } catch (err) {
-      console.error("fetchAllPagesAndSet error:", err);
-      setError(err.message || "Failed to fetch all pages");
-      // If fetching pages fails, fall back to whatever we had
-      setVisibleCars((prev) => (prev.length ? prev : cars.slice(0, 5)));
+      setError(err.message);
+      console.error("Error fetching cars:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSeeAll = async () => {
+    if (showAll) {
+      // toggle back to showing 5 cars
+      setShowAll(false);
+      await fetchCars(false);
+    } else {
+      // fetch all cars
+      setShowAll(true);
+      await fetchCars(true);
     }
   };
 
@@ -131,18 +80,25 @@ export default function OwnerCar({ showAll = false }) {
 
     try {
       const accessToken = localStorage.getItem("access_token");
-      const res = await fetch(`https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
 
-      if (!res.ok) throw new Error("Delete failed");
+      const response = await fetch(
+        `https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
 
-      setCars((prev) => prev.filter((c) => c.id !== carId));
-      setVisibleCars((prev) => prev.filter((c) => c.id !== carId));
+      if (response.ok) {
+        setCars(cars.filter((car) => car.id !== carId));
+      } else {
+        alert("Failed to delete car");
+      }
     } catch (err) {
-      console.error("delete error:", err);
-      alert("Failed to delete car");
+      console.error("Error deleting car:", err);
+      alert("Error deleting car");
     }
   };
 
@@ -150,17 +106,21 @@ export default function OwnerCar({ showAll = false }) {
     window.location.href = `/EditCarDetails/${carId}`;
   };
 
-  useEffect(() => {
-    window.refreshOwnerCars = () => setRefreshTrigger((p) => p + 1);
-  }, []);
+  if (loading) {
+    return <div className="text-center py-10">Loading cars...</div>;
+  }
 
-  if (loading) return <div className="text-center py-10">Loading cars...</div>;
-  if (error) return <div className="text-center py-10 text-red-600">Error: {error}</div>;
-  if (!visibleCars || visibleCars.length === 0) return <div className="text-center py-10">No cars available</div>;
+  if (error) {
+    return <div className="text-center py-10 text-red-600">Error: {error}</div>;
+  }
+
+  if (cars.length === 0) {
+    return <div className="text-center py-10">No cars available</div>;
+  }
 
   return (
     <>
-      {visibleCars.map((car) => (
+      {cars.map((car) => (
         <div key={car.id} className="flex flex-col text-[#111827] mb-6">
           <div className="bg-[#2563EB] relative px-4 py-1 w-32 flex items-center gap-3 text-white rounded-t-xl rounded-br-xl translate-y-4">
             <div className="bg-[#16A34A] h-3 w-3 rounded-full"></div>
@@ -173,7 +133,16 @@ export default function OwnerCar({ showAll = false }) {
             </p>
           </div>
 
-          <img className="" src={mercedes} alt="" />
+          <img
+            className="w-full h-56 object-cover rounded-t-xl"
+            src={
+              car.images && car.images.length > 0
+                ? `https://res.cloudinary.com/dmcortp4y/${car.images}`
+                : mercedes
+            }
+            alt={`${car.make} ${car.model}`}
+          />
+
           <div className="w-full border shadow-lg rounded-b-xl px-4 pt-[18px] pb-5">
             <div className="flex justify-between">
               <div className="flex gap-[14px]">
@@ -186,7 +155,6 @@ export default function OwnerCar({ showAll = false }) {
                   <p className="text-[#6B7280] capitalize">{car.car_type}</p>
                 </div>
               </div>
-
               <div className="mt-4 flex flex-col gap-7">
                 <img
                   className="w-4 -translate-y-5 cursor-pointer"
@@ -226,11 +194,26 @@ export default function OwnerCar({ showAll = false }) {
             </div>
 
             <p className="font-semibold text-start mt-4">
-              ${car.hourly_rate} <span className="text-[#6B7280]">/d</span>
+              ${car.hourly_rate || car.deposit_amount}{" "}
+              <span className="text-[#6B7280]">/d</span>
             </p>
           </div>
         </div>
       ))}
+
+      {/* See All / Show Less Button */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={handleSeeAll}
+          className={`px-6 py-2 rounded-full font-semibold transition ${
+            showAll
+              ? "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
+        >
+          {showAll ? "Show Less" : "See All"}
+        </button>
+      </div>
     </>
   );
 }

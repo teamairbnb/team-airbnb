@@ -7,6 +7,7 @@ import { useCarContext } from "../components/FetchCarDetails";
 
 export default function ReviewBooking() {
   const { car, bookingDetails } = useCarContext();
+  const [carImage, setCarImage] = useState(location.state?.image || "");
   const [userInfo, setUserInfo] = useState({
     fullName: "",
     email: "",
@@ -66,7 +67,7 @@ export default function ReviewBooking() {
         <div className="mt-[13px] py-[32px] flex items-center">
           <img
             className="w-[90px]"
-            src={car.image || selectedcarimg}
+            src={carImage || selectedcarimg}
             alt={car.name}
           />
           <div className="ml-[16px]">

@@ -9,13 +9,12 @@ function CustomerReservation() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Fetch reservations from API
+  // Fetch reservations from API endpoint
   useEffect(() => {
     const fetchReservations = async () => {
       try {
         setLoading(true);
 
-        // Get the access token from localStorage
         const accessToken = localStorage.getItem("accessToken");
 
         if (!accessToken) {
@@ -30,7 +29,7 @@ function CustomerReservation() {
             method: "GET",
             headers: {
               "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`, // Add Bearer token
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
@@ -49,35 +48,33 @@ function CustomerReservation() {
 
         const data = await response.json();
 
-        // The API returns an object with a 'data' property containing the array
         const reservationsArray = data.data || data.results || data || [];
 
         if (!Array.isArray(reservationsArray)) {
           throw new Error("Invalid reservations data format");
         }
 
-        // Transform reservations to match UI format
         const transformedReservations = reservationsArray.map((reservation) => {
-          // Access the car object from the response
           const car = reservation.car;
 
+          let imageUrl = car?.images
+            ? `https://res.cloudinary.com/dmcortp4y/${car.images}`
+            : carimg;
+
           return {
-            id: car?.id || reservation.car, // Car ID
-            reservationId: reservation.id || reservation._id, // Reservation ID
+            id: car?.id || reservation.car,
+            reservationId: reservation.id || reservation._id,
             status: reservation.status,
             expiresAt: reservation.expires_at,
             createdAt: reservation.created_at,
-            // Get actual data from the car object
             name: `${car?.make || "Unknown"} ${car?.model || "Car"}`,
-            type: car?.car_type || "Unknown", // e.g., "suv"
+            type: car?.car_type || "Unknown",
             year: car?.year || new Date().getFullYear(),
-            image: car?.images || null, 
+            image: imageUrl,
           };
         });
 
         setReservations(transformedReservations);
-
-        // Also save to localStorage as backup
         localStorage.setItem(
           "reservations",
           JSON.stringify(transformedReservations)
@@ -86,8 +83,6 @@ function CustomerReservation() {
       } catch (err) {
         console.error("Error fetching reservations:", err);
         setError(err.message);
-
-        // Fallback to localStorage if API fails
         const storedReservations =
           JSON.parse(localStorage.getItem("reservations")) || [];
         setReservations(storedReservations);
@@ -110,7 +105,6 @@ function CustomerReservation() {
         return;
       }
 
-      // Delete reservation from API
       const response = await fetch(
         `https://team-airbnb.onrender.com/api/v1/reservations/delete/${reservationId}/`,
         {
@@ -126,7 +120,6 @@ function CustomerReservation() {
         throw new Error("Failed to delete reservation");
       }
 
-      // Update local state
       const updated = reservations.filter(
         (car) => car.reservationId !== reservationId
       );
@@ -182,13 +175,15 @@ function CustomerReservation() {
                 <img
                   src={car.image || carimg}
                   alt={car.name || "Car img"}
-                  className="w-full h-auto object-contain"
+                  className="w-full h-auto object-cover rounded-md"
                 />
               </div>
 
               {/* Details */}
               <div className="flex flex-col justify-between w-[50%] mt-2">
-                <p className="font-semibold text-gray-900 capitalize">{car.name}</p>
+                <p className="font-semibold text-gray-900 capitalize">
+                  {car.name}
+                </p>
                 <div className="flex gap-2 mt-1 text-[12px] text-[#6B7280]">
                   <p className="capitalize">{car.type}</p>
                   <p>{car.year}</p>
@@ -211,7 +206,11 @@ function CustomerReservation() {
                   </button>
 
                   <button
-                    onClick={() => navigate(`/book/${car.id}/car-booking`)}
+                    onClick={() =>
+                      navigate(`/book/${car.id}/car-booking`, {
+                        state: { image: car.image },
+                      })
+                    }
                     className="bg-blue-600 w-full px-4 py-3 rounded-md hover:bg-blue-700 transition"
                   >
                     Book

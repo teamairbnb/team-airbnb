@@ -23,16 +23,6 @@ export default function Cars() {
             {/* passing showAll flag down */}
             <OwnerCar showAll={showAllCars} />
           </div>
-
-          {/* See All / Show Less */}
-          <div className="flex justify-center mt-6">
-            <button
-              onClick={() => setShowAllCars((s) => !s)}
-              className="bg-[#2563EB] text-white px-6 py-2 rounded-xl hover:bg-[#1E40AF] transition"
-            >
-              {showAllCars ? "Show Less" : "See All"}
-            </button>
-          </div>
         </>
       ) : (
         <AddCar onBack={() => setShowAddCar(false)} />

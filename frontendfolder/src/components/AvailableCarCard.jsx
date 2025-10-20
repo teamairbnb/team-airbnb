@@ -129,7 +129,6 @@ export default function AvailableCarCard({ car }) {
     }
   };
 
-  // Handle image - could be string, array, or undefined
   const getCarImage = () => {
     if (!car.image) return mercedes;
     if (typeof car.image === "string") return car.image;
@@ -149,13 +148,11 @@ export default function AvailableCarCard({ car }) {
       />
 
       <div className="m-[16px] tracking-wide">
-        {/* Car Name: Make + Model */}
-        <p className="font-semibold text-[20px]">
+        <p className="font-semibold text-[20px] capitalize">
           {car.make} {car.model}
         </p>
 
-        {/* Car Details: Type, Transmission, Seats, Year */}
-        <div className="text-[#6B7280] mt-[3px] flex font-semibold items-center gap-[4px] text-[12px]">
+        <div className="text-[#6B7280] mt-[3px] flex font-semibold items-center gap-[4px] text-[12px] capitalize">
           <p>{car.type}</p>
           <p className="-mt-2">.</p>
           <p>{car.transmission}</p>

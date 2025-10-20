@@ -20,12 +20,11 @@ export default function LiveChat() {
 
     const userMessage = inputValue.trim();
 
-    // Add message locally
     setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     setInputValue("");
 
     try {
-      const token = localStorage.getItem("accessToken"); // adjust the key if needed
+      const token = localStorage.getItem("accessToken"); 
 
       const response = await fetch(
         "https://team-airbnb.onrender.com/api/v1/chatbot/",

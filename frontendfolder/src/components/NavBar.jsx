@@ -21,7 +21,7 @@ function NavBar() {
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
-    { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
+    { label: "ChatBot", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
     { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
     { label: "Reservation", icon: bookicon, path: "/CustomerReservation" },

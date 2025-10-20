@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import editicon from "../assets/darkediticon.svg";
@@ -14,11 +14,38 @@ export default function CustomerPersonalInfo() {
     phone: "",
   });
 
+  // ✅ Load user_info from localStorage on mount
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user_info"));
+    if (storedUser) {
+      setFormData({
+        firstName: storedUser.first_name || "",
+        lastName: storedUser.last_name || "",
+        username: storedUser.username || "",
+        email: storedUser.email || "",
+        phone: storedUser.phone_number || "",
+      });
+    }
+  }, []);
+
   const handleEditClick = () => setIsEditing(true);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSave = () => {
+    const updatedInfo = {
+      username: formData.username,
+      first_name: formData.firstName,
+      last_name: formData.lastName,
+      email: formData.email,
+      phone_number: formData.phone,
+    };
+    localStorage.setItem("user_info", JSON.stringify(updatedInfo));
+    alert("Changes saved!");
+    setIsEditing(false);
   };
 
   return (
@@ -89,10 +116,7 @@ export default function CustomerPersonalInfo() {
       {isEditing && (
         <div className="fixed bottom-0 left-0 w-full px-4 pb-6 bg-white shadow-[0_-4px_12px_rgba(0,0,0,0.1)]">
           <button
-            onClick={() => {
-              alert("Changes saved!");
-              setIsEditing(false);
-            }}
+            onClick={handleSave}
             className="w-full bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"
           >
             Save Changes

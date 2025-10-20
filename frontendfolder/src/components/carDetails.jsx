@@ -3,13 +3,18 @@ import { Link, useParams } from "react-router-dom";
 import { MapPin, Calendar, Settings, Info } from "lucide-react";
 import back from "../assets/back.svg";
 import CarDetailsImg from "../assets/cardetailspage.jpg";
+import seaticon from "../assets/seaticon.svg";
+import calendericon from "../assets/calendericon.svg";
+import distanceicon from "../assets/distanceicon.svg";
+import settingsicon from "../assets/settingsicon.svg";
+
 import { useCarContext } from "../components/FetchCarDetails";
 
 export default function CarBookingScreen() {
   const { carId } = useParams();
   const { car, setCar } = useCarContext();
 
-  // If no car is found 
+  // If no car is found
   if (!car) {
     return (
       <div className="text-center mt-20">
@@ -40,9 +45,8 @@ export default function CarBookingScreen() {
     localStorage.setItem("selectedMileage", selectedMileage);
   }, [selectedMileage]);
 
-  const totalPrice = selectedBooking === "flexible" ? basePrice * 0.2 : basePrice;
-
-
+  const totalPrice =
+    selectedBooking === "flexible" ? basePrice * 0.2 : basePrice;
 
   return (
     <div className="flex justify-center">
@@ -65,27 +69,31 @@ export default function CarBookingScreen() {
         {/* Car Details */}
         <div className="px-[16px]">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-4 text-left">{car.name}</h1>
+            <h1 className="text-2xl font-bold mb-4 text-left capitalize">
+              {car.name}
+            </h1>
 
             <div className="flex items-center mb-3">
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <Settings className="w-4 h-4" />
-                <span className="text-sm">{car.seatnum} Seats</span>
+                <img src={seaticon} className="w-4 h-4" alt="" />
+                <span className="text-sm">{car.seats} Seats</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <MapPin className="w-4 h-4" />
+                <img src={distanceicon} className="w-4 h-4" alt="" />
                 <span className="text-sm">200m</span>
               </div>
             </div>
 
             <div className="flex items-center">
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <Calendar className="w-4 h-4" />
+                <img src={calendericon} className="w-4 h-4" alt="" />
+
                 <span className="text-sm">{car.year}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <Settings className="w-4 h-4" />
-                <span className="text-sm">{car.mode}</span>
+                <img src={settingsicon} className="w-4 h-4" alt="" />
+
+                <span className="text-sm capitalize">{car.transmission}</span>
               </div>
             </div>
           </div>

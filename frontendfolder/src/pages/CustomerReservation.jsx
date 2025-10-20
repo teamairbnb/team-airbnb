@@ -48,7 +48,6 @@ function CustomerReservation() {
         }
 
         const data = await response.json();
-        console.log("Reservations data:", data);
 
         // The API returns an object with a 'data' property containing the array
         const reservationsArray = data.data || data.results || data || [];
@@ -69,10 +68,10 @@ function CustomerReservation() {
             expiresAt: reservation.expires_at,
             createdAt: reservation.created_at,
             // Get actual data from the car object
-            name: `${car?.make || "Unknown"} ${car?.model || "Car"}`, // e.g., "Toyota Corolla"
+            name: `${car?.make || "Unknown"} ${car?.model || "Car"}`,
             type: car?.car_type || "Unknown", // e.g., "suv"
             year: car?.year || new Date().getFullYear(),
-            image: car?.images || null, // Car images
+            image: car?.images || null, 
           };
         });
 
@@ -189,7 +188,7 @@ function CustomerReservation() {
 
               {/* Details */}
               <div className="flex flex-col justify-between w-[50%] mt-2">
-                <p className="font-semibold text-gray-900">{car.name}</p>
+                <p className="font-semibold text-gray-900 capitalize">{car.name}</p>
                 <div className="flex gap-2 mt-1 text-[12px] text-[#6B7280]">
                   <p className="capitalize">{car.type}</p>
                   <p>{car.year}</p>

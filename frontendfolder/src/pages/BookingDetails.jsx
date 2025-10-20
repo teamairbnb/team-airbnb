@@ -1,10 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import menu from "../assets/darkhamburgermenu.svg";
 import chaticon from "../assets/darkchat.svg";
 import blackusericon from "../assets/blackusericon.svg";
 import blacknotificon from "../assets/blacknotificon.svg";
-import selectedcarimg from "../assets/smselectedcar.svg";
 import confirmedstatus from "../assets/confirmedstatus.svg";
 import cancelbookingwarning from "../assets/cancelbookingwarning.svg";
 import close from "../assets/close.svg";
@@ -12,21 +10,43 @@ import { useCarContext } from "../components/FetchCarDetails";
 
 export default function BookingDetails() {
   const [showModal, setShowModal] = useState(false);
+  const [driverInfo, setDriverInfo] = useState({ name: "", phone: "" });
   const { car, bookingDetails } = useCarContext();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user_info"));
+    if (storedUser) {
+      const fullName = `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim();
+      setDriverInfo({
+        name: fullName || "N/A",
+        phone: storedUser.phone_number || "N/A",
+      });
+    }
+  }, []);
 
   const handleCancelClick = () => setShowModal(true);
   const handleCloseModal = () => setShowModal(false);
 
-  const selectedPlanPrice =
-    parseFloat(localStorage.getItem("selectedPlanPrice")) || 0;
+  const selectedPlanPrice = parseFloat(localStorage.getItem("selectedPlanPrice")) || 0;
   const carPrice = car ? parseFloat(car.price) : 0;
   const totalPrice = carPrice + selectedPlanPrice;
 
   const handleConfirmBooking = () => {
-    alert("🎉 Thank you! Your booking has been confirmed successfully.");
-    localStorage.removeItem("bookingDetails");
-    navigate("/CustomerHomePage");
+    const newBooking = {
+      id: Date.now(),
+      status: "confirmed",
+      name: car?.name || "Unknown Car",
+      date: `${bookingDetails?.pickUpDate || ""} - ${bookingDetails?.returnDate || ""}`,
+      image: car?.image || "", // ✅ store actual car image (no fallback)
+      totalPrice,
+    };
+
+    const existing = JSON.parse(localStorage.getItem("myBookings")) || [];
+    localStorage.setItem("myBookings", JSON.stringify([...existing, newBooking]));
+
+    alert("🎉 Booking confirmed successfully!");
+    navigate("/MyBookings");
   };
 
   function formatTimeTo12Hour(time) {
@@ -34,14 +54,14 @@ export default function BookingDetails() {
     const [hour, minute] = time.split(":");
     const h = parseInt(hour);
     const suffix = h >= 12 ? "PM" : "AM";
-    const formattedHour = ((h + 11) % 12) + 1; 
+    const formattedHour = ((h + 11) % 12) + 1;
     return `${formattedHour}:${minute} ${suffix}`;
   }
 
   return (
     <div className="text-[#111827] px-[16px] pb-[43px] relative">
       {/* Header */}
-      <div className="flex relative justify-between py-[16px]">
+      <div className="flex justify-between py-[16px] relative">
         <div className="flex right-0 absolute gap-[16px]">
           <img className="w-6" src={chaticon} alt="Chat" />
           <img className="w-6" src={blackusericon} alt="User" />
@@ -51,130 +71,12 @@ export default function BookingDetails() {
 
       <p className="font-bold text-[25px] mt-12">Booking details</p>
 
-      {/* Car Info */}
       <div className="mt-[16px] py-[32px] px-[16px] flex items-center">
-        <img
-          className="w-[90px]"
-          src={car?.image || selectedcarimg}
-          alt={car?.name}
-        />
+        <img className="w-[90px]" src={car?.image || ""} alt={car?.name || "Car"} />
         <div className="ml-[17px]">
           <p className="font-semibold">{car?.name || "Car name unavailable"}</p>
           <p className="text-[12px] mt-[8px] tracking-wide">
-            {bookingDetails?.pickUpDate || "Start date"} -
-            {bookingDetails?.returnDate || "End date"}
-          </p>
-        </div>
-      </div>
-
-      {/* Booking Info */}
-      <div className="mt-[16px] py-[24px] px-[16px] font-semibold">
-        <p>
-          Booking ID :
-          <span className="text-[#6B7280] ml-[16px] font-normal">
-            #RNT - {bookingDetails?.bookingId || "1024"}
-          </span>
-        </p>
-        <div className="flex gap-[16px] mt-[8px]">
-          <p>Status : </p>
-          <img
-            className="w-20 mt-[2px]"
-            src={confirmedstatus}
-            alt="Confirmed"
-          />
-        </div>
-      </div>
-
-      {/* Pick-up Info */}
-      <div className="mt-[16px] py-[24px] px-[16px] font-semibold">
-        <p className="font-bold text-[20px]">Pick-up</p>
-        <div className="mt-[19px]">
-          <p>
-            Location :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.pickUpLocation || "company address"}
-            </span>
-          </p>
-          <p>
-            Date :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.pickUpDate || "--/--/----"}
-            </span>
-          </p>
-          <p>
-            Time :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {formatTimeTo12Hour(bookingDetails?.pickUpTime)}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* Drop-off Info */}
-      <div className="mt-[16px] py-[24px] px-[16px] font-semibold">
-        <p className="font-bold text-[20px]">Drop-off</p>
-        <div className="mt-[19px]">
-          <p>
-            Location :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.dropOffLocation || "company address"}
-            </span>
-          </p>
-          <p>
-            Date :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.returnDate || "--/--/----"}
-            </span>
-          </p>
-          <p>
-            Time :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {formatTimeTo12Hour(bookingDetails?.returnTime)}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* Payment Info */}
-      <div className="mt-[16px] py-[24px] px-[16px] font-semibold">
-        <p className="font-bold text-[20px]">Payment</p>
-        <div className="mt-[19px]">
-          <p>
-            Daily Rate :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              ${carPrice.toFixed(2)}
-            </span>
-          </p>
-          <p>
-            Insurance :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              ${selectedPlanPrice.toFixed(2)}
-            </span>
-          </p>
-          <p>
-            Total :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              ${totalPrice.toFixed(2)}
-            </span>
-          </p>
-        </div>
-      </div>
-
-      {/* Driver Info */}
-      <div className="mt-[16px] py-[24px] px-[16px] font-semibold">
-        <p className="font-bold text-[20px]">Driver Info</p>
-        <div className="mt-[19px]">
-          <p>
-            Name :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.driverName || "Roro Jones"}
-            </span>
-          </p>
-          <p>
-            Phone :
-            <span className="text-[#6B7280] ml-[16px] font-normal">
-              {bookingDetails?.driverPhone || "+234 8044444444"}
-            </span>
+            {bookingDetails?.pickUpDate || "Start"} - {bookingDetails?.returnDate || "End"}
           </p>
         </div>
       </div>
@@ -195,7 +97,7 @@ export default function BookingDetails() {
         </button>
       </div>
 
-      {/* Modal */}
+      {/* Cancel Modal */}
       {showModal && (
         <>
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
@@ -212,8 +114,7 @@ export default function BookingDetails() {
               </div>
               <h2 className="font-bold text-[25px] mb-3">Cancel Booking</h2>
               <p className="text-[#6B7280] text-sm mb-6">
-                Are you sure you want to cancel this booking? This action cannot
-                be undone.
+                Are you sure you want to cancel this booking? This action cannot be undone.
               </p>
 
               <div className="flex justify-center mb-6">
@@ -226,11 +127,10 @@ export default function BookingDetails() {
                     handleCloseModal();
                     alert("Booking cancelled successfully.");
                   }}
-                  className="w-full py-4 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition"
+                  className="w-full py-4 bg-red-600 text-white rounded-lg text-sm"
                 >
                   Yes, cancel booking
                 </button>
-
                 <button
                   onClick={handleCloseModal}
                   className="w-full py-4 border border-[#D3D3D3] rounded-lg text-sm"

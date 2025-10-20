@@ -5,14 +5,15 @@ import upload from "../assets/upload.svg";
 
 export default function AddCar({ onBack }) {
   const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
+  const [isAvailabilityDropdownOpen, setIsAvailabilityDropdownOpen] = useState(false);
   const [isSeatDropdownOpen, setIsSeatDropdownOpen] = useState(false);
   const [isMakeDropdownOpen, setIsMakeDropdownOpen] = useState(false);
   const [isModelDropdownOpen, setIsModelDropdownOpen] = useState(false);
-  const [isTransmissionDropdownOpen, setIsTransmissionDropdownOpen] =
-    useState(false);
+  const [isTransmissionDropdownOpen, setIsTransmissionDropdownOpen] = useState(false);
   const [isFuelDropdownOpen, setIsFuelDropdownOpen] = useState(false);
 
   const [selectedType, setSelectedType] = useState("");
+  const [selectedAvailability, setSelectedAvailability] = useState("");
   const [selectedSeat, setSelectedSeat] = useState("");
   const [selectedMake, setSelectedMake] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
@@ -26,12 +27,15 @@ export default function AddCar({ onBack }) {
 
   const [hasAC, setHasAC] = useState(false);
   const [hasGPS, setHasGPS] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [messageType, setMessageType] = useState("");
 
   const typeRef = useRef(null);
+  const availabilityRef = useRef(null);
   const seatRef = useRef(null);
   const makeRef = useRef(null);
   const modelRef = useRef(null);
@@ -39,6 +43,7 @@ export default function AddCar({ onBack }) {
   const fuelRef = useRef(null);
 
   const carTypes = ["suv", "sedan", "hatchback", "coupe", "convertible"];
+  const availabilityOptions = ["available", "rented", "unavailable", "maintenance"];
   const seatNums = ["2", "4", "5+"];
   const carMakes = ["toyota", "honda", "bmw", "mercedes", "ford"];
   const carModels = ["corolla", "civic", "mustang", "x5", "c-class"];
@@ -49,6 +54,7 @@ export default function AddCar({ onBack }) {
     const handleClickOutside = (event) => {
       if (
         !typeRef.current?.contains(event.target) &&
+        !availabilityRef.current?.contains(event.target) &&
         !seatRef.current?.contains(event.target) &&
         !makeRef.current?.contains(event.target) &&
         !modelRef.current?.contains(event.target) &&
@@ -56,6 +62,7 @@ export default function AddCar({ onBack }) {
         !fuelRef.current?.contains(event.target)
       ) {
         setIsTypeDropdownOpen(false);
+        setIsAvailabilityDropdownOpen(false);
         setIsSeatDropdownOpen(false);
         setIsMakeDropdownOpen(false);
         setIsModelDropdownOpen(false);
@@ -77,7 +84,6 @@ export default function AddCar({ onBack }) {
     setMessage("");
 
     try {
-      // Get access token from localStorage
       const accessToken = localStorage.getItem("access_token");
 
       if (!accessToken) {
@@ -87,7 +93,6 @@ export default function AddCar({ onBack }) {
         return;
       }
 
-      // Validate required fields
       if (!selectedMake || !selectedModel || !selectedType || !selectedSeat) {
         setMessageType("error");
         setMessage("Please fill in all required fields");
@@ -95,28 +100,28 @@ export default function AddCar({ onBack }) {
         return;
       }
 
-      // Parse seats - extract number from strings like "2", "4", "5+"
       let seatsNum = 0;
       if (selectedSeat === "2") seatsNum = 2;
       else if (selectedSeat === "4") seatsNum = 4;
       else if (selectedSeat === "5+") seatsNum = 5;
 
-      // Create FormData to handle file upload
       const formData = new FormData();
       formData.append("make", selectedMake);
       formData.append("model", selectedModel);
       formData.append("year", parseInt(year) || new Date().getFullYear());
       formData.append("car_type", selectedType);
       formData.append("color", color);
+      formData.append("availability", selectedAvailability); 
       formData.append("seats", seatsNum);
       formData.append("transmission", selectedTransmission);
       formData.append("fuel_type", selectedFuel);
       formData.append("has_ac", hasAC);
       formData.append("has_gps", hasGPS);
+      formData.append("is_available", isAvailable);
+      formData.append("is_active", isActive);
       formData.append("hourly_rate", hourlyRate || "0.00");
       formData.append("deposit_amount", dailyPrice || "0.00");
 
-      // Add the image file if selected
       if (selectedImage) {
         formData.append("images", selectedImage);
       }
@@ -160,12 +165,10 @@ export default function AddCar({ onBack }) {
 
         setMessage(errorMsg);
       }
-    }  catch (error) {
-  console.error("Fetch error details:", error);
-  setMessageType("error");
-  setMessage("Error: " + error.message);
-
-
+    } catch (error) {
+      setMessageType("error");
+      setMessage("Error: " + error.message);
+      console.error("Fetch error:", error);
     } finally {
       setLoading(false);
     }
@@ -295,6 +298,16 @@ export default function AddCar({ onBack }) {
         innerRef={typeRef}
       />
 
+      <Dropdown
+        label="Availability Status"
+        selected={selectedAvailability}
+        options={availabilityOptions}
+        isOpen={isAvailabilityDropdownOpen}
+        setOpen={setIsAvailabilityDropdownOpen}
+        setSelected={setSelectedAvailability}
+        innerRef={availabilityRef}
+      />
+
       {/* Seat Dropdown */}
       <Dropdown
         label="Seat Number"
@@ -331,7 +344,7 @@ export default function AddCar({ onBack }) {
       {/* Features */}
       <div className="mt-[25px] text-start">
         <p className="text-[17px] font-semibold">Features</p>
-        <div className="flex gap-5 mt-2">
+        <div className="grid grid-cols-2 gap-5 mt-2">
           <label className="flex items-center gap-2 text-[15px]">
             <input
               type="checkbox"
@@ -342,6 +355,7 @@ export default function AddCar({ onBack }) {
             />
             Has AC
           </label>
+
           <label className="flex items-center gap-2 text-[15px]">
             <input
               type="checkbox"
@@ -352,7 +366,42 @@ export default function AddCar({ onBack }) {
             />
             Has GPS
           </label>
+
+          <label className="flex items-center gap-2 text-[15px]">
+            <input
+              type="checkbox"
+              checked={isAvailable}
+              onChange={() => setIsAvailable(!isAvailable)}
+              disabled={loading}
+              className="w-5 h-5 accent-[#2563EB]"
+            />
+            Is Available
+          </label>
+
+          <label className="flex items-center gap-2 text-[15px]">
+            <input
+              type="checkbox"
+              checked={isActive}
+              onChange={() => setIsActive(!isActive)}
+              disabled={loading}
+              className="w-5 h-5 accent-[#2563EB]"
+            />
+            Is Active
+          </label>
         </div>
+      </div>
+
+      {/* Daily Price */}
+      <div className="mt-[25px] text-start">
+        <p className="text-[17px] font-semibold">Daily Price</p>
+        <input
+          type="text"
+          placeholder="Enter Daily Price Rate"
+          value={hourlyRate}
+          onChange={(e) => setHourlyRate(e.target.value)}
+          disabled={loading}
+          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB] disabled:bg-gray-100"
+        />
       </div>
 
       {/* Hourly Rate */}
@@ -361,19 +410,6 @@ export default function AddCar({ onBack }) {
         <input
           type="text"
           placeholder="Enter Hourly Rate"
-          value={hourlyRate}
-          onChange={(e) => setHourlyRate(e.target.value)}
-          disabled={loading}
-          className="w-full rounded-[10px] border border-[#D3D3D3] py-[14px] px-[16px] mt-2 focus:outline-none focus:border-[#2563EB] disabled:bg-gray-100"
-        />
-      </div>
-
-      {/* Deposit Amount */}
-      <div className="mt-[25px] text-start">
-        <p className="text-[17px] font-semibold">Daily Price</p>
-        <input
-          type="text"
-          placeholder="Enter Daily Price"
           value={dailyPrice}
           onChange={(e) => setDailyPrice(e.target.value)}
           disabled={loading}

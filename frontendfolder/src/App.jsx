@@ -107,7 +107,7 @@ function App() {
         <Route path="/Security" element={<Security />} />
         <Route path="/ChangePassword" element={<ChangePassword />} />
         <Route path="/ChangePhone" element={<ChangePhone />} />
-        <Route path="/EditCarDetails" element={<EditCarDetails />} />
+        <Route path="/EditCarDetails/:carId" element={<EditCarDetails />} />
         <Route path="/ChangeEmail" element={<ChangeEmail />} />
         <Route path="/SMSVerification" element={<SMSVerification />} />
         <Route path="/NotificationPreferences" element={<NotificationPreferences />} />

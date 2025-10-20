@@ -8,12 +8,13 @@ export default function OwnerCar() {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [showAll, setShowAll] = useState(false);
 
   useEffect(() => {
     fetchCars();
   }, []);
 
-  const fetchCars = async () => {
+  const fetchCars = async (fetchAll = false) => {
     try {
       setLoading(true);
       const accessToken = localStorage.getItem("access_token");
@@ -24,35 +25,34 @@ export default function OwnerCar() {
         return;
       }
 
-      const response = await fetch(
-        "https://team-airbnb.onrender.com/api/v1/admin/cars/",
-        {
+      let allData = [];
+      let nextUrl = "https://team-airbnb.onrender.com/api/v1/admin/cars/";
+
+      // Fetching all cars if "See All" is clicked
+      while (nextUrl) {
+        const response = await fetch(nextUrl, {
           method: "GET",
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
             Authorization: `Bearer ${accessToken}`,
           },
-        }
-      );
+        });
 
-      if (!response.ok) {
-        throw new Error(`API Error: ${response.status} ${response.statusText}`);
+        if (!response.ok)
+          throw new Error(`API Error: ${response.status} ${response.statusText}`);
+
+        const data = await response.json();
+        allData = [...allData, ...(data.results || [])];
+        nextUrl = fetchAll ? data.next : null; // only paginate when See All is triggered
       }
 
-      const data = await response.json();
-      console.log("API Response:", data); // Debug log
-
-      // Handle paginated response
-      const carsData = data.results || data;
-      const carsArray = Array.isArray(carsData) ? carsData : [];
-
-      console.log("Processed cars:", carsArray); // Debug log
+      const carsArray = Array.isArray(allData) ? allData : [];
 
       if (carsArray.length === 0) {
         setError("No cars found in database");
       } else {
-        setCars(carsArray);
+        setCars(fetchAll ? carsArray : carsArray.slice(0, 5)); // limit to 5 if not showing all
         setError("");
       }
     } catch (err) {
@@ -63,10 +63,20 @@ export default function OwnerCar() {
     }
   };
 
-  const handleDelete = async (carId) => {
-    if (!window.confirm("Are you sure you want to delete this car?")) {
-      return;
+  const handleSeeAll = async () => {
+    if (showAll) {
+      // toggle back to showing 5 cars
+      setShowAll(false);
+      await fetchCars(false);
+    } else {
+      // fetch all cars
+      setShowAll(true);
+      await fetchCars(true);
     }
+  };
+
+  const handleDelete = async (carId) => {
+    if (!window.confirm("Are you sure you want to delete this car?")) return;
 
     try {
       const accessToken = localStorage.getItem("access_token");
@@ -122,18 +132,16 @@ export default function OwnerCar() {
                 : "Unavailable"}
             </p>
           </div>
+
           <img
-  className="w-full h-56 object-cover rounded-t-xl"
-  src={
-    car.images && car.images.length > 0
-      ? `https://res.cloudinary.com/dmcortp4y/${car.images}`
-      : mercedes
-  }
-  alt={`${car.make} ${car.model}`}
-/>
-
-
-
+            className="w-full h-56 object-cover rounded-t-xl"
+            src={
+              car.images && car.images.length > 0
+                ? `https://res.cloudinary.com/dmcortp4y/${car.images}`
+                : mercedes
+            }
+            alt={`${car.make} ${car.model}`}
+          />
 
           <div className="w-full border shadow-lg rounded-b-xl px-4 pt-[18px] pb-5">
             <div className="flex justify-between">
@@ -192,6 +200,20 @@ export default function OwnerCar() {
           </div>
         </div>
       ))}
+
+      {/* See All / Show Less Button */}
+      <div className="flex justify-center mt-6">
+        <button
+          onClick={handleSeeAll}
+          className={`px-6 py-2 rounded-full font-semibold transition ${
+            showAll
+              ? "bg-gray-300 text-gray-800 hover:bg-gray-400"
+              : "bg-blue-600 text-white hover:bg-blue-700"
+          }`}
+        >
+          {showAll ? "Show Less" : "See All"}
+        </button>
+      </div>
     </>
   );
 }

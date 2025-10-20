@@ -27,7 +27,7 @@ export default function PickUp() {
       return;
     }
 
-    navigate(`/book/${car.id}/ReviewBooking`);
+    navigate(`/book/${car.id}/ReviewBooking`, { state: { image: car.image } });
   };
 
   const backUrl = `/book/${car.id}/car-booking`;
@@ -100,6 +100,7 @@ export default function PickUp() {
         </div>
       </div>
 
+      {/* button */}
       <button
         onClick={handleNext}
         className="block w-full my-4 bg-blue-600 text-white py-4 rounded-xl font-semibold text-lg text-center hover:bg-blue-700 transition"

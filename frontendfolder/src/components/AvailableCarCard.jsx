@@ -10,7 +10,7 @@ export default function AvailableCarCard({ car }) {
     try {
       setIsReserving(true);
 
-      // Get the access token from localStorage
+      // Getting the access token from localStorage
       const accessToken = localStorage.getItem("accessToken");
 
       if (!accessToken) {
@@ -19,7 +19,7 @@ export default function AvailableCarCard({ car }) {
         return;
       }
 
-      // Ensure car.id is a valid integer
+      // Ensuring car.id is a valid integer
       const carId = parseInt(car.id);
 
       if (!carId || isNaN(carId)) {
@@ -27,11 +27,10 @@ export default function AvailableCarCard({ car }) {
         return;
       }
 
-      // FIXED: Use "car_id" instead of "car"
       const requestBody = { car_id: carId };
       console.log("Creating reservation with:", requestBody);
 
-      // Create reservation via API
+      // Creating reservation via API
       const response = await fetch(
         "https://team-airbnb.onrender.com/api/v1/reservations/create",
         {
@@ -58,13 +57,13 @@ export default function AvailableCarCard({ car }) {
       console.log("Response data:", data);
 
       if (!response.ok) {
-        // Handle 400 Bad Request with detailed error
+        // Handling 400 Bad Request
         let errorMessage = "Failed to create reservation";
 
         if (data.error) {
           errorMessage = data.error;
 
-          // Special handling for "already reserved" error
+          // handling for "already reserved" error
           if (
             data.error.toLowerCase().includes("already") &&
             data.error.toLowerCase().includes("reserved")
@@ -91,10 +90,9 @@ export default function AvailableCarCard({ car }) {
 
       console.log("Reservation created successfully:", data);
 
-      // Save the reservation data to localStorage
+      // Saving the reservation data to localStorage
       const existing = JSON.parse(localStorage.getItem("reservations")) || [];
 
-      // Create reservation object matching CustomerReservation format
       const reservationData = {
         id: car.id,
         reservationId: data.id || data._id,
@@ -129,8 +127,6 @@ export default function AvailableCarCard({ car }) {
     }
   };
 
-  // Handle image - could be string, array, or undefined
-
 const getCarImage = () => {
   const cloudinaryBase = "https://res.cloudinary.com/dmcortp4y/";
 
@@ -153,13 +149,11 @@ const getCarImage = () => {
       />
 
       <div className="m-[16px] tracking-wide">
-        {/* Car Name: Make + Model */}
-        <p className="font-semibold text-[20px]">
+        <p className="font-semibold text-[20px] capitalize">
           {car.make} {car.model}
         </p>
 
-        {/* Car Details: Type, Transmission, Seats, Year */}
-        <div className="text-[#6B7280] mt-[3px] flex font-semibold items-center gap-[4px] text-[12px]">
+        <div className="text-[#6B7280] mt-[3px] flex font-semibold items-center gap-[4px] text-[12px] capitalize">
           <p>{car.type}</p>
           <p className="-mt-2">.</p>
           <p>{car.transmission}</p>

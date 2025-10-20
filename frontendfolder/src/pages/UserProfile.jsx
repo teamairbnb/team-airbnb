@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import cancelbookingwarning from "../assets/cancelbookingwarning.svg";
@@ -7,6 +7,18 @@ import NavBar from "../components/NavBar";
 
 export default function UserProfile() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user_info");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleCancelClick = () => setShowModal(true);
+  const handleCloseModal = () => setShowModal(false);
 
   const menuItems = [
     { title: "Personal info", path: "/CustomerPersonalInfo" },
@@ -17,14 +29,8 @@ export default function UserProfile() {
     { title: "Security", path: "/Security" },
   ];
 
-  const [showModal, setShowModal] = useState(false);
-
-  const handleCancelClick = () => setShowModal(true);
-  const handleCloseModal = () => setShowModal(false);
-
   return (
     <div className="min-h-screen bg-white flex flex-col relative">
-      {/* Fixed Top Navbar */}
       <div className="w-full bg-white">
         <div className="pt-4 pb-10">
           <NavBar />
@@ -32,26 +38,27 @@ export default function UserProfile() {
       </div>
 
       <div className="flex-1 overflow-y-auto pb-24">
-        {/* Profile Section */}
         <div className="px-4 flex flex-col items-center mb-6">
           <img
             src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=120&h=120&fit=crop"
             alt="Profile"
             className="w-28 h-28 rounded-full object-cover mb-4"
           />
+
+          {/* Show name and username */}
           <h2 className="text-base font-semibold text-gray-900 mb-1">
-            Rodie Jones
+            {user ? `${user.first_name} ${user.last_name}` : "Loading..."}
           </h2>
-          <div className="text-gray-400 text-sm">@roro</div>
+          <div className="text-gray-400 text-sm">
+            @{user ? user.username : ""}
+          </div>
         </div>
 
-        {/* Menu Items */}
         <div className="px-4 space-y-5">
           {menuItems.map((item, index) => (
             <button
               key={index}
-              onClick={() => navigate(item.path, {state: { backTo: "/UserProfile" } })}
-              
+              onClick={() => navigate(item.path, { state: { backTo: "/UserProfile" } })}
               className="w-full bg-white px-5 py-4 flex items-center justify-between rounded-xl border border-[#D3D3D3] hover:bg-gray-50 transition-colors"
             >
               <span className="text-gray-900 text-sm font-normal">
@@ -63,6 +70,7 @@ export default function UserProfile() {
         </div>
       </div>
 
+      {/* Log Out Button */}
       <div className="fixed bottom-0 left-0 w-full bg-white px-4 py-4 border-t border-gray-200">
         <button
           onClick={handleCancelClick}
@@ -75,10 +83,7 @@ export default function UserProfile() {
       {/* Log Out Modal */}
       {showModal && (
         <>
-          {/* Overlay */}
           <div className="fixed inset-0 bg-black bg-opacity-50 z-40"></div>
-
-          {/* Modal Box */}
           <div className="fixed inset-0 flex justify-center items-center z-50">
             <div className="bg-white rounded-2xl shadow-lg w-[92%] max-w-[400px] p-6 text-center">
               <div className="flex justify-between">
@@ -102,14 +107,15 @@ export default function UserProfile() {
               <div className="flex justify-center gap-3">
                 <button
                   onClick={() => {
+                    localStorage.removeItem("user_info");
                     handleCloseModal();
-                    alert("See you soon.");
+                    alert("See you soon!");
+                    navigate("/Login");
                   }}
                   className="w-full py-4 bg-red-600 text-white rounded-lg text-sm hover:bg-red-700 transition"
                 >
                   Log Out
                 </button>
-
                 <button
                   onClick={handleCloseModal}
                   className="w-full py-4 border border-[#D3D3D3] rounded-lg text-sm"

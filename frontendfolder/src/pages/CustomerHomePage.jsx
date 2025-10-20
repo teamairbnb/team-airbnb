@@ -28,33 +28,30 @@ export default function CustomerHomePage() {
   const [filteredCars, setFilteredCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showAll, setShowAll] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch cars from API
+  const baseUrl = "https://team-airbnb.onrender.com/api/v1/admin/cars/";
+
+  // Fetching first 5 cars initially
   useEffect(() => {
-    const fetchCars = async () => {
+    const fetchInitialCars = async () => {
       try {
         setLoading(true);
         const accessToken = localStorage.getItem("accessToken");
-        const response = await fetch(
-          "https://team-airbnb.onrender.com/api/v1/admin/cars/",
-          {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch cars");
-        }
+        const response = await fetch(baseUrl, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch cars");
         const data = await response.json();
 
-        // Extract cars from the results array
         const cars = data.results || [];
-
-        // Transform API data to match your existing car structure
         const transformedCars = cars.map((car) => ({
           id: car.id || car._id,
           make: car.make,
@@ -74,6 +71,7 @@ export default function CustomerHomePage() {
           availabilityStatus: car.availability_status,
           image: car.images || car.image,
         }));
+
         setAllCars(transformedCars);
         setFilteredCars(transformedCars);
         setError(null);
@@ -84,19 +82,97 @@ export default function CustomerHomePage() {
         setLoading(false);
       }
     };
-    fetchCars();
+
+    fetchInitialCars();
   }, []);
+
+  useEffect(() => {
+    if (activeCategory === "All") {
+      setFilteredCars(allCars);
+    } else {
+      const results = allCars.filter(
+        (car) => car.model?.toLowerCase() === activeCategory.toLowerCase()
+      );
+      setFilteredCars(results);
+    }
+  }, [activeCategory, allCars]);
+
+  // Fetching all cars
+  const fetchAllCars = async () => {
+    try {
+      setLoading(true);
+      const accessToken = localStorage.getItem("accessToken");
+      let allData = [];
+      let nextUrl = baseUrl;
+
+      while (nextUrl) {
+        const response = await fetch(nextUrl, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
+
+        if (!response.ok) throw new Error("Failed to fetch all cars");
+        const data = await response.json();
+        allData = [...allData, ...(data.results || [])];
+        nextUrl = data.next;
+      }
+
+      const transformedCars = allData.map((car) => ({
+        id: car.id || car._id,
+        make: car.make,
+        model: car.model,
+        year: car.year,
+        type: car.car_type,
+        color: car.color,
+        seats: car.seats,
+        transmission: car.transmission,
+        fuelType: car.fuel_type,
+        hasAC: car.has_ac,
+        hasGPS: car.has_gps,
+        price: parseFloat(car.hourly_rate),
+        deposit: parseFloat(car.deposit_amount),
+        isAvailable: car.is_available,
+        isActive: car.is_active,
+        availabilityStatus: car.availability_status,
+        image: car.images || car.image,
+      }));
+
+      setAllCars(transformedCars);
+      setFilteredCars(transformedCars);
+      setShowAll(true);
+      setError(null);
+    } catch (err) {
+      console.error("Error fetching all cars:", err);
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Search functionality logic
+  const handleSearch = () => {
+    const term = searchTerm.trim().toLowerCase();
+    if (!term) {
+      setFilteredCars(allCars);
+      return;
+    }
+
+    const results = allCars.filter(
+      (car) =>
+        car.make.toLowerCase().includes(term) ||
+        car.model.toLowerCase().includes(term)
+    );
+    setFilteredCars(results);
+  };
 
   const handleApplyFilters = ({ carYear, priceRange, carType }) => {
     let results = allCars;
 
-    if (carType) {
-      results = results.filter((c) => c.type === carType);
-    }
-
-    if (carYear) {
-      results = results.filter((c) => c.year === parseInt(carYear));
-    }
+    if (carType) results = results.filter((c) => c.type === carType);
+    if (carYear) results = results.filter((c) => c.year === parseInt(carYear));
 
     if (priceRange) {
       const [min, max] = priceRange
@@ -104,10 +180,6 @@ export default function CustomerHomePage() {
         .split("-")
         .map((p) => parseInt(p));
       results = results.filter((c) => c.price >= min && c.price <= max);
-    }
-
-    if (!carType && !carYear && !priceRange) {
-      results = allCars;
     }
 
     setFilteredCars(results);
@@ -121,7 +193,7 @@ export default function CustomerHomePage() {
     { label: "Browse car", icon: smblackcar, path: "/CustomerHomePage" },
     { label: "My Booking", icon: bookicon, path: "/MyBookings" },
     { label: "Profile", icon: blackusericon, path: "/UserProfile" },
-    { label: "Chat", icon: blackchaticon, path: "/LiveChat" },
+    { label: "ChatBot", icon: blackchaticon, path: "/LiveChat" },
     { label: "Notification", icon: blacknotificon, path: "/CustomerNotif" },
     { label: "Settings", icon: settingsicon, path: "/CustomerAccSettings" },
     {
@@ -130,6 +202,8 @@ export default function CustomerHomePage() {
       pathTemplate: "/CustomerReservation",
     },
   ];
+
+  const displayedCars = showAll ? filteredCars : filteredCars.slice(0, 5);
 
   return (
     <>
@@ -232,7 +306,6 @@ export default function CustomerHomePage() {
               <Link to="/UserProfile" className="p-[6px] rounded-full">
                 <img src={usericon} alt="User" className="cursor-pointer" />
               </Link>
-
               <Link to="/CustomerNotif" className="p-[6px] rounded-full">
                 <img src={notificon} alt="notif" className="cursor-pointer" />
               </Link>
@@ -259,11 +332,12 @@ export default function CustomerHomePage() {
                 />
                 <input
                   type="text"
-                  placeholder="Search Car"
+                  placeholder="Search any car"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="border border-[#D3D3D3] rounded-[5px] py-[11px] pl-[45px] pr-[16px] w-full tracking-wide text-[#111827] focus:outline-none focus:border-[#2563EB] placeholder-[#111827]"
                 />
               </div>
-
               <button
                 onClick={() => setFilterMenuOpen(true)}
                 className="border border-[#D3D3D3] p-[10px] rounded-[5px] bg-white"
@@ -272,32 +346,39 @@ export default function CustomerHomePage() {
               </button>
             </div>
 
-            <button className="bg-[#2563EB] mt-[24px] w-full tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px]">
-              Search any car
+            <button
+              onClick={handleSearch}
+              className="bg-[#2563EB] mt-[24px] w-full tracking-wide flex justify-center items-center text-white rounded-[10px] py-[14px]"
+            >
+              Search
             </button>
           </div>
         </div>
       </div>
 
       {/* Category Slider */}
-      <div className="mt-[24px] mx-[16px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide">
+      <div className="mt-[24px] mx-[10px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide tracking-wide">
         {CATEGORY_DATA.map((category, index) => {
           const isActive = activeCategory === category.label;
           return (
-            <div
+            <button
               key={index}
               onClick={() => setActiveCategory(category.label)}
-              className={`cursor-pointer min-w-[calc(33.333%-8px)] snap-start py-[14px] flex justify-center rounded-[10px] items-center ${
-                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"
+              className={`cursor-pointer flex-shrink-0 min-w-[109px] snap-start py-[14px] px-[20px] flex justify-center rounded-[10px] items-center transition-colors duration-200 ${
+                isActive
+                  ? "bg-[#2563EB] text-white"
+                  : "bg-gray-100 text-[#6B7280] hover:bg-gray-200"
               }`}
             >
               <img
                 src={isActive ? category.activeIcon : category.inactiveIcon}
                 alt={category.label}
-                className="mr-[8px]"
+                className="mr-[8px] w-[20px] h-[20px]"
               />
-              <p className="font-semibold">{category.label}</p>
-            </div>
+              <p className="font-semibold whitespace-nowrap">
+                {category.label}
+              </p>
+            </button>
           );
         })}
       </div>
@@ -318,8 +399,31 @@ export default function CustomerHomePage() {
               Retry
             </button>
           </div>
-        ) : filteredCars.length > 0 ? (
-          filteredCars.map((car) => <AvailableCarCard key={car.id} car={car} />)
+        ) : displayedCars.length > 0 ? (
+          <>
+            {displayedCars.map((car) => (
+              <AvailableCarCard key={car.id} car={car} />
+            ))}
+
+            {/* Toggle Buttons */}
+            <div className="mt-6">
+              {!showAll ? (
+                <button
+                  onClick={fetchAllCars}
+                  className="bg-blue-600 text-white px-6 py-2 rounded-full hover:bg-blue-700 transition"
+                >
+                  See All
+                </button>
+              ) : (
+                <button
+                  onClick={() => setShowAll(false)}
+                  className="bg-gray-300 text-gray-800 px-6 py-2 rounded-full hover:bg-gray-400 transition"
+                >
+                  Show Less
+                </button>
+              )}
+            </div>
+          </>
         ) : (
           <div className="text-gray-600 text-center py-10">
             <p className="font-semibold text-lg">

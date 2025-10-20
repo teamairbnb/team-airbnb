@@ -7,18 +7,18 @@ import locationInactive from "../assets/graylocation.svg";
 
 export const CATEGORY_DATA = [
   { label: "All", activeIcon: carActive, inactiveIcon: carInactive },
-  { label: "Airport", activeIcon: planeActive, inactiveIcon: planeInactive },
+  { label: "Corolla", activeIcon: carActive, inactiveIcon: carInactive },
   {
-    label: "Nearby",
-    activeIcon: locationActive,
-    inactiveIcon: locationInactive,
+    label: "Civic",
+    activeIcon: carActive,
+    inactiveIcon: carInactive,
   },
-  { label: "Taxi", activeIcon: carActive, inactiveIcon: carInactive },
-  { label: "Flight", activeIcon: planeActive, inactiveIcon: planeInactive },
+  { label: "Mustang", activeIcon: carActive, inactiveIcon: carInactive },
+  { label: "X5", activeIcon: carActive, inactiveIcon: carInactive },
   {
-    label: "Hotel",
-    activeIcon: locationActive,
-    inactiveIcon: locationInactive,
+    label: "C-Class",
+    activeIcon: carActive,
+    inactiveIcon: carInactive,
   },
 ];
 

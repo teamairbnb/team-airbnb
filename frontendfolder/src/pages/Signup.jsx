@@ -3,7 +3,6 @@ import { useState } from "react";
 import Button from "../components/Button.jsx";
 
 function Signup() {
-  // CHANGED: Replaced businessName with username, ownerName with firstName/lastName
   const [username, setUsername] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -12,57 +11,38 @@ function Signup() {
   const [password, setPassword] = useState("");
   const [rePassword, setRePassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false); // ADDED: Loading state
+  const [isLoading, setIsLoading] = useState(false);
 
   const validate = () => {
     const newErrors = {};
 
-    // Username check
-    if (!username) {
-      newErrors.username = "Username is required";
-    } else if (username.length < 3) {
+    if (!username) newErrors.username = "Username is required";
+    else if (username.length < 3)
       newErrors.username = "Username must be at least 3 characters";
-    }
 
-    // First & Last name check
     if (!firstName) newErrors.firstName = "First name is required";
     if (!lastName) newErrors.lastName = "Last name is required";
 
-    // Email validation
-    if (!email) {
-      newErrors.email = "Email is required";
-    } else {
+    if (!email) newErrors.email = "Email is required";
+    else {
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        newErrors.email = "Enter a valid email address";
-      }
+      if (!emailRegex.test(email)) newErrors.email = "Enter a valid email address";
     }
 
-    // Phone check
-    if (!phone) {
-      newErrors.phone = "Phone number is required";
-    } else {
-      // phone number validation
+    if (!phone) newErrors.phone = "Phone number is required";
+    else {
       const phoneRegex = /^\+?\d{10,15}$/;
-      if (!phoneRegex.test(phone)) {
+      if (!phoneRegex.test(phone))
         newErrors.phone = "Enter a valid phone number (10–15 digits)";
-      }
     }
 
-    // Password check
-    if (!password) {
-      newErrors.password = "Password is required";
-    } else if (password.length < 6) {
+    if (!password) newErrors.password = "Password is required";
+    else if (password.length < 6)
       newErrors.password = "Password must be at least 6 characters";
-    }
 
-    if (!rePassword) {
-      newErrors.rePassword = "Please re-enter your password";
-    }
-
-    if (password && rePassword && password !== rePassword) {
+    if (!rePassword) newErrors.rePassword = "Please re-enter your password";
+    if (password && rePassword && password !== rePassword)
       newErrors.rePassword = "Passwords do not match";
-    }
 
     return newErrors;
   };
@@ -75,7 +55,6 @@ function Signup() {
     if (Object.keys(validationErrors).length === 0) {
       setIsLoading(true);
 
-      // Prepare the request body according to API specification
       const requestBody = {
         username: username.trim(),
         email: email.trim().toLowerCase(),
@@ -104,15 +83,22 @@ function Signup() {
         );
 
         const data = await response.json();
-
-        // Log the full response for debugging
         console.log("Full API Response:", response.status, data);
 
         if (response.ok) {
           console.log("Signup successful:", data);
           alert("Signup submitted successfully!");
 
-          // Reset form fields
+          const userInfo = {
+            username: data.username || username,
+            first_name: data.first_name || firstName,
+            last_name: data.last_name || lastName,
+            email: data.email || email,
+            phone_number: data.phone_number || phone,
+          };
+          localStorage.setItem("user_info", JSON.stringify(userInfo));
+
+          // Reset form
           setUsername("");
           setFirstName("");
           setLastName("");
@@ -121,30 +107,19 @@ function Signup() {
           setPassword("");
           setRePassword("");
 
-          // Redirect to Login page on success
           window.location.href = "/Login";
         } else {
-          // Handle API errors
           console.error("Signup failed:", data);
-
-          // Extract error message from API response
           let errorMessage = "Please try again";
-          if (typeof data === "string") {
-            errorMessage = data;
-          } else if (data.message) {
-            errorMessage = data.message;
-          } else if (data.error) {
-            errorMessage = data.error;
-          } else if (Array.isArray(data) && data.length > 0) {
+
+          if (typeof data === "string") errorMessage = data;
+          else if (data.message) errorMessage = data.message;
+          else if (data.error) errorMessage = data.error;
+          else if (Array.isArray(data) && data.length > 0)
             errorMessage = data[0];
-          }
 
           alert(`Signup failed: ${errorMessage}`);
-
-          // Set field-specific errors if provided by API
-          if (data.errors) {
-            setErrors(data.errors);
-          }
+          if (data.errors) setErrors(data.errors);
         }
       } catch (error) {
         console.error("Network error:", error);
@@ -179,9 +154,7 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.username && (
-              <p className="text-sm text-red-500 text-right">
-                {errors.username}
-              </p>
+              <p className="text-sm text-red-500 text-right">{errors.username}</p>
             )}
           </div>
 
@@ -199,9 +172,7 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.firstName && (
-              <p className="text-sm text-red-500 text-right">
-                {errors.firstName}
-              </p>
+              <p className="text-sm text-red-500 text-right">{errors.firstName}</p>
             )}
           </div>
 
@@ -219,9 +190,7 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.lastName && (
-              <p className="text-sm text-red-500 text-right">
-                {errors.lastName}
-              </p>
+              <p className="text-sm text-red-500 text-right">{errors.lastName}</p>
             )}
           </div>
 
@@ -275,9 +244,7 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.password && (
-              <p className="text-sm text-red-500 text-right">
-                {errors.password}
-              </p>
+              <p className="text-sm text-red-500 text-right">{errors.password}</p>
             )}
           </div>
 
@@ -295,9 +262,7 @@ function Signup() {
               className="border border-[#717171] outline-none text-[#717171] bg-white rounded-lg w-full p-3"
             />
             {errors.rePassword && (
-              <p className="text-sm text-red-500 text-right">
-                {errors.rePassword}
-              </p>
+              <p className="text-sm text-red-500 text-right">{errors.rePassword}</p>
             )}
           </div>
 

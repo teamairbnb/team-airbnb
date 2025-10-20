@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
-import { MapPin, Calendar, Settings, Info } from "lucide-react";
+import { Link, useParams, useLocation } from "react-router-dom";
+import { Info } from "lucide-react";
 import back from "../assets/back.svg";
-import CarDetailsImg from "../assets/cardetailspage.jpg";
+import seaticon from "../assets/seaticon.svg";
+import calendericon from "../assets/calendericon.svg";
+import distanceicon from "../assets/distanceicon.svg";
+import settingsicon from "../assets/settingsicon.svg";
 import { useCarContext } from "../components/FetchCarDetails";
 
 export default function CarBookingScreen() {
   const { carId } = useParams();
   const { car, setCar } = useCarContext();
+  const location = useLocation();
+  const [carImage, setCarImage] = useState(location.state?.image || ""); 
 
-  // If no car is found 
+  // If no car found
   if (!car) {
     return (
       <div className="text-center mt-20">
@@ -23,13 +28,11 @@ export default function CarBookingScreen() {
 
   // Preserving the base/original price
   const basePrice = car?.originalPrice || car?.price || 0;
-
   const savedBooking = localStorage.getItem("selectedBooking") || "best";
   const savedMileage = localStorage.getItem("selectedMileage") || "unlimited";
 
   const [selectedBooking, setSelectedBooking] = useState(savedBooking);
   const [selectedMileage, setSelectedMileage] = useState(savedMileage);
-  const [displayPrice, setDisplayPrice] = useState(basePrice);
 
   // Persist selections
   useEffect(() => {
@@ -40,9 +43,8 @@ export default function CarBookingScreen() {
     localStorage.setItem("selectedMileage", selectedMileage);
   }, [selectedMileage]);
 
-  const totalPrice = selectedBooking === "flexible" ? basePrice * 0.2 : basePrice;
-
-
+  const totalPrice =
+    selectedBooking === "flexible" ? basePrice * 0.2 : basePrice;
 
   return (
     <div className="flex justify-center">
@@ -50,7 +52,7 @@ export default function CarBookingScreen() {
         {/* Car Image */}
         <div className="relative mb-6 bg-black">
           <img
-            src={CarDetailsImg}
+            src={carImage || car.image} 
             alt={car.name}
             className="w-full h-full object-cover"
           />
@@ -65,27 +67,29 @@ export default function CarBookingScreen() {
         {/* Car Details */}
         <div className="px-[16px]">
           <div className="mb-6">
-            <h1 className="text-2xl font-bold mb-4 text-left">{car.name}</h1>
+            <h1 className="text-2xl font-bold mb-4 text-left capitalize">
+              {car.name}
+            </h1>
 
             <div className="flex items-center mb-3">
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <Settings className="w-4 h-4" />
-                <span className="text-sm">{car.seatnum} Seats</span>
+                <img src={seaticon} className="w-4 h-4" alt="" />
+                <span className="text-sm">{car.seats} Seats</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <MapPin className="w-4 h-4" />
+                <img src={distanceicon} className="w-4 h-4" alt="" />
                 <span className="text-sm">200m</span>
               </div>
             </div>
 
             <div className="flex items-center">
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <Calendar className="w-4 h-4" />
+                <img src={calendericon} className="w-4 h-4" alt="" />
                 <span className="text-sm">{car.year}</span>
               </div>
               <div className="flex items-center gap-2 text-gray-600 w-1/2">
-                <Settings className="w-4 h-4" />
-                <span className="text-sm">{car.mode}</span>
+                <img src={settingsicon} className="w-4 h-4" alt="" />
+                <span className="text-sm capitalize">{car.transmission}</span>
               </div>
             </div>
           </div>
@@ -96,7 +100,6 @@ export default function CarBookingScreen() {
               Booking option
             </h2>
 
-            {/* Best Price */}
             <div
               onClick={() => setSelectedBooking("best")}
               className={`border-2 rounded-2xl p-4 mb-3 cursor-pointer transition ${
@@ -129,7 +132,6 @@ export default function CarBookingScreen() {
               </div>
             </div>
 
-            {/* Flexible */}
             <div
               onClick={() => setSelectedBooking("flexible")}
               className={`border-2 rounded-2xl p-4 cursor-pointer transition ${
@@ -203,6 +205,7 @@ export default function CarBookingScreen() {
             </div>
           </div>
 
+          {/* Total and Next */}
           <div className="px-0 pb-6">
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -214,10 +217,9 @@ export default function CarBookingScreen() {
               <div className="text-2xl font-bold">${totalPrice}</div>
             </div>
 
-            {/* Updating car in context and localStorage */}
             <Link
               to={`/book/${carId}/PickUp`}
-              state={{ carName: car?.name }}
+              state={{ image: car.image, carName: car?.name }} 
               onClick={() => {
                 const updatedCar = {
                   ...car,

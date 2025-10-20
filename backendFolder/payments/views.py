@@ -192,7 +192,6 @@ class PaymentMethodListView(APIView):
 
 class ListPaymentsView(APIView):
     permission_classes = [permissions.IsAuthenticated]
-    @extend_schema(request=PaymentDetailSerializer, responses=PaymentDetailSerializer)
 
     def get(self, request):
         payments = Payment.objects.filter(user=request.user).order_by("-created_at")

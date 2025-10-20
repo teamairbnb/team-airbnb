@@ -15,6 +15,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 import uuid
 from bookings.models import Booking
+from .serializers import PaymentDetailSerializer
+
 
 
 
@@ -53,7 +55,7 @@ class DirectProcessPaymentView(APIView):
         booking_id = data["booking_id"]
         amount = data["amount"]
         payment_type = data["payment_type"]
-        token = data.get["payment_method_token"]
+        token = data.get("payment_method_token")
         
 
         try:
@@ -66,7 +68,7 @@ class DirectProcessPaymentView(APIView):
 
         payment = Payment.objects.create(
             user=request.user,
-            booking_id=booking,
+            booking=booking,
             amount=amount,
             payment_method=payment_method,
             status="succeeded",
@@ -130,6 +132,7 @@ class DirectProcessDummyView(APIView):
         # payments record
         payment = Payment.objects.create(
             user=request.user,
+            booking=booking,
             amount=amount,
             payment_method=payment_method,
             status="succeeded",
@@ -205,7 +208,6 @@ class PaymentDetailView(APIView):
         except Payment.DoesNotExist:
             return Response({"detail": "Payment not found."}, status=status.HTTP_404_NOT_FOUND)
 
-        from .serializers import PaymentDetailSerializer
 
         serializer = PaymentDetailSerializer(payment)
         return Response(serializer.data)

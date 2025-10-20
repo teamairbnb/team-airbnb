@@ -1,5 +1,5 @@
 # team-airbnb
-# oladimeji
+# Sholanke Oladimeji
 # Abasiofon Sendan
 # Tope Fasasi
 # Rohimat Olamide Salaudeen

@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.validators import MinValueValidator, MaxValueValidator
 import datetime
+from cloudinary.models import CloudinaryField
 
 
 
@@ -71,7 +72,7 @@ class Car(models.Model):
     availability_status = models.CharField(max_length=20, choices=AVAILABILITY_STATUS_CHOICES, default='available')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    images = models.TextField(blank=True, null=True)  # URL to the car image
+    images = CloudinaryField('images')
 
     class Meta:
         ordering = ['-created_at']

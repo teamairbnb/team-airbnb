@@ -15,8 +15,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 import uuid
 from bookings.models import Booking
-from .serializers import PaymentDetailSerializer
-
+from drf_spectacular.utils import extend_schema
 
 
 
@@ -87,7 +86,7 @@ class DirectProcessPaymentView(APIView):
 class DirectProcessDummyView(APIView):
     """Accept dummy card details, validate them, do not store raw data, optionally save masked token."""
     permission_classes = [permissions.IsAuthenticated]
-
+    @extend_schema(request=DirectPaymentDummySerializer, responses=DirectPaymentDummySerializer)
     def post(self, request):
         serializer = DirectPaymentDummySerializer(data=request.data)
         if not serializer.is_valid():
@@ -169,6 +168,7 @@ class DirectProcessDummyView(APIView):
 
 class VerifyPaymentView(APIView):
     permission_classes = [permissions.IsAuthenticated]
+    
 
     def get(self, request, reference: str):
         try:
@@ -183,6 +183,7 @@ class VerifyPaymentView(APIView):
 
 class PaymentMethodListView(APIView):  
     permission_classes = [permissions.IsAuthenticated]
+    @extend_schema(request=PaymentMethodSerializer, responses=PaymentMethodSerializer)
 
     def get(self, request):
         methods = PaymentMethod.objects.filter(user=request.user)

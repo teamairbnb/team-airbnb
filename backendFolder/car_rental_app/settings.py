@@ -62,7 +62,21 @@ INSTALLED_APPS = [
     'django_filters',
     'notifications',
     'reservations.apps.ReservationsConfig',
+    'cloudinary',
 ]
+
+# cloudinary imports
+import cloudinary
+import cloudinary.uploader
+import cloudinary.api
+
+
+# cloudinary/django integrate
+cloudinary.config(
+    cloud_name = "dmcortp4y",
+    api_key="672818291377851",
+    api_secret="6KF29ujmPwumfnI34cYWeF2F2XA",
+)
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',

@@ -84,7 +84,7 @@ export default function AddCar({ onBack }) {
     setMessage("");
 
     try {
-      const accessToken = localStorage.getItem("access_token");
+      const accessToken = localStorage.getItem("accessToken");
 
       if (!accessToken) {
         setMessageType("error");

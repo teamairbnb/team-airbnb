@@ -38,7 +38,7 @@ export default function CustomerHomePage() {
     const fetchInitialCars = async () => {
       try {
         setLoading(true);
-        const accessToken = localStorage.getItem("access_token");
+        const accessToken = localStorage.getItem("accessToken");
         const response = await fetch(baseUrl, {
           method: "GET",
           headers: {

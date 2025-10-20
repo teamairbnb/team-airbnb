@@ -79,7 +79,7 @@ export default function OwnerCar() {
     if (!window.confirm("Are you sure you want to delete this car?")) return;
 
     try {
-      const accessToken = localStorage.getItem("access_token");
+      const accessToken = localStorage.getItem("accessToken");
 
       const response = await fetch(
         `https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`,

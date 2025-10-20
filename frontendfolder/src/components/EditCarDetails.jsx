@@ -28,7 +28,7 @@ export default function EditCarDetails() {
   useEffect(() => {
     const fetchCarDetails = async () => {
       try {
-        const accessToken = localStorage.getItem("access_token");
+        const accessToken = localStorage.getItem("accessToken");
         const res = await fetch(
           `https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`,
           {

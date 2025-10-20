@@ -54,7 +54,7 @@ function BusinessOwnerLogin() {
           console.log("Login successful:", data);
 
           // Store tokens in localStorage
-          localStorage.setItem("access_token", data.access);
+          localStorage.setItem("accessToken", data.access);
           localStorage.setItem("refresh_token", data.refresh);
           localStorage.setItem("username", username);
 

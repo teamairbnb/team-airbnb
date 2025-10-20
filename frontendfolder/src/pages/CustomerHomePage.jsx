@@ -38,7 +38,7 @@ export default function CustomerHomePage() {
     const fetchInitialCars = async () => {
       try {
         setLoading(true);
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem("access_token");
         const response = await fetch(baseUrl, {
           method: "GET",
           headers: {
@@ -101,7 +101,7 @@ export default function CustomerHomePage() {
   const fetchAllCars = async () => {
     try {
       setLoading(true);
-      const accessToken = localStorage.getItem("accessToken");
+      const accessToken = localStorage.getItem("access_token");
       let allData = [];
       let nextUrl = baseUrl;
 

@@ -16,7 +16,6 @@ function PaymentDetails() {
   const [cvv, setCvv] = useState("");
   const [agreeOwnCard, setAgreeOwnCard] = useState(false);
   const [errors, setErrors] = useState({});
-  const [isProcessing, setIsProcessing] = useState(false);
 
   const { car } = useCarContext();
   const location = useLocation();
@@ -50,98 +49,19 @@ function PaymentDetails() {
     else if (!/^\d{3,4}$/.test(cvv)) newErrors.cvv = "Invalid CVV";
 
     if (!agreeOwnCard)
-      newErrors.agreeOwnCard = "You must confirm you'll use your own card";
+      newErrors.agreeOwnCard = "You must confirm you’ll use your own card";
 
     return newErrors;
   };
 
-  const processPayment = async (paymentData) => {
-    try {
-      // Get auth token from localStorage
-      const token = localStorage.getItem("accessToken");
-
-      const headers = {
-        "Content-Type": "application/json",
-      };
-
-      // Add authorization header if token exists
-      if (token) {
-        headers["Authorization"] = `Bearer ${token}`;
-      }
-
-      const response = await fetch(
-        "https://team-airbnb.onrender.com/api/v1/payments/process/dummy/",
-        {
-          method: "POST",
-          headers: headers,
-          body: JSON.stringify(paymentData),
-        }
-      );
-
-      if (!response.ok) {
-        if (response.status === 401) {
-          throw new Error("Authentication required. Please log in again.");
-        }
-
-        let errorMessage = "Payment processing failed";
-        try {
-          const errorData = await response.json();
-          errorMessage = errorData.message || errorData.error || errorMessage;
-        } catch (e) {
-          // If response is not JSON, use default message
-        }
-        throw new Error(errorMessage);
-      }
-
-      // Handle empty response (200 with no body)
-      const text = await response.text();
-      return text ? JSON.parse(text) : {};
-    } catch (error) {
-      console.error("Payment error:", error);
-      throw error;
-    }
-  };
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     const validationErrors = validate();
     setErrors(validationErrors);
 
     if (Object.keys(validationErrors).length === 0) {
-      setIsProcessing(true);
-
-      try {
-        // Split expiry into month and year
-        const [expiryMonth, expiryYear] = expiry.split("/");
-
-        // Prepare payment data for API
-        const paymentData = {
-          cardNumber: cardNumber.replace(/\s+/g, ""),
-          cardholderName: cardHolder,
-          expiryMonth: expiryMonth,
-          expiryYear: `20${expiryYear}`, // Convert YY to YYYY
-          cvv: cvv,
-          amount: total,
-        };
-
-        // Process payment through API
-        const result = await processPayment(paymentData);
-
-        // On success, navigate to success page
-        alert("Payment processed successfully!");
-        navigate(`/book/${car.id}/BookingSuccess`, {
-          state: { paymentResult: result },
-        });
-      } catch (error) {
-        // Handle payment errors
-        setErrors({
-          submit:
-            error.message || "Payment processing failed. Please try again.",
-        });
-        alert(error.message || "Payment processing failed. Please try again.");
-      } finally {
-        setIsProcessing(false);
-      }
+      alert("Payment submitted successfully!");
+      navigate(`/book/${car.id}/BookingSuccess`);
     }
   };
 
@@ -173,12 +93,11 @@ function PaymentDetails() {
               placeholder="1234 1234 1234 1234"
               value={cardNumber}
               onChange={(e) => setCardNumber(e.target.value)}
-              disabled={isProcessing}
               className={`border rounded-lg w-full p-3 outline-none ${
                 errors.cardNumber
                   ? "border-red-500"
                   : "border-[#D3D3D3] text-[#717171]"
-              } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+              }`}
             />
             {errors.cardNumber && (
               <p className="text-sm text-red-500 text-right">
@@ -198,12 +117,11 @@ function PaymentDetails() {
               placeholder="Name on Card"
               value={cardHolder}
               onChange={(e) => setCardHolder(e.target.value)}
-              disabled={isProcessing}
               className={`border rounded-lg w-full p-3 outline-none ${
                 errors.cardHolder
                   ? "border-red-500"
                   : "border-[#D3D3D3] text-[#717171]"
-              } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+              }`}
             />
             {errors.cardHolder && (
               <p className="text-sm text-red-500 text-right">
@@ -224,12 +142,11 @@ function PaymentDetails() {
                 placeholder="MM/YY"
                 value={expiry}
                 onChange={(e) => setExpiry(e.target.value)}
-                disabled={isProcessing}
                 className={`border rounded-lg w-full p-3 outline-none ${
                   errors.expiry
                     ? "border-red-500"
                     : "border-[#D3D3D3] text-[#717171]"
-                } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+                }`}
               />
               {errors.expiry && (
                 <p className="text-sm text-red-500 text-right">
@@ -249,12 +166,11 @@ function PaymentDetails() {
                   placeholder="123"
                   value={cvv}
                   onChange={(e) => setCvv(e.target.value)}
-                  disabled={isProcessing}
                   className={`border rounded-lg w-full p-3 pr-10 outline-none ${
                     errors.cvv
                       ? "border-red-500"
                       : "border-[#D3D3D3] text-[#717171]"
-                  } ${isProcessing ? "opacity-50 cursor-not-allowed" : ""}`}
+                  }`}
                 />
                 <div
                   className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
@@ -284,14 +200,13 @@ function PaymentDetails() {
               id="agreeOwnCard"
               checked={agreeOwnCard}
               onChange={() => setAgreeOwnCard(!agreeOwnCard)}
-              disabled={isProcessing}
               className="mt-1"
             />
             <label
               htmlFor="agreeOwnCard"
               className="text-sm text-[#717171] leading-snug"
             >
-              I'll use a payment method in my own name and present it at pickup.
+              I’ll use a payment method in my own name and present it at pickup.
               I understand debit cards may only work for certain vehicles and
               might need extra documents.
             </label>
@@ -300,13 +215,6 @@ function PaymentDetails() {
             <p className="text-sm text-red-500 text-right">
               {errors.agreeOwnCard}
             </p>
-          )}
-
-          {/* Error message for submission errors */}
-          {errors.submit && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-3 mt-2">
-              <p className="text-sm text-red-600">{errors.submit}</p>
-            </div>
           )}
 
           {/* Total */}
@@ -325,15 +233,11 @@ function PaymentDetails() {
       <div className="fixed bottom-0 left-0 w-full p-4">
         <button
           type="submit"
+          form="paymentForm"
           onClick={handleSubmit}
-          disabled={isProcessing}
-          className={`block w-full py-4 rounded-xl font-semibold text-lg text-center transition ${
-            isProcessing
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-blue-600 hover:bg-blue-700"
-          } text-white`}
+          className="block w-full py-4 rounded-xl font-semibold text-lg text-center transition bg-blue-600 text-white hover:bg-blue-700"
         >
-          {isProcessing ? "Processing..." : "Pay & Book"}
+          Pay & Book
         </button>
       </div>
     </div>

@@ -85,7 +85,7 @@ export default function CarFilterMenu({ isOpen, onClose, onApply, onReset }) {
           <div className="text-[#111827]">
             <h3 className="font-bold mb-2 text-[19px] tracking-wide">Type</h3>
             <div className="space-y-[13px] mt-[16px] ml-1">
-              {["SUV", "Sedan", "Truck", "Family Car"].map((type) => (
+              {["suv", "sedan", "hatchback", "coupe", "convertible"].map((type) => (
                 <label key={type} className="flex items-center space-x-2">
                   <input
                     type="radio"

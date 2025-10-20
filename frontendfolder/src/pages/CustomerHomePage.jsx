@@ -46,11 +46,9 @@ export default function CustomerHomePage() {
             },
           }
         );
-
         if (!response.ok) {
           throw new Error("Failed to fetch cars");
         }
-
         const data = await response.json();
         console.log("API Response:", data);
 
@@ -79,7 +77,6 @@ export default function CustomerHomePage() {
           availabilityStatus: car.availability_status,
           image: car.images || car.image,
         }));
-
         setAllCars(transformedCars);
         setFilteredCars(transformedCars);
         setError(null);
@@ -90,7 +87,6 @@ export default function CustomerHomePage() {
         setLoading(false);
       }
     };
-
     fetchCars();
   }, []);
 

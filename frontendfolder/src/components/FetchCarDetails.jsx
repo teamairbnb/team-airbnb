@@ -47,22 +47,32 @@ export default function FetchCarDetails() {
     const fetchCar = async () => {
       try {
         setLoading(true);
+
+        const accessToken = localStorage.getItem("access_token");
+        if (!accessToken)
+          throw new Error("Not authenticated. Please log in again.");
+
         const response = await fetch(
-          `https://team-airbnb.onrender.com/api/v1/cars/${carId}/`,
+          `https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`,
           {
             headers: {
               "Content-Type": "application/json",
+              Authorization: `Bearer ${accessToken}`,
             },
           }
         );
 
+        if (response.status === 404) {
+          throw new Error(
+            "Car not found. It may have been removed or unavailable."
+          );
+        }
         if (!response.ok) {
-          throw new Error("Car not found");
+          throw new Error(`Failed to fetch car: ${response.statusText}`);
         }
 
         const data = await response.json();
 
-        // Transform API data to match your existing structure
         const transformedCar = {
           id: data.id || data._id,
           make: data.make,
@@ -80,7 +90,7 @@ export default function FetchCarDetails() {
           isAvailable: data.is_available,
           isActive: data.is_active,
           availabilityStatus: data.availability_status,
-          name: `${data.make} ${data.model}`, // Combined name
+          name: `${data.make} ${data.model}`,
         };
 
         setCar(transformedCar);
@@ -90,13 +100,11 @@ export default function FetchCarDetails() {
         console.error("Error fetching car:", err);
         setError(err.message);
 
-        // Fallback: Try to find in localStorage reservations
         const savedReservations =
           JSON.parse(localStorage.getItem("reservations")) || [];
         const foundCar = savedReservations.find(
           (c) => c.id === parseInt(carId)
         );
-
         if (foundCar) {
           setCar(foundCar);
           setTotalPrice(foundCar.price);

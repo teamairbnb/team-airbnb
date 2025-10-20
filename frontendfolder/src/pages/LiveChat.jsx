@@ -1,15 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import { io } from "socket.io-client";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import chaticon from "../assets/blackchaticon.svg";
 import sendimg from "../assets/sendimg.svg";
 
-const socket = io("http://localhost:4000");
-
 export default function LiveChat() {
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState("");
+  const [loading, setLoading] = useState(false);
   const chatEndRef = useRef(null);
 
   const location = useLocation();
@@ -17,33 +15,55 @@ export default function LiveChat() {
 
   const { backTo = "/", role = "guest" } = location.state || {};
 
-  useEffect(() => {
-    socket.on("receiveMessage", (message) => {
-      setMessages((prev) => [...prev, { sender: "other", text: message }]);
-    });
+  const handleSend = async () => {
+    if (!inputValue.trim()) return;
 
-    return () => {
-      socket.off("receiveMessage");
-    };
-  }, []);
+    const userMessage = inputValue.trim();
 
-  const handleSend = () => {
-    if (inputValue.trim() === "") return;
-
-    const message = inputValue.trim();
-
-    // Add locally
-    setMessages((prev) => [...prev, { sender: "user", text: message }]);
-
-    // Send to other
-    socket.emit("sendMessage", message);
-
+    // Add message locally
+    setMessages((prev) => [...prev, { sender: "user", text: userMessage }]);
     setInputValue("");
+
+    try {
+      const token = localStorage.getItem("accessToken"); // adjust the key if needed
+
+      const response = await fetch(
+        "https://team-airbnb.onrender.com/api/v1/chatbot/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ message: userMessage }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.detail || "Failed to get chatbot response");
+      }
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          sender: "bot",
+          text: data.reply || data.response || JSON.stringify(data),
+        },
+      ]);
+    } catch (err) {
+      console.error("Chatbot API error:", err);
+      setMessages((prev) => [
+        ...prev,
+        { sender: "bot", text: "Sorry, I couldn’t process your request." },
+      ]);
+    }
   };
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
 
   return (
     <div className="px-4 text-[#111827] min-h-screen pb-[100px] relative tracking-wide flex flex-col">
@@ -60,7 +80,6 @@ export default function LiveChat() {
         </div>
       </div>
 
-      {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto pb-24">
         {messages.map((msg, index) => (
           <div
@@ -80,6 +99,13 @@ export default function LiveChat() {
             </div>
           </div>
         ))}
+        {loading && (
+          <div className="flex justify-start mb-3">
+            <div className="px-4 py-2 bg-gray-200 text-gray-600 rounded-2xl text-sm rounded-bl-none animate-pulse">
+              Typing...
+            </div>
+          </div>
+        )}
         <div ref={chatEndRef} />
       </div>
 

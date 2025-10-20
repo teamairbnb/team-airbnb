@@ -130,12 +130,16 @@ export default function AvailableCarCard({ car }) {
   };
 
   // Handle image - could be string, array, or undefined
-  const getCarImage = () => {
-    if (!car.image) return mercedes;
-    if (typeof car.image === "string") return car.image;
-    if (Array.isArray(car.image) && car.image.length > 0) return car.image[0];
-    return mercedes;
-  };
+
+const getCarImage = () => {
+  const cloudinaryBase = "https://res.cloudinary.com/dmcortp4y/";
+
+  if (!car.image) return mercedes; // fallback placeholder
+  if (typeof car.image === "string") return cloudinaryBase + car.image;
+  if (Array.isArray(car.image) && car.image.length > 0) return cloudinaryBase + car.image[0];
+  return mercedes;
+};
+
 
   return (
     <div className="w-full rounded-[10px] bg-white mb-[25px] shadow-lg">

@@ -8,11 +8,10 @@ export default function OwnerCar() {
   const [cars, setCars] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     fetchCars();
-  }, [refreshTrigger]);
+  }, []);
 
   const fetchCars = async () => {
     try {
@@ -42,15 +41,16 @@ export default function OwnerCar() {
       }
 
       const data = await response.json();
-      console.log("API Response:", data);
+      console.log("API Response:", data); // Debug log
 
+      // Handle paginated response
       const carsData = data.results || data;
       const carsArray = Array.isArray(carsData) ? carsData : [];
 
-      console.log("Processed cars:", carsArray);
+      console.log("Processed cars:", carsArray); // Debug log
 
       if (carsArray.length === 0) {
-        setError("No car found");
+        setError("No cars found in database");
       } else {
         setCars(carsArray);
         setError("");
@@ -96,11 +96,6 @@ export default function OwnerCar() {
     window.location.href = `/EditCarDetails/${carId}`;
   };
 
-  // Export refresh function for parent components
-  useEffect(() => {
-    window.refreshOwnerCars = () => setRefreshTrigger((prev) => prev + 1);
-  }, []);
-
   if (loading) {
     return <div className="text-center py-10">Loading cars...</div>;
   }
@@ -127,7 +122,19 @@ export default function OwnerCar() {
                 : "Unavailable"}
             </p>
           </div>
-          <img className="" src={mercedes} alt="" />
+          <img
+  className="w-full h-56 object-cover rounded-t-xl"
+  src={
+    car.images && car.images.length > 0
+      ? `https://res.cloudinary.com/dmcortp4y/${car.images}`
+      : mercedes
+  }
+  alt={`${car.make} ${car.model}`}
+/>
+
+
+
+
           <div className="w-full border shadow-lg rounded-b-xl px-4 pt-[18px] pb-5">
             <div className="flex justify-between">
               <div className="flex gap-[14px]">

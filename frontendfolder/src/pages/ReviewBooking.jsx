@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import back from "../assets/back.svg";
 import selectedcarimg from "../assets/smselectedcar.svg";
@@ -7,6 +7,22 @@ import { useCarContext } from "../components/FetchCarDetails";
 
 export default function ReviewBooking() {
   const { car, bookingDetails } = useCarContext();
+  const [userInfo, setUserInfo] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+  });
+
+  useEffect(() => {
+    const storedUser = JSON.parse(localStorage.getItem("user_info"));
+    if (storedUser) {
+      setUserInfo({
+        fullName: `${storedUser.first_name || ""} ${storedUser.last_name || ""}`.trim(),
+        email: storedUser.email || "",
+        phone: storedUser.phone_number || "",
+      });
+    }
+  }, []);
 
   // Format to 12-hour time with AM/PM
   const formatTo12Hour = (time) => {
@@ -48,9 +64,13 @@ export default function ReviewBooking() {
 
         {/* Selected Car */}
         <div className="mt-[13px] py-[32px] flex items-center">
-          <img className="w-[90px]" src={car.image || selectedcarimg} alt={car.name} />
+          <img
+            className="w-[90px]"
+            src={car.image || selectedcarimg}
+            alt={car.name}
+          />
           <div className="ml-[16px]">
-            <p className="text-[17px] font-semibold">{car.name}</p>
+            <p className="text-[17px] font-semibold capitalize">{car.name}</p>
             <p className="text-[#6B7280] text-[12px] mt-1 mb-2 font-semibold tracking-normal">
               or similar model
             </p>
@@ -68,22 +88,20 @@ export default function ReviewBooking() {
         {/* Driver Info Section */}
         <div className="mt-[40px]">
           <p className="font-bold mb-6">Driver Info</p>
-          <EditField title="Full name" />
-          <EditField title="Email address" />
-          <EditField title="Phone number" />
+          <EditField title="Full name" value={userInfo.fullName || ""} />
+          <EditField title="Email address" value={userInfo.email || ""} />
+          <EditField title="Phone number" value={userInfo.phone || ""} />
 
           {/* Pickup & Dropoff */}
           <div className="mt-[45px]">
-            <EditField title="Pick-up address" />
-            <EditField title="Drop-off address" />
+            <EditField title="Pick-up address" value={"company address"} />
+            <EditField title="Drop-off address" value={"company address"} />
 
-            {/* PickUp Date and Time */}
             <div className="flex gap-[12px] mt-2">
               <EditField title="Pick-up date" value={formattedPickUpDate || ""} />
               <EditField title="Pick-up time" value={formattedPickUpTime || ""} />
             </div>
 
-            {/* Dropoff Date and Time */}
             <div className="flex gap-[12px] mt-1">
               <EditField title="Drop-off date" value={formattedReturnDate || ""} />
               <EditField title="Drop-off time" value={formattedReturnTime || ""} />

@@ -4,7 +4,7 @@ import logo from "../assets/logowheel.svg";
 import notificon from "../assets/blacknotificon.svg";
 import userimg from "../assets/userimage.svg";
 import logo_textblack from "../assets/logo_textblack.svg";
-import chaticon from "../assets/blackchaticon.svg";
+// import chaticon from "../assets/blackchaticon.svg";
 import bookings from "../assets/bookingstats.svg";
 import revenue from "../assets/revenuestats.svg";
 
@@ -14,7 +14,7 @@ import Reservations from "../components/Reservations";
 import BusinessOwnerReport from "./BusinessOwnerReport";
 import BusinessOwnerProfile from "./BusinessOwnerProfile";
 import BusinessNotification from "./BusinessNotification";
-import Chat from "./Chat";
+// import Chat from "./Chat";
 
 export default function BusinessOwnerDashboard() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -38,8 +38,8 @@ export default function BusinessOwnerDashboard() {
         return <BusinessOwnerProfile />;
       case "Notification":
         return <BusinessNotification />;
-      case "Chat":
-        return <Chat />;
+      // case "Chat":
+      //   return <Chat />;
       default:
         return (
           <div className="text-center text-[#111827] mt-10 tracking-wide">
@@ -139,7 +139,7 @@ export default function BusinessOwnerDashboard() {
               "Reports",
               "Profile",
               "Notification",
-              "Chat",
+              // "Chat",
             ].map((item) => (
               <li
                 key={item}
@@ -184,9 +184,9 @@ export default function BusinessOwnerDashboard() {
           />
         </div>
 
-        <div className="fixed top-[440px] right-0 z-50 border border-[#D3D3D3] bg-white shadow-md w-[95px] translate-x-5 py-1 rounded-full flex justify-center items-center">
+        {/* <div className="fixed top-[440px] right-0 z-50 border border-[#D3D3D3] bg-white shadow-md w-[95px] translate-x-5 py-1 rounded-full flex justify-center items-center">
           <img onClick={() => setActivePage("Chat")} className="w-8" src={chaticon} alt="Chat Icon" />
-        </div>
+        </div> */}
       </div>
 
       {/* Content */}

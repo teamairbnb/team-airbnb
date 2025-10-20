@@ -86,6 +86,17 @@ export default function CustomerHomePage() {
     fetchInitialCars();
   }, []);
 
+  useEffect(() => {
+    if (activeCategory === "All") {
+      setFilteredCars(allCars);
+    } else {
+      const results = allCars.filter(
+        (car) => car.model?.toLowerCase() === activeCategory.toLowerCase()
+      );
+      setFilteredCars(results);
+    }
+  }, [activeCategory, allCars]);
+
   // Fetching all cars
   const fetchAllCars = async () => {
     try {
@@ -229,7 +240,10 @@ export default function CustomerHomePage() {
 
                     if (item.path === "/LiveChat") {
                       navigate(item.path, {
-                        state: { backTo: "/CustomerHomePage", role: "Customer" },
+                        state: {
+                          backTo: "/CustomerHomePage",
+                          role: "Customer",
+                        },
                       });
                       return;
                     }
@@ -320,7 +334,7 @@ export default function CustomerHomePage() {
                   type="text"
                   placeholder="Search any car"
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)} 
+                  onChange={(e) => setSearchTerm(e.target.value)}
                   className="border border-[#D3D3D3] rounded-[5px] py-[11px] pl-[45px] pr-[16px] w-full tracking-wide text-[#111827] focus:outline-none focus:border-[#2563EB] placeholder-[#111827]"
                 />
               </div>
@@ -343,24 +357,28 @@ export default function CustomerHomePage() {
       </div>
 
       {/* Category Slider */}
-      <div className="mt-[24px] mx-[16px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide">
+      <div className="mt-[24px] mx-[10px] overflow-x-auto flex gap-[8px] snap-x snap-mandatory scrollbar-hide tracking-wide">
         {CATEGORY_DATA.map((category, index) => {
           const isActive = activeCategory === category.label;
           return (
-            <div
+            <button
               key={index}
               onClick={() => setActiveCategory(category.label)}
-              className={`cursor-pointer min-w-[calc(33.333%-8px)] snap-start py-[14px] flex justify-center rounded-[10px] items-center ${
-                isActive ? "bg-[#2563EB] text-white" : "bg-white text-[#6B7280]"
+              className={`cursor-pointer flex-shrink-0 min-w-[109px] snap-start py-[14px] px-[20px] flex justify-center rounded-[10px] items-center transition-colors duration-200 ${
+                isActive
+                  ? "bg-[#2563EB] text-white"
+                  : "bg-gray-100 text-[#6B7280] hover:bg-gray-200"
               }`}
             >
               <img
                 src={isActive ? category.activeIcon : category.inactiveIcon}
                 alt={category.label}
-                className="mr-[8px]"
+                className="mr-[8px] w-[20px] h-[20px]"
               />
-              <p className="font-semibold">{category.label}</p>
-            </div>
+              <p className="font-semibold whitespace-nowrap">
+                {category.label}
+              </p>
+            </button>
           );
         })}
       </div>

@@ -5,7 +5,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
 @layer base {
   * {
     margin: 0;
@@ -21,7 +20,7 @@
     padding: 0;
   }
 
-  /* Add this to your global CSS or in Tailwind via plugin/custom class */
+  /* Hide scrollbar */
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
@@ -29,5 +28,12 @@
   .scrollbar-hide {
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
+  }
+
+  @media (min-width: 1200px) {
+    html,
+    body {
+      padding: 0 150px;
+    }
   }
 }

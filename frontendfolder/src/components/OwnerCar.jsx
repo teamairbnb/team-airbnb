@@ -17,7 +17,7 @@ export default function OwnerCar() {
   const fetchCars = async (fetchAll = false) => {
     try {
       setLoading(true);
-      const accessToken = localStorage.getItem("access_token");
+      const accessToken = localStorage.getItem("accessToken");
 
       if (!accessToken) {
         setError("Authentication error. Please login again.");

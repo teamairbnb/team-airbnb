@@ -36,91 +36,84 @@ export default function FetchCarDetails() {
 
   const [totalPrice, setTotalPrice] = useState(0);
 
-  // Storing all reserved cars
+  // Store all reservations locally
   const [reservations, setReservations] = useState(() => {
     const saved = localStorage.getItem("reservations");
     return saved ? JSON.parse(saved) : [];
   });
 
-  // Fetch car details from API
+  // Fetch car from API or fallback to localStorage
   useEffect(() => {
     const fetchCar = async () => {
       try {
         setLoading(true);
 
         const accessToken = localStorage.getItem("access_token");
-        if (!accessToken)
-          throw new Error("Not authenticated. Please log in again.");
 
-        const response = await fetch(
-          `https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
-        );
-
-        if (response.status === 404) {
-          throw new Error(
-            "Car not found. It may have been removed or unavailable."
+        // Only try API if token exists
+        if (accessToken) {
+          const response = await fetch(
+            `https://team-airbnb.onrender.com/api/v1/admin/cars/${carId}/`,
+            {
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
           );
+
+          if (response.ok) {
+            const data = await response.json();
+            const transformedCar = {
+              id: data.id || data._id,
+              make: data.make,
+              model: data.model,
+              year: data.year,
+              type: data.car_type,
+              color: data.color,
+              seats: data.seats,
+              transmission: data.transmission,
+              fuelType: data.fuel_type,
+              hasAC: data.has_ac,
+              hasGPS: data.has_gps,
+              price: parseFloat(data.hourly_rate),
+              deposit: parseFloat(data.deposit_amount),
+              isAvailable: data.is_available,
+              isActive: data.is_active,
+              availabilityStatus: data.availability_status,
+              name: `${data.make} ${data.model}`,
+            };
+            setCar(transformedCar);
+            setTotalPrice(transformedCar.price);
+            setError(null);
+            setLoading(false);
+            return;
+          }
         }
-        if (!response.ok) {
-          throw new Error(`Failed to fetch car: ${response.statusText}`);
-        }
 
-        const data = await response.json();
-
-        const transformedCar = {
-          id: data.id || data._id,
-          make: data.make,
-          model: data.model,
-          year: data.year,
-          type: data.car_type,
-          color: data.color,
-          seats: data.seats,
-          transmission: data.transmission,
-          fuelType: data.fuel_type,
-          hasAC: data.has_ac,
-          hasGPS: data.has_gps,
-          price: parseFloat(data.hourly_rate),
-          deposit: parseFloat(data.deposit_amount),
-          isAvailable: data.is_available,
-          isActive: data.is_active,
-          availabilityStatus: data.availability_status,
-          name: `${data.make} ${data.model}`,
-        };
-
-        setCar(transformedCar);
-        setTotalPrice(transformedCar.price);
-        setError(null);
-      } catch (err) {
-        console.error("Error fetching car:", err);
-        setError(err.message);
-
-        const savedReservations =
-          JSON.parse(localStorage.getItem("reservations")) || [];
-        const foundCar = savedReservations.find(
-          (c) => c.id === parseInt(carId)
-        );
+        // Fallback to localStorage
+        const savedReservations = JSON.parse(localStorage.getItem("reservations")) || [];
+        const foundCar = savedReservations.find((c) => c.id === parseInt(carId));
         if (foundCar) {
           setCar(foundCar);
           setTotalPrice(foundCar.price);
           setError(null);
+        } else {
+          setError("Car not found in reservations or not authenticated.");
         }
+      } catch (err) {
+        console.error("Error fetching car:", err);
+        setError("Failed to fetch car. Using localStorage fallback.");
       } finally {
         setLoading(false);
       }
     };
 
-    if (carId) {
-      fetchCar();
-    }
+    if (carId) fetchCar();
   }, [carId]);
 
-  // Adding car to reservations
+  // Add a car to reservations
   const addReservation = (car) => {
     setReservations((prev) => {
       const exists = prev.some((item) => item.id === car.id);
@@ -133,7 +126,7 @@ export default function FetchCarDetails() {
     });
   };
 
-  // Removing a car
+  // Remove a car from reservations
   const removeReservation = (carId) => {
     setReservations((prev) => {
       const updated = prev.filter((c) => c.id !== carId);
@@ -142,6 +135,7 @@ export default function FetchCarDetails() {
     });
   };
 
+  // Persist booking details
   useEffect(() => {
     localStorage.setItem("bookingDetails", JSON.stringify(bookingDetails));
   }, [bookingDetails]);
@@ -149,9 +143,7 @@ export default function FetchCarDetails() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <p className="text-gray-600 text-lg">Loading car details...</p>
-        </div>
+        <p className="text-gray-600 text-lg">Loading car details...</p>
       </div>
     );
   }
@@ -160,9 +152,7 @@ export default function FetchCarDetails() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <p className="text-red-600 text-lg mb-4">
-            {error || "Car not found."}
-          </p>
+          <p className="text-red-600 text-lg mb-4">{error || "Car not found."}</p>
           <button
             onClick={() => navigate("/CustomerHomePage")}
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"

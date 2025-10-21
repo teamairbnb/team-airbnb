@@ -48,7 +48,7 @@ export default function FetchCarDetails() {
       try {
         setLoading(true);
 
-        const accessToken = localStorage.getItem("access_token");
+        const accessToken = localStorage.getItem("accessToken");
 
         // Only try API if token exists
         if (accessToken) {

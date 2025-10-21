@@ -31,7 +31,7 @@ export default function CustomerHomePage() {
   const [showAll, setShowAll] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
-  const baseUrl = "https://team-airbnb.onrender.com/api/v1/admin/cars/";
+  const baseUrl = "https://team-airbnb.onrender.com/api/v1/cars/";
 
   // Fetching first 5 cars initially
   useEffect(() => {
@@ -44,7 +44,7 @@ export default function CustomerHomePage() {
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
+            // Authorization: `Bearer ${accessToken}`,
           },
         });
 

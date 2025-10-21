@@ -48,7 +48,7 @@ export default function FetchCarDetails() {
       try {
         setLoading(true);
 
-        const accessToken = localStorage.getItem("accessToken");
+        const accessToken = localStorage.getItem("access_token");
         if (!accessToken)
           throw new Error("Not authenticated. Please log in again.");
 
